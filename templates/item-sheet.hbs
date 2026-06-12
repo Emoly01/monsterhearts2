@@ -18,6 +18,10 @@
           <input class="mh2-bonus-input" type="number" name="system.bonus" value="{{system.bonus}}" step="1" title="Flat bonus added to this move's roll">
         </label>
         <label class="mh2-stat-select">
+          <span>Group</span>
+          <input class="mh2-group-input" type="text" name="system.group" value="{{system.group}}" placeholder="Hexes, Bargains…" title="Optional grouping label shown as a sub-header">
+        </label>
+        <label class="mh2-stat-select">
           <span>Category</span>
           <select name="system.category">
             {{#each categoryOptions}}

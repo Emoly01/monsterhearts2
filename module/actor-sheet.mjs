@@ -24,6 +24,8 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
       setXp: MH2ActorSheet.#onSetXp,
       addCondition: MH2ActorSheet.#onAddCondition,
       deleteCondition: MH2ActorSheet.#onDeleteCondition,
+      addCustom: MH2ActorSheet.#onAddCustom,
+      deleteCustom: MH2ActorSheet.#onDeleteCustom,
       addString: MH2ActorSheet.#onAddString,
       deleteString: MH2ActorSheet.#onDeleteString,
       stringPlus: MH2ActorSheet.#onStringPlus,
@@ -84,7 +86,18 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
       .filter(i => i.type === "move")
       .sort((a, b) => (a.sort ?? 0) - (b.sort ?? 0) || a.name.localeCompare(b.name));
     context.basicMoves = allMoves.filter(m => m.system.category === "basic").map(decorate);
-    context.skinMoves = allMoves.filter(m => m.system.category !== "basic").map(decorate);
+
+    // Skin moves render grouped: ungrouped first, then groups alphabetically.
+    const groupMap = new Map();
+    for (const m of allMoves.filter(m => m.system.category !== "basic")) {
+      const g = (m.system.group ?? "").trim();
+      if (!groupMap.has(g)) groupMap.set(g, []);
+      groupMap.get(g).push(decorate(m));
+    }
+    context.skinMoveGroups = [...groupMap.entries()]
+      .sort((a, b) => (a[0] === "" ? -1 : b[0] === "" ? 1 : a[0].localeCompare(b[0])))
+      .map(([label, moves]) => ({ label, moves }));
+    context.hasSkinMoves = groupMap.size > 0;
 
     context.xpFull = sys.experience.value >= sys.experience.max;
     context.skinItem = actor.items.find(i => i.type === "skin") ?? null;
@@ -115,6 +128,7 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     if (sys) {
       if (sys.strings && !Array.isArray(sys.strings)) sys.strings = Object.values(sys.strings);
       if (sys.conditions && !Array.isArray(sys.conditions)) sys.conditions = Object.values(sys.conditions);
+      if (sys.custom && !Array.isArray(sys.custom)) sys.custom = Object.values(sys.custom);
     }
     return submitData;
   }
@@ -176,6 +190,18 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     const conditions = this.#sourceArray("conditions");
     conditions.splice(Number(target.dataset.index), 1);
     return this.actor.update({ "system.conditions": conditions });
+  }
+
+  static async #onAddCustom(event, target) {
+    const custom = this.#sourceArray("custom");
+    custom.push("");
+    return this.actor.update({ "system.custom": custom });
+  }
+
+  static async #onDeleteCustom(event, target) {
+    const custom = this.#sourceArray("custom");
+    custom.splice(Number(target.dataset.index), 1);
+    return this.actor.update({ "system.custom": custom });
   }
 
   static async #onAddString(event, target) {
@@ -321,11 +347,20 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
       return `<datalist id="${id}">${opts}</datalist>`;
     };
 
-    const moveRows = (s.moves ?? []).map((m, i) => `
-      <label class="mh2-choice">
-        <input type="checkbox" name="move" value="${i}" ${m.granted ? "checked disabled" : ""}>
-        ${esc(m.name)}${m.stat ? ` <em>(${esc(MH2.stats[m.stat] ?? m.stat)})</em>` : ""}${m.granted ? " — automatic" : ""}
-      </label>`).join("");
+    const dlgGroups = new Map();
+    (s.moves ?? []).forEach((m, i) => {
+      const g = (m.group ?? "").trim() || "Moves";
+      if (!dlgGroups.has(g)) dlgGroups.set(g, []);
+      dlgGroups.get(g).push(`
+        <label class="mh2-choice">
+          <input type="checkbox" name="move" value="${i}" ${m.granted ? "checked disabled" : ""}>
+          ${esc(m.name)}${m.stat ? ` <em>(${esc(MH2.stats[m.stat] ?? m.stat)})</em>` : ""}${m.granted ? " — automatic" : ""}
+        </label>`);
+    });
+    const moveRows = [...dlgGroups.entries()]
+      .sort((a, b) => (a[0] === "Moves" ? -1 : b[0] === "Moves" ? 1 : a[0].localeCompare(b[0])))
+      .map(([g, rows]) => `<fieldset><legend>${esc(g)}</legend>${rows.join("")}</fieldset>`)
+      .join("");
 
     const content = `
       <div class="mh2-skin-dialog">
@@ -336,9 +371,8 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
         <div class="form-group"><label>Look</label><input name="look" list="mh2-dl-look" placeholder="pick or write your own">${datalist("mh2-dl-look", s.looks)}</div>
         <div class="form-group"><label>Eyes</label><input name="eyes" list="mh2-dl-eyes" placeholder="pick or write your own">${datalist("mh2-dl-eyes", s.eyes)}</div>
         <div class="form-group"><label>Origin</label><input name="origin" list="mh2-dl-origin" placeholder="pick or write your own">${datalist("mh2-dl-origin", s.origins)}</div>
-        <fieldset><legend>Skin moves — choose ${s.moveChoices}${s.moveNote ? ` <em>(${esc(s.moveNote)})</em>` : ""}</legend>
-          ${moveRows || "<p>This skin has no moves yet.</p>"}
-        </fieldset>
+        <p class="mh2-choose-note">Skin moves — choose ${s.moveChoices}${s.moveNote ? ` <em>(${esc(s.moveNote)})</em>` : ""}</p>
+        ${moveRows || "<p>This skin has no moves yet.</p>"}
       </div>`;
 
     const result = await foundry.applications.api.DialogV2.prompt({
@@ -375,6 +409,7 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
       "system.look": result.look,
       "system.eyes": result.eyes,
       "system.origin": result.origin,
+      "system.customLabel": s.customLabel,
       "system.darkestSelf": s.darkestSelf,
       "system.sexMove": s.sexMove,
       "system.backstory": s.backstory
@@ -396,7 +431,7 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
         name: m.name,
         type: "move",
         img: m.img || undefined,
-        system: { stat: m.stat, category: "skin", bonus: m.bonus ?? 0, description: m.description }
+        system: { stat: m.stat, category: "skin", bonus: m.bonus ?? 0, group: m.group ?? "", description: m.description }
       }));
     if (toCreate.length) await this.actor.createEmbeddedDocuments("Item", toCreate);
 
@@ -477,7 +512,7 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
             return `
               <label class="mh2-choice">
                 <input type="checkbox" name="move" value="${pool.key}:${i}">
-                ${esc(m.name)}${m.stat ? ` <em>(${esc(MH2.stats[m.stat] ?? m.stat)})</em>` : ""}
+                ${esc(m.name)}${m.group ? ` <em>[${esc(m.group)}]</em>` : ""}${m.stat ? ` <em>(${esc(MH2.stats[m.stat] ?? m.stat)})</em>` : ""}
               </label>`;
           }).join("");
         if (rows) sections.push(`<fieldset><legend>${esc(pool.name)}</legend>${rows}</fieldset>`);
@@ -504,7 +539,7 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
             name: m.name,
             type: "move",
             img: m.img || undefined,
-            system: { stat: m.stat, category: "skin", bonus: m.bonus ?? 0, description: m.description }
+            system: { stat: m.stat, category: "skin", bonus: m.bonus ?? 0, group: m.group ?? "", description: m.description }
           }));
           if (creates.length) await actor.createEmbeddedDocuments("Item", creates);
         }

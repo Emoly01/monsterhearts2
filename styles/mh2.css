@@ -494,3 +494,32 @@
   flex: 0 0 auto;
 }
 .monsterhearts2 .mh2-bonus-input { width: 3rem; text-align: center; }
+
+/* v0.5: move groups + custom tracker */
+.monsterhearts2 .mh2-subhead {
+  font-family: Georgia, serif;
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--mh2-bone-dim);
+  border-bottom: 1px dotted var(--mh2-line);
+  margin: 0.5rem 0 0.2rem;
+  padding-bottom: 0.15rem;
+}
+.monsterhearts2 .mh2-custom-label {
+  font-family: Georgia, serif;
+  font-size: 0.9rem;
+  letter-spacing: 0.08em;
+  background: transparent;
+  border: none;
+  border-bottom: 1px dashed var(--mh2-line);
+  border-radius: 0;
+  flex: 1;
+  margin-right: 0.5rem;
+}
+.monsterhearts2 .mh2-custom-label:focus { border-bottom-color: var(--mh2-thread); box-shadow: none; }
+.monsterhearts2 .mh2-group-input { width: 6rem; flex: 0 0 auto; }
+.mh2-skin-dialog .mh2-choose-note {
+  font-size: 0.8rem;
+  margin: 0 0 0.4rem;
+}

@@ -92,6 +92,19 @@
 
     </div>
 
+    <section class="mh2-panel mh2-custom">
+      <header class="mh2-panel-header">
+        <input class="mh2-custom-label" type="text" name="system.customLabel" value="{{system.customLabel}}" placeholder="Custom tracker — Hungers, Promises…">
+        <a class="mh2-btn" data-action="addCustom" title="Add entry">＋</a>
+      </header>
+      {{#each system.custom}}
+      <div class="mh2-row">
+        <input type="text" name="system.custom.{{@index}}" value="{{this}}" placeholder="…">
+        <a class="mh2-btn mh2-del" data-action="deleteCustom" data-index="{{@index}}" title="Delete"><i class="fa-solid fa-xmark"></i></a>
+      </div>
+      {{/each}}
+    </section>
+
     <section class="mh2-panel mh2-moves">
       <header class="mh2-panel-header">
         <h2>Basic Moves</h2>
@@ -124,21 +137,26 @@
           <a class="mh2-btn" data-action="createMove" data-category="skin" title="New skin move">＋</a>
         </div>
       </header>
-      {{#each skinMoves}}
+      {{#if hasSkinMoves}}
+      {{#each skinMoveGroups}}
+      {{#if this.label}}<h3 class="mh2-subhead">{{this.label}}</h3>{{/if}}
+      {{#each this.moves}}
       <div class="mh2-move" data-item-id="{{this.id}}">
         <a class="mh2-move-name" data-action="rollMove" title="Roll / post to chat">{{this.name}}</a>
         {{#if this.bonus}}<span class="mh2-move-bonus">{{this.bonusLabel}}</span>{{/if}}
         {{#if this.stat}}
-        <span class="mh2-move-stat">{{lookup ../statLabels this.stat}}</span>
+        <span class="mh2-move-stat">{{lookup ../../statLabels this.stat}}</span>
         {{else}}
         <span class="mh2-move-stat mh2-move-stat-none">—</span>
         {{/if}}
         <a class="mh2-btn" data-action="editMove" title="Edit"><i class="fa-solid fa-pen"></i></a>
         <a class="mh2-btn mh2-del" data-action="deleteMove" title="Delete"><i class="fa-solid fa-trash"></i></a>
       </div>
+      {{/each}}
+      {{/each}}
       {{else}}
       <p class="mh2-empty">No skin moves yet — your Skin's signature tricks go here.</p>
-      {{/each}}
+      {{/if}}
     </section>
 
     <section class="mh2-panel">

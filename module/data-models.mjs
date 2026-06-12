@@ -49,6 +49,10 @@ export class CharacterData extends foundry.abstract.TypeDataModel {
 
       conditions: new ArrayField(new StringField({ required: true, blank: true })),
 
+      /** Skin-specific tracker, e.g. the Ghoul's Hungers or the Fae's promises. */
+      customLabel: new StringField({ required: true, blank: true }),
+      custom: new ArrayField(new StringField({ required: true, blank: true })),
+
       strings: new ArrayField(new SchemaField({
         name: new StringField({ required: true, blank: true }),
         count: new NumberField({ required: true, integer: true, min: 0, initial: 1 })
@@ -84,6 +88,8 @@ export class MoveData extends foundry.abstract.TypeDataModel {
       category: new StringField({ required: true, blank: false, initial: "skin" }),
       /** Flat bonus this move adds to its own roll, e.g. +1. */
       bonus: new NumberField({ required: true, integer: true, initial: 0 }),
+      /** Optional grouping label, e.g. "Hexes", "Bargains". */
+      group: new StringField({ required: true, blank: true }),
       description: new HTMLField()
     };
   }
@@ -110,6 +116,9 @@ export class SkinData extends foundry.abstract.TypeDataModel {
         b: statLine()
       }),
 
+      /** Name of the character's custom tracker this skin uses, e.g. "Hungers". */
+      customLabel: new StringField({ required: true, blank: true }),
+
       /** How many non-automatic skin moves to pick at creation. */
       moveChoices: new NumberField({ required: true, integer: true, min: 0, initial: 1 }),
       /** Free-text rule shown in the chooser, e.g. "You get Faery Contract, and choose one more". */
@@ -121,6 +130,7 @@ export class SkinData extends foundry.abstract.TypeDataModel {
         img: new StringField({ required: true, blank: true }),
         stat: new StringField({ required: true, blank: true }),
         bonus: new NumberField({ required: true, integer: true, initial: 0 }),
+        group: new StringField({ required: true, blank: true }),
         granted: new BooleanField({ initial: false }),
         description: new StringField({ required: true, blank: true })
       })),

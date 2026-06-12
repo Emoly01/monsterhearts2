@@ -108,6 +108,8 @@ export class MH2SkinSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
       name: dropped.name,
       img: dropped.img ?? "",
       stat: dropped.system?.stat ?? "",
+      bonus: dropped.system?.bonus ?? 0,
+      group: dropped.system?.group ?? "",
       granted: false,
       description: dropped.system?.description ?? ""
     });

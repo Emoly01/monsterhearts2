@@ -34,6 +34,7 @@
       <label class="mh2-field"><span>Looks</span><input type="text" name="system.looks" value="{{system.looks}}" placeholder="lithe, guarded, coy…"></label>
       <label class="mh2-field"><span>Eyes</span><input type="text" name="system.eyes" value="{{system.eyes}}" placeholder="calculating eyes, smirking eyes…"></label>
       <label class="mh2-field"><span>Origins</span><input type="text" name="system.origins" value="{{system.origins}}" placeholder="taught by grandma, awoken…"></label>
+      <label class="mh2-field"><span>Tracker</span><input type="text" name="system.customLabel" value="{{system.customLabel}}" placeholder="e.g. Hungers — names the custom tracker on the character sheet"></label>
     </section>
 
     <section class="mh2-panel mh2-skin-drop">
@@ -48,6 +49,7 @@
       {{#each system.moves}}
       <div class="mh2-row mh2-skinmove-row">
         <input type="text" name="system.moves.{{@index}}.name" value="{{this.name}}" placeholder="Move name">
+        <input class="mh2-group-input" type="text" name="system.moves.{{@index}}.group" value="{{this.group}}" placeholder="group" title="Optional group, e.g. Hexes">
         {{#if this.stat}}
         <span class="mh2-move-stat">{{lookup ../statLabels this.stat}}</span>
         {{else}}

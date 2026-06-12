@@ -523,3 +523,26 @@
   font-size: 0.8rem;
   margin: 0 0 0.4rem;
 }
+
+/* v0.6: readable move text in dialogs + skin picker */
+.mh2-skin-dialog .mh2-choice-block { margin-bottom: 0.35rem; }
+.mh2-skin-dialog .mh2-move-details { margin: 0 0 0.2rem 1.55rem; }
+.mh2-skin-dialog .mh2-move-details summary {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.65;
+  cursor: pointer;
+}
+.mh2-skin-dialog .mh2-move-details summary:hover { opacity: 1; }
+.mh2-skin-dialog .mh2-move-desc {
+  font-size: 0.82rem;
+  line-height: 1.4;
+  border-left: 2px solid #7e2a44;
+  padding: 0.25rem 0.5rem;
+  margin-top: 0.2rem;
+  max-height: 12rem;
+  overflow-y: auto;
+}
+.mh2-skin-dialog .mh2-move-desc ul { margin: 0.2rem 0 0.2rem 1.1rem; padding: 0; }
+.monsterhearts2 .mh2-skin-picker { flex: 1; }

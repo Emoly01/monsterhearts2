@@ -59,6 +59,8 @@ export class CharacterData extends foundry.abstract.TypeDataModel {
       })),
 
       advancements: new StringField({ required: true, blank: true }),
+      /** Indices of skin advancement lines already taken (each is once-only). */
+      advancementsTaken: new ArrayField(new NumberField({ required: true, integer: true, min: 0 })),
 
       darkestSelf: new HTMLField(),
       sexMove: new HTMLField(),

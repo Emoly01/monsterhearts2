@@ -5,7 +5,19 @@
     <div class="mh2-identity">
       <input class="mh2-name" type="text" name="name" value="{{actor.name}}" placeholder="Name">
       <div class="mh2-identity-grid">
-        <label><span>Skin</span><input type="text" name="system.skin" value="{{system.skin}}" placeholder="The Witch…">{{#if skinItem}}<a class="mh2-btn" data-action="openSkin" title="Open this character's skin"><i class="fa-solid fa-book"></i></a>{{/if}}</label>
+        <label><span>Skin</span>
+          <select class="mh2-skin-picker" title="Pick a skin to apply it to this character">
+            {{#if skinMatched}}
+            <option value=""></option>
+            {{else}}
+            <option value="" selected>{{#if system.skin}}{{system.skin}}{{else}}— apply a skin —{{/if}}</option>
+            {{/if}}
+            {{#each skinOptions}}
+            <option value="{{this.id}}"{{#if this.selected}} selected{{/if}}>{{this.name}}</option>
+            {{/each}}
+          </select>
+          {{#if skinItem}}<a class="mh2-btn" data-action="openSkin" title="Open this character's skin"><i class="fa-solid fa-book"></i></a>{{/if}}
+        </label>
         <label><span>Look</span><input type="text" name="system.look" value="{{system.look}}" placeholder="guarded, coy…"></label>
         <label><span>Eyes</span><input type="text" name="system.eyes" value="{{system.eyes}}" placeholder="wicked eyes…"></label>
         <label><span>Origin</span><input type="text" name="system.origin" value="{{system.origin}}" placeholder="awoken…"></label>

@@ -102,6 +102,13 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     context.xpFull = sys.experience.value >= sys.experience.max;
     context.skinItem = actor.items.find(i => i.type === "skin") ?? null;
 
+    const worldSkins = game.items.filter(i => i.type === "skin")
+      .sort((a, b) => a.name.localeCompare(b.name));
+    context.skinOptions = worldSkins.map(s => ({
+      id: s.id, name: s.name, selected: s.name === sys.skin
+    }));
+    context.skinMatched = context.skinOptions.some(o => o.selected);
+
     const enrichOpts = { relativeTo: actor, secrets: actor.isOwner };
     context.enriched = {
       darkestSelf: await TE.enrichHTML(sys.darkestSelf, enrichOpts),
@@ -111,6 +118,20 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     };
 
     return context;
+  }
+
+  /** @override */
+  _onRender(context, options) {
+    super._onRender(context, options);
+    const picker = this.element.querySelector(".mh2-skin-picker");
+    picker?.addEventListener("change", async ev => {
+      const id = ev.currentTarget.value;
+      if (!id) return;
+      const skin = game.items.get(id);
+      if (!skin) return;
+      const applied = await this.#applySkin(skin);
+      if (!applied) this.render(); // dialog cancelled — snap the select back
+    });
   }
 
   /* -------------------------------------------- */
@@ -145,6 +166,18 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
   #getMove(target) {
     const id = target.closest("[data-item-id]")?.dataset.itemId;
     return this.actor.items.get(id);
+  }
+
+  /**
+   * The character's current skin: prefer the live world item (matched by
+   * name) so later edits to the playbook are seen; fall back to the
+   * embedded snapshot taken when the skin was applied.
+   */
+  #resolveSkin() {
+    const embedded = this.actor.items.find(i => i.type === "skin") ?? null;
+    const name = embedded?.name || this.actor.system.skin;
+    const world = name ? game.items.find(i => i.type === "skin" && i.name === name) : null;
+    return world ?? embedded;
   }
 
   /* -------------------------------------------- */
@@ -304,7 +337,7 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
   }
 
   static async #onOpenSkin(event, target) {
-    return this.actor.items.find(i => i.type === "skin")?.sheet.render(true);
+    return this.#resolveSkin()?.sheet.render(true);
   }
 
   static async #onAdvance(event, target) {
@@ -352,10 +385,13 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
       const g = (m.group ?? "").trim() || "Moves";
       if (!dlgGroups.has(g)) dlgGroups.set(g, []);
       dlgGroups.get(g).push(`
-        <label class="mh2-choice">
-          <input type="checkbox" name="move" value="${i}" ${m.granted ? "checked disabled" : ""}>
-          ${esc(m.name)}${m.stat ? ` <em>(${esc(MH2.stats[m.stat] ?? m.stat)})</em>` : ""}${m.granted ? " — automatic" : ""}
-        </label>`);
+        <div class="mh2-choice-block">
+          <label class="mh2-choice">
+            <input type="checkbox" name="move" value="${i}" ${m.granted ? "checked disabled" : ""}>
+            ${esc(m.name)}${m.stat ? ` <em>(${esc(MH2.stats[m.stat] ?? m.stat)})</em>` : ""}${m.granted ? " — automatic" : ""}
+          </label>
+          ${m.description ? `<details class="mh2-move-details"><summary>read move</summary><div class="mh2-move-desc">${m.description}</div></details>` : ""}
+        </div>`);
     });
     const moveRows = [...dlgGroups.entries()]
       .sort((a, b) => (a[0] === "Moves" ? -1 : b[0] === "Moves" ? 1 : a[0].localeCompare(b[0])))
@@ -410,6 +446,7 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
       "system.eyes": result.eyes,
       "system.origin": result.origin,
       "system.customLabel": s.customLabel,
+      "system.advancementsTaken": [],
       "system.darkestSelf": s.darkestSelf,
       "system.sexMove": s.sexMove,
       "system.backstory": s.backstory
@@ -436,6 +473,7 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     if (toCreate.length) await this.actor.createEmbeddedDocuments("Item", toCreate);
 
     ui.notifications.info(`${this.actor.name} is now ${skin.name}.`);
+    return true;
   }
 
   /* -------------------------------------------- */
@@ -445,18 +483,19 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
   async #advance() {
     const actor = this.actor;
     const DialogV2 = foundry.applications.api.DialogV2;
-    const skinItem = actor.items.find(i => i.type === "skin");
+    const skinItem = this.#resolveSkin();
     const advs = skinItem?.system.advancements ?? [];
+    const taken = new Set(actor.system.advancementsTaken ?? []);
 
-    const rows = advs.map((a, i) => `
+    const rows = advs.map((a, i) => taken.has(i) ? "" : `
       <label class="mh2-choice">
         <input type="radio" name="adv" value="${i}">
-        ${esc(a.label)}${a.grantsMove ? ' <em>(grants a move)</em>' : ""}
+        ${esc(a.label)}${a.grantsMove || a.anySkin ? ' <em>(grants a move)</em>' : ""}
       </label>`).join("");
 
     const content = `
       <div class="mh2-skin-dialog">
-        ${rows ? `<fieldset><legend>Choose an advancement</legend>${rows}</fieldset>` : "<p>This character's skin has no advancement list.</p>"}
+        ${rows.trim() ? `<fieldset><legend>Choose an advancement</legend>${rows}</fieldset>` : "<p>No advancements left on this skin's list — write a custom one below.</p>"}
         <div class="form-group"><label>Or custom</label><input name="custom" placeholder="e.g. +1 Hot"></div>
       </div>`;
 
@@ -479,11 +518,13 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     let label = res.custom;
     let grantsMove = false;
     let anySkin = false;
+    let usedIndex = null;
     if (!label && res.index !== "") {
       const a = advs[Number(res.index)];
       label = a?.label ?? "";
       grantsMove = !!a?.grantsMove || !!a?.anySkin;
       anySkin = !!a?.anySkin;
+      usedIndex = Number(res.index);
     }
     if (!label) return ui.notifications.warn("Pick an advancement or write a custom one.");
 
@@ -497,6 +538,7 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
       if (skinItem) pools.push({ key: "self", name: skinItem.name, moves: skinItem.system.moves ?? [] });
       if (anySkin) {
         for (const world of game.items.filter(i => i.type === "skin")) {
+          if (skinItem && world.id === skinItem.id) continue;
           pools.push({ key: world.id, name: world.name, moves: world.system.moves ?? [] });
         }
       }
@@ -510,10 +552,13 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
           .map(({ m, i }) => {
             seen.add(m.name);
             return `
-              <label class="mh2-choice">
-                <input type="checkbox" name="move" value="${pool.key}:${i}">
-                ${esc(m.name)}${m.group ? ` <em>[${esc(m.group)}]</em>` : ""}${m.stat ? ` <em>(${esc(MH2.stats[m.stat] ?? m.stat)})</em>` : ""}
-              </label>`;
+              <div class="mh2-choice-block">
+                <label class="mh2-choice">
+                  <input type="checkbox" name="move" value="${pool.key}:${i}">
+                  ${esc(m.name)}${m.group ? ` <em>[${esc(m.group)}]</em>` : ""}${m.stat ? ` <em>(${esc(MH2.stats[m.stat] ?? m.stat)})</em>` : ""}
+                </label>
+                ${m.description ? `<details class="mh2-move-details"><summary>read move</summary><div class="mh2-move-desc">${m.description}</div></details>` : ""}
+              </div>`;
           }).join("");
         if (rows) sections.push(`<fieldset><legend>${esc(pool.name)}</legend>${rows}</fieldset>`);
       }
@@ -549,10 +594,14 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     }
 
     const prev = actor.system.advancements;
-    await actor.update({
+    const update = {
       "system.advancements": prev ? `${prev}; ${label}` : label,
       "system.experience.value": 0
-    });
+    };
+    if (usedIndex !== null) {
+      update["system.advancementsTaken"] = [...(actor.system.advancementsTaken ?? []), usedIndex];
+    }
+    await actor.update(update);
 
     return ChatMessage.implementation.create({
       speaker: ChatMessage.implementation.getSpeaker({ actor }),

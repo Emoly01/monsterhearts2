@@ -1,0 +1,22 @@
+<div class="mh2-sheet mh2-item-sheet">
+
+  <header class="mh2-header">
+    <img class="mh2-portrait mh2-portrait-sm" data-action="editImage" src="{{item.img}}" alt="{{item.name}}" title="Change icon">
+    <div class="mh2-identity">
+      <input class="mh2-name" type="text" name="name" value="{{item.name}}" placeholder="Move name">
+      <label class="mh2-stat-select">
+        <span>Rolls with</span>
+        <select name="system.stat">
+          {{#each statOptions}}
+          <option value="{{this.value}}"{{#if this.selected}} selected{{/if}}>{{this.label}}</option>
+          {{/each}}
+        </select>
+      </label>
+    </div>
+  </header>
+
+  <div class="mh2-item-body">
+    <prose-mirror name="system.description" value="{{system.description}}" toggled>{{{enrichedDescription}}}</prose-mirror>
+  </div>
+
+</div>

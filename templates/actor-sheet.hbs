@@ -1,0 +1,142 @@
+<div class="mh2-sheet">
+
+  <header class="mh2-header">
+    <img class="mh2-portrait" data-action="editImage" src="{{actor.img}}" alt="{{actor.name}}" title="Change portrait">
+    <div class="mh2-identity">
+      <input class="mh2-name" type="text" name="name" value="{{actor.name}}" placeholder="Name">
+      <div class="mh2-identity-grid">
+        <label><span>Skin</span><input type="text" name="system.skin" value="{{system.skin}}" placeholder="The Witch…"></label>
+        <label><span>Look</span><input type="text" name="system.look" value="{{system.look}}" placeholder="guarded, coy…"></label>
+        <label><span>Eyes</span><input type="text" name="system.eyes" value="{{system.eyes}}" placeholder="wicked eyes…"></label>
+        <label><span>Origin</span><input type="text" name="system.origin" value="{{system.origin}}" placeholder="awoken…"></label>
+      </div>
+    </div>
+  </header>
+
+  <section class="mh2-stats">
+    {{#each statList}}
+    <div class="mh2-stat">
+      <a class="mh2-stat-roll" data-action="rollStat" data-stat="{{this.key}}" title="Roll 2d6 + {{this.label}}">{{this.label}}</a>
+      <input type="number" name="system.stats.{{this.key}}" value="{{this.value}}" step="1">
+    </div>
+    {{/each}}
+  </section>
+
+  <section class="mh2-trackers">
+    <div class="mh2-track">
+      <span class="mh2-track-label">Harm</span>
+      <div class="mh2-pips mh2-pips-harm">
+        {{#each harmPips}}
+        <a class="mh2-pip{{#if this.filled}} filled{{/if}}" data-action="setHarm" data-value="{{this.index}}" title="Harm {{this.index}}"></a>
+        {{/each}}
+      </div>
+    </div>
+    <div class="mh2-track">
+      <span class="mh2-track-label">Experience</span>
+      <div class="mh2-pips mh2-pips-xp">
+        {{#each xpPips}}
+        <a class="mh2-pip{{#if this.filled}} filled{{/if}}" data-action="setXp" data-value="{{this.index}}" title="XP {{this.index}}"></a>
+        {{/each}}
+      </div>
+    </div>
+    <div class="mh2-track mh2-bonuses">
+      <label title="One-shot bonus, consumed by your next roll"><span>Forward</span>
+        <input type="number" name="system.forward" value="{{system.forward}}" step="1">
+      </label>
+      <label title="Applies to every roll until cleared"><span>Ongoing</span>
+        <input type="number" name="system.ongoing" value="{{system.ongoing}}" step="1">
+      </label>
+    </div>
+  </section>
+
+  <div class="mh2-body">
+
+    <div class="mh2-columns">
+
+      <section class="mh2-panel mh2-strings">
+        <header class="mh2-panel-header">
+          <h2>Strings</h2>
+          <a class="mh2-btn" data-action="addString" title="Add a String">＋</a>
+        </header>
+        {{#each system.strings}}
+        <div class="mh2-row mh2-string-row">
+          <input type="text" name="system.strings.{{@index}}.name" value="{{this.name}}" placeholder="On whom?">
+          <a class="mh2-btn" data-action="stringMinus" data-index="{{@index}}" title="Remove one">−</a>
+          <input class="mh2-count" type="number" name="system.strings.{{@index}}.count" value="{{this.count}}" step="1" min="0">
+          <a class="mh2-btn" data-action="stringPlus" data-index="{{@index}}" title="Add one">＋</a>
+          <a class="mh2-btn mh2-spend" data-action="spendString" data-index="{{@index}}" title="Spend a String (posts options to chat)"><i class="fa-solid fa-hand-sparkles"></i></a>
+          <a class="mh2-btn mh2-del" data-action="deleteString" data-index="{{@index}}" title="Delete"><i class="fa-solid fa-xmark"></i></a>
+        </div>
+        {{else}}
+        <p class="mh2-empty">No Strings yet. Tragic. Add one.</p>
+        {{/each}}
+      </section>
+
+      <section class="mh2-panel mh2-conditions">
+        <header class="mh2-panel-header">
+          <h2>Conditions</h2>
+          <a class="mh2-btn" data-action="addCondition" title="Add a Condition">＋</a>
+        </header>
+        {{#each system.conditions}}
+        <div class="mh2-row">
+          <input type="text" name="system.conditions.{{@index}}" value="{{this}}" placeholder="drained, terrified…">
+          <a class="mh2-btn mh2-del" data-action="deleteCondition" data-index="{{@index}}" title="Delete"><i class="fa-solid fa-xmark"></i></a>
+        </div>
+        {{else}}
+        <p class="mh2-empty">No Conditions. For now.</p>
+        {{/each}}
+      </section>
+
+    </div>
+
+    <section class="mh2-panel mh2-moves">
+      <header class="mh2-panel-header">
+        <h2>Moves</h2>
+        <div class="mh2-panel-actions">
+          <a class="mh2-btn mh2-btn-text" data-action="addBasicMoves" title="Add the six basic moves">basics</a>
+          <a class="mh2-btn" data-action="createMove" title="New move">＋</a>
+        </div>
+      </header>
+      {{#each moves}}
+      <div class="mh2-move" data-item-id="{{this.id}}">
+        <a class="mh2-move-name" data-action="rollMove" title="Roll / post to chat">{{this.name}}</a>
+        {{#if this.system.stat}}
+        <span class="mh2-move-stat">{{lookup ../statLabels this.system.stat}}</span>
+        {{else}}
+        <span class="mh2-move-stat mh2-move-stat-none">—</span>
+        {{/if}}
+        <a class="mh2-btn" data-action="editMove" title="Edit"><i class="fa-solid fa-pen"></i></a>
+        <a class="mh2-btn mh2-del" data-action="deleteMove" title="Delete"><i class="fa-solid fa-trash"></i></a>
+      </div>
+      {{else}}
+      <p class="mh2-empty">No moves yet — hit <em>basics</em> to seed the six basic moves, then drag in your skin moves.</p>
+      {{/each}}
+    </section>
+
+    <section class="mh2-panel">
+      <header class="mh2-panel-header"><h2>Darkest Self</h2></header>
+      <prose-mirror name="system.darkestSelf" value="{{system.darkestSelf}}" toggled>{{{enriched.darkestSelf}}}</prose-mirror>
+    </section>
+
+    <section class="mh2-panel">
+      <header class="mh2-panel-header"><h2>Sex Move</h2></header>
+      <prose-mirror name="system.sexMove" value="{{system.sexMove}}" toggled>{{{enriched.sexMove}}}</prose-mirror>
+    </section>
+
+    <section class="mh2-panel">
+      <header class="mh2-panel-header"><h2>Backstory</h2></header>
+      <prose-mirror name="system.backstory" value="{{system.backstory}}" toggled>{{{enriched.backstory}}}</prose-mirror>
+    </section>
+
+    <section class="mh2-panel">
+      <header class="mh2-panel-header"><h2>Advancements</h2></header>
+      <input type="text" name="system.advancements" value="{{system.advancements}}" placeholder="e.g. +1 Dark · took Sanctuary · …">
+    </section>
+
+    <section class="mh2-panel">
+      <header class="mh2-panel-header"><h2>Notes</h2></header>
+      <prose-mirror name="system.notes" value="{{system.notes}}" toggled>{{{enriched.notes}}}</prose-mirror>
+    </section>
+
+  </div>
+</div>

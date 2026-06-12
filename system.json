@@ -1,0 +1,44 @@
+{
+  "id": "monsterhearts2",
+  "title": "Monsterhearts 2 (Hausgemacht)",
+  "description": "A lightweight, personal-table implementation of Monsterhearts 2. Stats, moves, Strings, Conditions, Harm, and Experience — functional first, fancy later.",
+  "version": "0.1.0",
+  "compatibility": {
+    "minimum": "13",
+    "verified": "14"
+  },
+  "authors": [
+    {
+      "name": "Emily (with a fox on the couch)"
+    }
+  ],
+  "esmodules": ["mh2.mjs"],
+  "styles": ["styles/mh2.css"],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    }
+  ],
+  "documentTypes": {
+    "Actor": {
+      "character": {
+        "htmlFields": ["darkestSelf", "sexMove", "backstory", "notes"]
+      }
+    },
+    "Item": {
+      "move": {
+        "htmlFields": ["description"]
+      }
+    }
+  },
+  "socket": false,
+  "initiative": "2d6",
+  "grid": {
+    "distance": 5,
+    "units": "ft"
+  },
+  "primaryTokenAttribute": "harm",
+  "secondaryTokenAttribute": "experience"
+}

@@ -5,7 +5,7 @@
     <div class="mh2-identity">
       <input class="mh2-name" type="text" name="name" value="{{actor.name}}" placeholder="Name">
       <div class="mh2-identity-grid">
-        <label><span>Skin</span><input type="text" name="system.skin" value="{{system.skin}}" placeholder="The Witch…"></label>
+        <label><span>Skin</span><input type="text" name="system.skin" value="{{system.skin}}" placeholder="The Witch…">{{#if skinItem}}<a class="mh2-btn" data-action="openSkin" title="Open this character's skin"><i class="fa-solid fa-book"></i></a>{{/if}}</label>
         <label><span>Look</span><input type="text" name="system.look" value="{{system.look}}" placeholder="guarded, coy…"></label>
         <label><span>Eyes</span><input type="text" name="system.eyes" value="{{system.eyes}}" placeholder="wicked eyes…"></label>
         <label><span>Origin</span><input type="text" name="system.origin" value="{{system.origin}}" placeholder="awoken…"></label>
@@ -38,6 +38,9 @@
         <a class="mh2-pip{{#if this.filled}} filled{{/if}}" data-action="setXp" data-value="{{this.index}}" title="XP {{this.index}}"></a>
         {{/each}}
       </div>
+      {{#if xpFull}}
+      <a class="mh2-btn mh2-btn-text mh2-advance" data-action="advance" title="Spend your full experience track">advance!</a>
+      {{/if}}
     </div>
     <div class="mh2-track mh2-bonuses">
       <label title="One-shot bonus, consumed by your next roll"><span>Forward</span>

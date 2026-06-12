@@ -3,6 +3,12 @@ import { MH2 } from "./config.mjs";
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
 
+function esc(str) {
+  return String(str ?? "").replace(/[&<>"']/g, c => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  })[c]);
+}
+
 export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
 
   /** @override */
@@ -27,7 +33,9 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
       addBasicMoves: MH2ActorSheet.#onAddBasicMoves,
       rollMove: MH2ActorSheet.#onRollMove,
       editMove: MH2ActorSheet.#onEditMove,
-      deleteMove: MH2ActorSheet.#onDeleteMove
+      deleteMove: MH2ActorSheet.#onDeleteMove,
+      advance: MH2ActorSheet.#onAdvance,
+      openSkin: MH2ActorSheet.#onOpenSkin
     }
   };
 
@@ -70,6 +78,9 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
       .sort((a, b) => (a.sort ?? 0) - (b.sort ?? 0) || a.name.localeCompare(b.name));
     context.basicMoves = allMoves.filter(m => m.system.category === "basic");
     context.skinMoves = allMoves.filter(m => m.system.category !== "basic");
+
+    context.xpFull = sys.experience.value >= sys.experience.max;
+    context.skinItem = actor.items.find(i => i.type === "skin") ?? null;
 
     const enrichOpts = { relativeTo: actor, secrets: actor.isOwner };
     context.enriched = {
@@ -252,5 +263,232 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
       rejectClose: false
     });
     if (confirmed) return move.delete();
+  }
+
+  static async #onOpenSkin(event, target) {
+    return this.actor.items.find(i => i.type === "skin")?.sheet.render(true);
+  }
+
+  static async #onAdvance(event, target) {
+    return this.#advance();
+  }
+
+  /* -------------------------------------------- */
+  /*  Drag & drop                                 */
+  /* -------------------------------------------- */
+
+  /** @override */
+  async _onDropItem(event, itemOrData) {
+    const item = itemOrData instanceof Item
+      ? itemOrData
+      : await Item.implementation.fromDropData(itemOrData);
+    if (!item) return;
+
+    // Dropping a skin starts the apply-skin interview.
+    if (item.type === "skin" && item.parent !== this.actor) {
+      return this.#applySkin(item);
+    }
+    return super._onDropItem(event, itemOrData);
+  }
+
+  /* -------------------------------------------- */
+  /*  Skin application                            */
+  /* -------------------------------------------- */
+
+  /**
+   * Interview the player (stat line, look/eyes/origin, skin moves), then write
+   * the skin onto the character: stats, identity, Darkest Self, Sex Move,
+   * Backstory, an embedded copy of the skin, and the chosen move items.
+   */
+  async #applySkin(skin) {
+    const s = skin.system;
+    const statLine = sl => `Hot ${sl.hot} · Cold ${sl.cold} · Volatile ${sl.volatile} · Dark ${sl.dark}`;
+    const datalist = (id, csv) => {
+      const opts = (csv ?? "").split(",").map(x => x.trim()).filter(Boolean)
+        .map(x => `<option value="${esc(x)}"></option>`).join("");
+      return `<datalist id="${id}">${opts}</datalist>`;
+    };
+
+    const moveRows = (s.moves ?? []).map((m, i) => `
+      <label class="mh2-choice">
+        <input type="checkbox" name="move" value="${i}" ${m.granted ? "checked disabled" : ""}>
+        ${esc(m.name)}${m.stat ? ` <em>(${esc(MH2.stats[m.stat] ?? m.stat)})</em>` : ""}${m.granted ? " — automatic" : ""}
+      </label>`).join("");
+
+    const content = `
+      <div class="mh2-skin-dialog">
+        <fieldset><legend>Stat line</legend>
+          <label class="mh2-choice"><input type="radio" name="statline" value="a" checked> ${statLine(s.statlines.a)}</label>
+          <label class="mh2-choice"><input type="radio" name="statline" value="b"> ${statLine(s.statlines.b)}</label>
+        </fieldset>
+        <div class="form-group"><label>Look</label><input name="look" list="mh2-dl-look" placeholder="pick or write your own">${datalist("mh2-dl-look", s.looks)}</div>
+        <div class="form-group"><label>Eyes</label><input name="eyes" list="mh2-dl-eyes" placeholder="pick or write your own">${datalist("mh2-dl-eyes", s.eyes)}</div>
+        <div class="form-group"><label>Origin</label><input name="origin" list="mh2-dl-origin" placeholder="pick or write your own">${datalist("mh2-dl-origin", s.origins)}</div>
+        <fieldset><legend>Skin moves — choose ${s.moveChoices}${s.moveNote ? ` <em>(${esc(s.moveNote)})</em>` : ""}</legend>
+          ${moveRows || "<p>This skin has no moves yet.</p>"}
+        </fieldset>
+      </div>`;
+
+    const result = await foundry.applications.api.DialogV2.prompt({
+      window: { title: `Become ${skin.name}` },
+      position: { width: 480 },
+      content,
+      ok: {
+        label: "Apply Skin",
+        icon: "fa-solid fa-mask",
+        callback: (event, button) => {
+          const f = button.form;
+          const chosen = Array.from(f.querySelectorAll('input[name="move"]:checked:not(:disabled)'))
+            .map(el => Number(el.value));
+          return {
+            statline: f.elements.statline.value,
+            look: f.elements.look.value.trim(),
+            eyes: f.elements.eyes.value.trim(),
+            origin: f.elements.origin.value.trim(),
+            chosen
+          };
+        }
+      },
+      rejectClose: false
+    });
+    if (!result) return;
+
+    const line = s.statlines[result.statline] ?? s.statlines.a;
+    await this.actor.update({
+      "system.skin": skin.name,
+      "system.stats.hot": line.hot,
+      "system.stats.cold": line.cold,
+      "system.stats.volatile": line.volatile,
+      "system.stats.dark": line.dark,
+      "system.look": result.look,
+      "system.eyes": result.eyes,
+      "system.origin": result.origin,
+      "system.darkestSelf": s.darkestSelf,
+      "system.sexMove": s.sexMove,
+      "system.backstory": s.backstory
+    });
+
+    // Replace any previously embedded skin with a copy of this one.
+    const oldSkins = this.actor.items.filter(i => i.type === "skin").map(i => i.id);
+    if (oldSkins.length) await this.actor.deleteEmbeddedDocuments("Item", oldSkins);
+    await this.actor.createEmbeddedDocuments("Item", [skin.toObject()]);
+
+    // Create the granted + chosen moves (skipping any the actor already has).
+    const indices = new Set(result.chosen);
+    (s.moves ?? []).forEach((m, i) => { if (m.granted) indices.add(i); });
+    const existing = new Set(this.actor.items.filter(i => i.type === "move").map(i => i.name));
+    const toCreate = [...indices]
+      .map(i => s.moves[i])
+      .filter(m => m && m.name && !existing.has(m.name))
+      .map(m => ({
+        name: m.name,
+        type: "move",
+        img: m.img || undefined,
+        system: { stat: m.stat, category: "skin", description: m.description }
+      }));
+    if (toCreate.length) await this.actor.createEmbeddedDocuments("Item", toCreate);
+
+    ui.notifications.info(`${this.actor.name} is now ${skin.name}.`);
+  }
+
+  /* -------------------------------------------- */
+  /*  Advancement                                 */
+  /* -------------------------------------------- */
+
+  async #advance() {
+    const actor = this.actor;
+    const DialogV2 = foundry.applications.api.DialogV2;
+    const skinItem = actor.items.find(i => i.type === "skin");
+    const advs = skinItem?.system.advancements ?? [];
+
+    const rows = advs.map((a, i) => `
+      <label class="mh2-choice">
+        <input type="radio" name="adv" value="${i}">
+        ${esc(a.label)}${a.grantsMove ? ' <em>(grants a move)</em>' : ""}
+      </label>`).join("");
+
+    const content = `
+      <div class="mh2-skin-dialog">
+        ${rows ? `<fieldset><legend>Choose an advancement</legend>${rows}</fieldset>` : "<p>This character's skin has no advancement list.</p>"}
+        <div class="form-group"><label>Or custom</label><input name="custom" placeholder="e.g. +1 Hot"></div>
+      </div>`;
+
+    const res = await DialogV2.prompt({
+      window: { title: `Advance ${actor.name}` },
+      position: { width: 440 },
+      content,
+      ok: {
+        label: "Advance",
+        icon: "fa-solid fa-arrow-trend-up",
+        callback: (event, button) => ({
+          index: button.form.elements.adv?.value ?? "",
+          custom: button.form.elements.custom.value.trim()
+        })
+      },
+      rejectClose: false
+    });
+    if (!res) return;
+
+    let label = res.custom;
+    let grantsMove = false;
+    if (!label && res.index !== "") {
+      const a = advs[Number(res.index)];
+      label = a?.label ?? "";
+      grantsMove = !!a?.grantsMove;
+    }
+    if (!label) return ui.notifications.warn("Pick an advancement or write a custom one.");
+
+    // Move-granting advancement: offer the remaining skin moves.
+    if (grantsMove && skinItem) {
+      const existing = new Set(actor.items.filter(i => i.type === "move").map(i => i.name));
+      const remaining = (skinItem.system.moves ?? [])
+        .map((m, i) => ({ m, i }))
+        .filter(({ m }) => m.name && !existing.has(m.name));
+
+      if (remaining.length) {
+        const moveRows = remaining.map(({ m, i }) => `
+          <label class="mh2-choice">
+            <input type="checkbox" name="move" value="${i}">
+            ${esc(m.name)}${m.stat ? ` <em>(${esc(MH2.stats[m.stat] ?? m.stat)})</em>` : ""}
+          </label>`).join("");
+        const picked = await DialogV2.prompt({
+          window: { title: "Take a new skin move" },
+          position: { width: 420 },
+          content: `<div class="mh2-skin-dialog"><fieldset><legend>Choose</legend>${moveRows}</fieldset></div>`,
+          ok: {
+            label: "Take",
+            callback: (event, button) =>
+              Array.from(button.form.querySelectorAll('input[name="move"]:checked')).map(el => Number(el.value))
+          },
+          rejectClose: false
+        });
+        if (picked?.length) {
+          const creates = picked.map(i => skinItem.system.moves[i]).map(m => ({
+            name: m.name,
+            type: "move",
+            img: m.img || undefined,
+            system: { stat: m.stat, category: "skin", description: m.description }
+          }));
+          await actor.createEmbeddedDocuments("Item", creates);
+        }
+      } else {
+        ui.notifications.info("No remaining skin moves to take.");
+      }
+    }
+
+    const prev = actor.system.advancements;
+    await actor.update({
+      "system.advancements": prev ? `${prev}; ${label}` : label,
+      "system.experience.value": 0
+    });
+
+    return ChatMessage.implementation.create({
+      speaker: ChatMessage.implementation.getSpeaker({ actor }),
+      content: `
+        <div class="mh2-roll-card mh2-string-card">
+          <header class="mh2-card-header"><h3>Advancement</h3></header>
+          <p><strong>${esc(actor.name)}</strong> advances: ${esc(label)}. The experience track resets.</p>
+        </div>`
+    });
   }
 }

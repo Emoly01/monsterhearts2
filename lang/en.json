@@ -1,4 +1,5 @@
 {
   "TYPES.Actor.character": "Character",
-  "TYPES.Item.move": "Move"
+  "TYPES.Item.move": "Move",
+  "TYPES.Item.skin": "Skin"
 }

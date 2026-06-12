@@ -1,0 +1,106 @@
+<div class="mh2-sheet mh2-skin-sheet">
+
+  <header class="mh2-header">
+    <img class="mh2-portrait mh2-portrait-sm" data-action="editImage" src="{{item.img}}" alt="{{item.name}}" title="Change icon">
+    <div class="mh2-identity">
+      <input class="mh2-name" type="text" name="name" value="{{item.name}}" placeholder="The Witch, The Fae…">
+    </div>
+  </header>
+
+  <div class="mh2-body">
+
+    <section class="mh2-panel">
+      <header class="mh2-panel-header"><h2>Stat Lines</h2></header>
+      <div class="mh2-statline">
+        <span class="mh2-statline-tag">A</span>
+        <label>Hot <input type="number" name="system.statlines.a.hot" value="{{system.statlines.a.hot}}" step="1"></label>
+        <label>Cold <input type="number" name="system.statlines.a.cold" value="{{system.statlines.a.cold}}" step="1"></label>
+        <label>Volatile <input type="number" name="system.statlines.a.volatile" value="{{system.statlines.a.volatile}}" step="1"></label>
+        <label>Dark <input type="number" name="system.statlines.a.dark" value="{{system.statlines.a.dark}}" step="1"></label>
+      </div>
+      <div class="mh2-statline">
+        <span class="mh2-statline-tag">B</span>
+        <label>Hot <input type="number" name="system.statlines.b.hot" value="{{system.statlines.b.hot}}" step="1"></label>
+        <label>Cold <input type="number" name="system.statlines.b.cold" value="{{system.statlines.b.cold}}" step="1"></label>
+        <label>Volatile <input type="number" name="system.statlines.b.volatile" value="{{system.statlines.b.volatile}}" step="1"></label>
+        <label>Dark <input type="number" name="system.statlines.b.dark" value="{{system.statlines.b.dark}}" step="1"></label>
+      </div>
+    </section>
+
+    <section class="mh2-panel">
+      <header class="mh2-panel-header"><h2>Identity Suggestions</h2></header>
+      <p class="mh2-hint">Comma-separated lists. They become pick-lists when the skin is applied to a character.</p>
+      <label class="mh2-field"><span>Names</span><input type="text" name="system.names" value="{{system.names}}" placeholder="Abrielle, Annalee, Cordelia…"></label>
+      <label class="mh2-field"><span>Looks</span><input type="text" name="system.looks" value="{{system.looks}}" placeholder="lithe, guarded, coy…"></label>
+      <label class="mh2-field"><span>Eyes</span><input type="text" name="system.eyes" value="{{system.eyes}}" placeholder="calculating eyes, smirking eyes…"></label>
+      <label class="mh2-field"><span>Origins</span><input type="text" name="system.origins" value="{{system.origins}}" placeholder="taught by grandma, awoken…"></label>
+    </section>
+
+    <section class="mh2-panel mh2-skin-drop">
+      <header class="mh2-panel-header">
+        <h2>Skin Moves</h2>
+        <span class="mh2-hint-inline">drag moves from the sidebar &amp; drop them here</span>
+      </header>
+      <div class="mh2-field-row">
+        <label class="mh2-field mh2-field-sm"><span>Choose</span><input type="number" name="system.moveChoices" value="{{system.moveChoices}}" min="0" step="1"></label>
+        <label class="mh2-field"><span>Rule note</span><input type="text" name="system.moveNote" value="{{system.moveNote}}" placeholder="e.g. You get X, and choose one more"></label>
+      </div>
+      {{#each system.moves}}
+      <div class="mh2-row mh2-skinmove-row">
+        <input type="text" name="system.moves.{{@index}}.name" value="{{this.name}}" placeholder="Move name">
+        {{#if this.stat}}
+        <span class="mh2-move-stat">{{lookup ../statLabels this.stat}}</span>
+        {{else}}
+        <span class="mh2-move-stat mh2-move-stat-none">—</span>
+        {{/if}}
+        <label class="mh2-granted" title="Automatically granted when the skin is applied">
+          <input type="checkbox" name="system.moves.{{@index}}.granted" {{#if this.granted}}checked{{/if}}> auto
+        </label>
+        <a class="mh2-btn mh2-del" data-action="deleteSkinMove" data-index="{{@index}}" title="Remove from skin"><i class="fa-solid fa-xmark"></i></a>
+      </div>
+      {{else}}
+      <p class="mh2-empty">No moves yet. Create them as move items, then drop them onto this panel.</p>
+      {{/each}}
+    </section>
+
+    <section class="mh2-panel">
+      <header class="mh2-panel-header">
+        <h2>Advancements</h2>
+        <a class="mh2-btn" data-action="addAdvancement" title="Add advancement">＋</a>
+      </header>
+      <p class="mh2-hint">Offered when the character's experience track fills. Tick "move" if picking it grants a new skin move.</p>
+      {{#each system.advancements}}
+      <div class="mh2-row">
+        <input type="text" name="system.advancements.{{@index}}.label" value="{{this.label}}" placeholder="Add +1 to one of your stats">
+        <label class="mh2-granted" title="Picking this opens the skin move chooser">
+          <input type="checkbox" name="system.advancements.{{@index}}.grantsMove" {{#if this.grantsMove}}checked{{/if}}> move
+        </label>
+        <a class="mh2-btn mh2-del" data-action="deleteAdvancement" data-index="{{@index}}" title="Delete"><i class="fa-solid fa-xmark"></i></a>
+      </div>
+      {{else}}
+      <p class="mh2-empty">No advancements defined yet.</p>
+      {{/each}}
+    </section>
+
+    <section class="mh2-panel">
+      <header class="mh2-panel-header"><h2>Description</h2></header>
+      <prose-mirror name="system.description" value="{{system.description}}" toggled>{{{enriched.description}}}</prose-mirror>
+    </section>
+
+    <section class="mh2-panel">
+      <header class="mh2-panel-header"><h2>Darkest Self</h2></header>
+      <prose-mirror name="system.darkestSelf" value="{{system.darkestSelf}}" toggled>{{{enriched.darkestSelf}}}</prose-mirror>
+    </section>
+
+    <section class="mh2-panel">
+      <header class="mh2-panel-header"><h2>Sex Move</h2></header>
+      <prose-mirror name="system.sexMove" value="{{system.sexMove}}" toggled>{{{enriched.sexMove}}}</prose-mirror>
+    </section>
+
+    <section class="mh2-panel">
+      <header class="mh2-panel-header"><h2>Backstory</h2></header>
+      <prose-mirror name="system.backstory" value="{{system.backstory}}" toggled>{{{enriched.backstory}}}</prose-mirror>
+    </section>
+
+  </div>
+</div>

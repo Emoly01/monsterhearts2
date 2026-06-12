@@ -378,3 +378,107 @@
 }
 .mh2-roll-card.mh2-string-card { border-left: 3px solid #d23b63; }
 .mh2-roll-card ul { margin: 0.2rem 0 0 1.1rem; padding: 0; font-size: 0.85rem; }
+
+/* =====================================================
+   v0.3: skin sheet, dialogs, advancement
+   ===================================================== */
+
+.monsterhearts2 .mh2-hint {
+  font-size: 0.74rem;
+  color: var(--mh2-bone-dim);
+  margin: 0 0 0.4rem 0;
+}
+.monsterhearts2 .mh2-hint-inline {
+  font-size: 0.68rem;
+  color: var(--mh2-bone-dim);
+  font-style: italic;
+}
+.monsterhearts2 .mh2-field {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.3rem;
+  font-size: 0.72rem;
+  color: var(--mh2-bone-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.monsterhearts2 .mh2-field input[type="text"] { flex: 1; }
+.monsterhearts2 .mh2-field-row { display: flex; gap: 0.75rem; margin-bottom: 0.4rem; }
+.monsterhearts2 .mh2-field-sm input { width: 3rem; }
+
+.monsterhearts2 .mh2-statline {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.4rem;
+}
+.monsterhearts2 .mh2-statline-tag {
+  font-family: Georgia, serif;
+  font-size: 1rem;
+  color: var(--mh2-thread);
+  width: 1rem;
+  text-align: center;
+}
+.monsterhearts2 .mh2-statline label {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  color: var(--mh2-bone-dim);
+}
+.monsterhearts2 .mh2-statline input { width: 2.8rem; text-align: center; }
+
+.monsterhearts2 .mh2-skin-drop {
+  border: 1px dashed var(--mh2-line);
+  transition: border-color 0.15s ease;
+}
+.monsterhearts2 .mh2-skin-drop:hover { border-color: var(--mh2-thread-dim); }
+
+.monsterhearts2 .mh2-granted {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--mh2-bone-dim);
+  flex: 0 0 auto;
+}
+
+.monsterhearts2 .mh2-advance {
+  color: var(--mh2-thread);
+  border-color: var(--mh2-thread);
+  animation: mh2-pulse 1.6s ease-in-out infinite;
+}
+@keyframes mh2-pulse {
+  0%, 100% { box-shadow: 0 0 0 rgba(210, 59, 99, 0); }
+  50% { box-shadow: 0 0 8px rgba(210, 59, 99, 0.55); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .monsterhearts2 .mh2-advance { animation: none; }
+}
+
+/* dialogs live outside the sheet scope */
+.mh2-skin-dialog fieldset {
+  border: 1px solid #3a3147;
+  border-radius: 3px;
+  margin: 0 0 0.6rem 0;
+  padding: 0.4rem 0.6rem;
+}
+.mh2-skin-dialog legend {
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 0 0.3rem;
+}
+.mh2-skin-dialog .mh2-choice {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.15rem 0;
+  cursor: pointer;
+}
+.mh2-skin-dialog .mh2-choice em { opacity: 0.7; }
+.mh2-skin-dialog .form-group { margin-bottom: 0.5rem; }

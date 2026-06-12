@@ -65,9 +65,11 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
       index: i, filled: i < sys.experience.value
     }));
 
-    context.moves = actor.items
+    const allMoves = actor.items
       .filter(i => i.type === "move")
       .sort((a, b) => (a.sort ?? 0) - (b.sort ?? 0) || a.name.localeCompare(b.name));
+    context.basicMoves = allMoves.filter(m => m.system.category === "basic");
+    context.skinMoves = allMoves.filter(m => m.system.category !== "basic");
 
     const enrichOpts = { relativeTo: actor, secrets: actor.isOwner };
     context.enriched = {
@@ -191,8 +193,9 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
   }
 
   static async #onCreateMove(event, target) {
+    const category = target.dataset.category === "basic" ? "basic" : "skin";
     const [item] = await this.actor.createEmbeddedDocuments("Item", [
-      { name: "New Move", type: "move" }
+      { name: "New Move", type: "move", system: { category } }
     ]);
     return item?.sheet.render(true);
   }
@@ -204,7 +207,7 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
       .map(m => ({
         name: m.name,
         type: "move",
-        system: { stat: m.stat, description: m.description }
+        system: { stat: m.stat, category: "basic", description: m.description }
       }));
     if (!toCreate.length) {
       ui.notifications.info("The basic moves are already on this sheet.");

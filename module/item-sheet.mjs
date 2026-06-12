@@ -35,6 +35,9 @@ export class MH2ItemSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
     context.statOptions = MH2.statOptions.map(o => ({
       ...o, selected: o.value === item.system.stat
     }));
+    context.categoryOptions = MH2.categoryOptions.map(o => ({
+      ...o, selected: o.value === item.system.category
+    }));
     context.enrichedDescription = await TE.enrichHTML(item.system.description, {
       relativeTo: item, secrets: item.isOwner
     });

@@ -22,6 +22,11 @@ MH2.statOptions = [
   { value: "dark", label: "Dark" }
 ];
 
+MH2.categoryOptions = [
+  { value: "basic", label: "Basic move" },
+  { value: "skin", label: "Skin move" }
+];
+
 /** Options posted to chat when a String is spent. */
 MH2.pullingStrings = [
   "Tempt them to do what you want",

@@ -91,13 +91,13 @@
 
     <section class="mh2-panel mh2-moves">
       <header class="mh2-panel-header">
-        <h2>Moves</h2>
+        <h2>Basic Moves</h2>
         <div class="mh2-panel-actions">
-          <a class="mh2-btn mh2-btn-text" data-action="addBasicMoves" title="Add the six basic moves">basics</a>
-          <a class="mh2-btn" data-action="createMove" title="New move">＋</a>
+          <a class="mh2-btn mh2-btn-text" data-action="addBasicMoves" title="Seed the six basic moves">basics</a>
+          <a class="mh2-btn" data-action="createMove" data-category="basic" title="New basic move">＋</a>
         </div>
       </header>
-      {{#each moves}}
+      {{#each basicMoves}}
       <div class="mh2-move" data-item-id="{{this.id}}">
         <a class="mh2-move-name" data-action="rollMove" title="Roll / post to chat">{{this.name}}</a>
         {{#if this.system.stat}}
@@ -109,7 +109,30 @@
         <a class="mh2-btn mh2-del" data-action="deleteMove" title="Delete"><i class="fa-solid fa-trash"></i></a>
       </div>
       {{else}}
-      <p class="mh2-empty">No moves yet — hit <em>basics</em> to seed the six basic moves, then drag in your skin moves.</p>
+      <p class="mh2-empty">Hit <em>basics</em> to seed the six basic moves.</p>
+      {{/each}}
+    </section>
+
+    <section class="mh2-panel mh2-moves">
+      <header class="mh2-panel-header">
+        <h2>Skin Moves</h2>
+        <div class="mh2-panel-actions">
+          <a class="mh2-btn" data-action="createMove" data-category="skin" title="New skin move">＋</a>
+        </div>
+      </header>
+      {{#each skinMoves}}
+      <div class="mh2-move" data-item-id="{{this.id}}">
+        <a class="mh2-move-name" data-action="rollMove" title="Roll / post to chat">{{this.name}}</a>
+        {{#if this.system.stat}}
+        <span class="mh2-move-stat">{{lookup ../statLabels this.system.stat}}</span>
+        {{else}}
+        <span class="mh2-move-stat mh2-move-stat-none">—</span>
+        {{/if}}
+        <a class="mh2-btn" data-action="editMove" title="Edit"><i class="fa-solid fa-pen"></i></a>
+        <a class="mh2-btn mh2-del" data-action="deleteMove" title="Delete"><i class="fa-solid fa-trash"></i></a>
+      </div>
+      {{else}}
+      <p class="mh2-empty">No skin moves yet — your Skin's signature tricks go here.</p>
       {{/each}}
     </section>
 

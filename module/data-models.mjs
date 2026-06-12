@@ -71,6 +71,8 @@ export class MoveData extends foundry.abstract.TypeDataModel {
     return {
       /** One of: "", "hot", "cold", "volatile", "dark". Blank = no roll. */
       stat: new StringField({ required: true, blank: true, initial: "" }),
+      /** "basic" or "skin". Controls which sheet section the move lives in. */
+      category: new StringField({ required: true, blank: false, initial: "skin" }),
       description: new HTMLField()
     };
   }

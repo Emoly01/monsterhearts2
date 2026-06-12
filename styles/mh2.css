@@ -281,17 +281,49 @@
 /* ---------- prose editors ---------- */
 
 .monsterhearts2 prose-mirror {
-  min-height: 2.2rem;
+  display: flex;
+  flex-direction: column;
+  min-height: 6rem;
   color: var(--mh2-bone);
 }
-.monsterhearts2 prose-mirror .editor-content { color: var(--mh2-bone); }
+.monsterhearts2 prose-mirror .editor-content,
+.monsterhearts2 prose-mirror .ProseMirror {
+  flex: 1;
+  min-height: 5rem;
+  max-height: 24rem;
+  overflow-y: auto;
+  color: var(--mh2-bone);
+  line-height: 1.45;
+  padding: 0.25rem 0.1rem;
+}
+.monsterhearts2 prose-mirror p { margin: 0 0 0.5em 0; }
 
 /* ---------- item sheet ---------- */
 
+.monsterhearts2 .mh2-item-sheet {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.monsterhearts2 .mh2-item-selects {
+  display: flex;
+  gap: 0.9rem;
+  flex-wrap: wrap;
+}
 .monsterhearts2 .mh2-item-body {
   flex: 1;
+  display: flex;
+  flex-direction: column;
   overflow-y: auto;
   padding: 0.6rem 0.75rem;
+}
+.monsterhearts2 .mh2-item-body prose-mirror {
+  flex: 1;
+  min-height: 14rem;
+}
+.monsterhearts2 .mh2-item-body prose-mirror .editor-content,
+.monsterhearts2 .mh2-item-body prose-mirror .ProseMirror {
+  max-height: none;
 }
 
 /* =====================================================

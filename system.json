@@ -40,5 +40,8 @@
     "units": "ft"
   },
   "primaryTokenAttribute": "harm",
-  "secondaryTokenAttribute": "experience"
+  "secondaryTokenAttribute": "experience",
+  "url": "https://github.com/Emoly01/monsterhearts2",
+  "manifest": "https://raw.githubusercontent.com/Emoly01/monsterhearts2/main/system.json",
+  "download": "https://github.com/Emoly01/monsterhearts2/releases/download/v0.1.0/monsterhearts2.zip"
 }

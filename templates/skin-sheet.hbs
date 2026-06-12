@@ -75,6 +75,9 @@
         <label class="mh2-granted" title="Picking this opens the skin move chooser">
           <input type="checkbox" name="system.advancements.{{@index}}.grantsMove" {{#if this.grantsMove}}checked{{/if}}> move
         </label>
+        <label class="mh2-granted" title="Offer moves from every skin in the world, not just this one">
+          <input type="checkbox" name="system.advancements.{{@index}}.anySkin" {{#if this.anySkin}}checked{{/if}}> any skin
+        </label>
         <a class="mh2-btn mh2-del" data-action="deleteAdvancement" data-index="{{@index}}" title="Delete"><i class="fa-solid fa-xmark"></i></a>
       </div>
       {{else}}

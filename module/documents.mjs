@@ -16,8 +16,9 @@ export class MH2Actor extends Actor {
    * @param {string|null} options.stat    Stat key, or null for a bare 2d6 roll.
    * @param {string|null} options.label   Heading for the chat card.
    * @param {string} options.description  Pre-enriched HTML shown on the card.
+   * @param {number} options.bonus        Flat bonus baked into the move itself.
    */
-  async rollMH({ stat = null, label = null, description = "" } = {}) {
+  async rollMH({ stat = null, label = null, description = "", bonus = 0 } = {}) {
     const sys = this.system;
     const statLabel = stat ? (MH2.stats[stat] ?? stat) : null;
     const statValue = stat ? (sys.stats?.[stat] ?? 0) : 0;
@@ -53,6 +54,7 @@ export class MH2Actor extends Actor {
     const parts = ["2d6"];
     const data = {};
     if (stat) { parts.push("@stat"); data.stat = statValue; }
+    if (bonus) { parts.push("@bonus"); data.bonus = bonus; }
     if (forward) { parts.push("@forward"); data.forward = forward; }
     if (ongoing) { parts.push("@ongoing"); data.ongoing = ongoing; }
     if (mod) { parts.push("@mod"); data.mod = mod; }
@@ -83,6 +85,7 @@ export class MH2Actor extends Actor {
 
     const bits = [];
     if (stat) bits.push(`${statLabel} ${statValue >= 0 ? "+" : ""}${statValue}`);
+    if (bonus) bits.push(`Move ${bonus >= 0 ? "+" : ""}${bonus}`);
     if (forward) bits.push(`Forward ${forward >= 0 ? "+" : ""}${forward} (spent)`);
     if (ongoing) bits.push(`Ongoing ${ongoing >= 0 ? "+" : ""}${ongoing}`);
     if (mod) bits.push(`Mod ${mod >= 0 ? "+" : ""}${mod}`);

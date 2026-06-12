@@ -73,11 +73,18 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
       index: i, filled: i < sys.experience.value
     }));
 
+    const decorate = m => ({
+      id: m.id,
+      name: m.name,
+      stat: m.system.stat,
+      bonus: m.system.bonus ?? 0,
+      bonusLabel: (m.system.bonus ?? 0) >= 0 ? `+${m.system.bonus}` : `${m.system.bonus}`
+    });
     const allMoves = actor.items
       .filter(i => i.type === "move")
       .sort((a, b) => (a.sort ?? 0) - (b.sort ?? 0) || a.name.localeCompare(b.name));
-    context.basicMoves = allMoves.filter(m => m.system.category === "basic");
-    context.skinMoves = allMoves.filter(m => m.system.category !== "basic");
+    context.basicMoves = allMoves.filter(m => m.system.category === "basic").map(decorate);
+    context.skinMoves = allMoves.filter(m => m.system.category !== "basic").map(decorate);
 
     context.xpFull = sys.experience.value >= sys.experience.max;
     context.skinItem = actor.items.find(i => i.type === "skin") ?? null;
@@ -236,7 +243,12 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     });
 
     if (move.system.stat) {
-      return this.actor.rollMH({ stat: move.system.stat, label: move.name, description });
+      return this.actor.rollMH({
+        stat: move.system.stat,
+        label: move.name,
+        description,
+        bonus: move.system.bonus ?? 0
+      });
     }
 
     // No roll: just post the move to chat.
@@ -384,7 +396,7 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
         name: m.name,
         type: "move",
         img: m.img || undefined,
-        system: { stat: m.stat, category: "skin", description: m.description }
+        system: { stat: m.stat, category: "skin", bonus: m.bonus ?? 0, description: m.description }
       }));
     if (toCreate.length) await this.actor.createEmbeddedDocuments("Item", toCreate);
 
@@ -431,48 +443,73 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
 
     let label = res.custom;
     let grantsMove = false;
+    let anySkin = false;
     if (!label && res.index !== "") {
       const a = advs[Number(res.index)];
       label = a?.label ?? "";
-      grantsMove = !!a?.grantsMove;
+      grantsMove = !!a?.grantsMove || !!a?.anySkin;
+      anySkin = !!a?.anySkin;
     }
     if (!label) return ui.notifications.warn("Pick an advancement or write a custom one.");
 
-    // Move-granting advancement: offer the remaining skin moves.
-    if (grantsMove && skinItem) {
+    // Move-granting advancement: offer remaining moves from this skin —
+    // or, for "any skin" advancements, from every skin item in the world.
+    if (grantsMove) {
       const existing = new Set(actor.items.filter(i => i.type === "move").map(i => i.name));
-      const remaining = (skinItem.system.moves ?? [])
-        .map((m, i) => ({ m, i }))
-        .filter(({ m }) => m.name && !existing.has(m.name));
 
-      if (remaining.length) {
-        const moveRows = remaining.map(({ m, i }) => `
-          <label class="mh2-choice">
-            <input type="checkbox" name="move" value="${i}">
-            ${esc(m.name)}${m.stat ? ` <em>(${esc(MH2.stats[m.stat] ?? m.stat)})</em>` : ""}
-          </label>`).join("");
+      // Build the pools of candidate moves.
+      const pools = [];
+      if (skinItem) pools.push({ key: "self", name: skinItem.name, moves: skinItem.system.moves ?? [] });
+      if (anySkin) {
+        for (const world of game.items.filter(i => i.type === "skin")) {
+          pools.push({ key: world.id, name: world.name, moves: world.system.moves ?? [] });
+        }
+      }
+
+      const seen = new Set();
+      const sections = [];
+      for (const pool of pools) {
+        const rows = pool.moves
+          .map((m, i) => ({ m, i }))
+          .filter(({ m }) => m.name && !existing.has(m.name) && !seen.has(m.name))
+          .map(({ m, i }) => {
+            seen.add(m.name);
+            return `
+              <label class="mh2-choice">
+                <input type="checkbox" name="move" value="${pool.key}:${i}">
+                ${esc(m.name)}${m.stat ? ` <em>(${esc(MH2.stats[m.stat] ?? m.stat)})</em>` : ""}
+              </label>`;
+          }).join("");
+        if (rows) sections.push(`<fieldset><legend>${esc(pool.name)}</legend>${rows}</fieldset>`);
+      }
+
+      if (sections.length) {
         const picked = await DialogV2.prompt({
-          window: { title: "Take a new skin move" },
-          position: { width: 420 },
-          content: `<div class="mh2-skin-dialog"><fieldset><legend>Choose</legend>${moveRows}</fieldset></div>`,
+          window: { title: anySkin ? "Take a move from any skin" : "Take a new skin move" },
+          position: { width: 440 },
+          content: `<div class="mh2-skin-dialog">${sections.join("")}</div>`,
           ok: {
             label: "Take",
             callback: (event, button) =>
-              Array.from(button.form.querySelectorAll('input[name="move"]:checked')).map(el => Number(el.value))
+              Array.from(button.form.querySelectorAll('input[name="move"]:checked')).map(el => el.value)
           },
           rejectClose: false
         });
         if (picked?.length) {
-          const creates = picked.map(i => skinItem.system.moves[i]).map(m => ({
+          const poolMap = new Map(pools.map(p => [p.key, p.moves]));
+          const creates = picked.map(v => {
+            const [key, idx] = v.split(":");
+            return poolMap.get(key)?.[Number(idx)];
+          }).filter(m => m).map(m => ({
             name: m.name,
             type: "move",
             img: m.img || undefined,
-            system: { stat: m.stat, category: "skin", description: m.description }
+            system: { stat: m.stat, category: "skin", bonus: m.bonus ?? 0, description: m.description }
           }));
-          await actor.createEmbeddedDocuments("Item", creates);
+          if (creates.length) await actor.createEmbeddedDocuments("Item", creates);
         }
       } else {
-        ui.notifications.info("No remaining skin moves to take.");
+        ui.notifications.info("No new moves available to take.");
       }
     }
 

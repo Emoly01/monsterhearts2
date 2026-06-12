@@ -103,8 +103,9 @@
       {{#each basicMoves}}
       <div class="mh2-move" data-item-id="{{this.id}}">
         <a class="mh2-move-name" data-action="rollMove" title="Roll / post to chat">{{this.name}}</a>
-        {{#if this.system.stat}}
-        <span class="mh2-move-stat">{{lookup ../statLabels this.system.stat}}</span>
+        {{#if this.bonus}}<span class="mh2-move-bonus">{{this.bonusLabel}}</span>{{/if}}
+        {{#if this.stat}}
+        <span class="mh2-move-stat">{{lookup ../statLabels this.stat}}</span>
         {{else}}
         <span class="mh2-move-stat mh2-move-stat-none">—</span>
         {{/if}}
@@ -126,8 +127,9 @@
       {{#each skinMoves}}
       <div class="mh2-move" data-item-id="{{this.id}}">
         <a class="mh2-move-name" data-action="rollMove" title="Roll / post to chat">{{this.name}}</a>
-        {{#if this.system.stat}}
-        <span class="mh2-move-stat">{{lookup ../statLabels this.system.stat}}</span>
+        {{#if this.bonus}}<span class="mh2-move-bonus">{{this.bonusLabel}}</span>{{/if}}
+        {{#if this.stat}}
+        <span class="mh2-move-stat">{{lookup ../statLabels this.stat}}</span>
         {{else}}
         <span class="mh2-move-stat mh2-move-stat-none">—</span>
         {{/if}}

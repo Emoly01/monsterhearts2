@@ -82,6 +82,8 @@ export class MoveData extends foundry.abstract.TypeDataModel {
       stat: new StringField({ required: true, blank: true, initial: "" }),
       /** "basic" or "skin". Controls which sheet section the move lives in. */
       category: new StringField({ required: true, blank: false, initial: "skin" }),
+      /** Flat bonus this move adds to its own roll, e.g. +1. */
+      bonus: new NumberField({ required: true, integer: true, initial: 0 }),
       description: new HTMLField()
     };
   }
@@ -118,6 +120,7 @@ export class SkinData extends foundry.abstract.TypeDataModel {
         name: new StringField({ required: true, blank: true }),
         img: new StringField({ required: true, blank: true }),
         stat: new StringField({ required: true, blank: true }),
+        bonus: new NumberField({ required: true, integer: true, initial: 0 }),
         granted: new BooleanField({ initial: false }),
         description: new StringField({ required: true, blank: true })
       })),
@@ -125,7 +128,8 @@ export class SkinData extends foundry.abstract.TypeDataModel {
       /** Advancement options offered when the experience track is full. */
       advancements: new ArrayField(new SchemaField({
         label: new StringField({ required: true, blank: true }),
-        grantsMove: new BooleanField({ initial: false })
+        grantsMove: new BooleanField({ initial: false }),
+        anySkin: new BooleanField({ initial: false })
       })),
 
       darkestSelf: new HTMLField(),

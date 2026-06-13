@@ -546,3 +546,10 @@
 }
 .mh2-skin-dialog .mh2-move-desc ul { margin: 0.2rem 0 0.2rem 1.1rem; padding: 0; }
 .monsterhearts2 .mh2-skin-picker { flex: 1; }
+
+/* v0.6.1: scrollable choice dialogs */
+.mh2-scroll-dialog {
+  max-height: 60vh;
+  overflow-y: auto;
+  padding-right: 0.4rem;
+}

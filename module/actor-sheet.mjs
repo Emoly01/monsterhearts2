@@ -373,6 +373,12 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
    */
   async #applySkin(skin) {
     const s = skin.system;
+    // Snapshot descriptions can be empty (older skins, or moves built without
+    // text). Fall back to the live move item's description, matched by name.
+    const liveDesc = name => {
+      const it = game.items.find(i => i.type === "move" && i.name === name);
+      return it?.system.description ?? "";
+    };
     const statLine = sl => `Hot ${sl.hot} · Cold ${sl.cold} · Volatile ${sl.volatile} · Dark ${sl.dark}`;
     const datalist = (id, csv) => {
       const opts = (csv ?? "").split(",").map(x => x.trim()).filter(Boolean)
@@ -384,13 +390,14 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     (s.moves ?? []).forEach((m, i) => {
       const g = (m.group ?? "").trim() || "Moves";
       if (!dlgGroups.has(g)) dlgGroups.set(g, []);
+      const desc = m.description || liveDesc(m.name);
       dlgGroups.get(g).push(`
         <div class="mh2-choice-block">
           <label class="mh2-choice">
             <input type="checkbox" name="move" value="${i}" ${m.granted ? "checked disabled" : ""}>
             ${esc(m.name)}${m.stat ? ` <em>(${esc(MH2.stats[m.stat] ?? m.stat)})</em>` : ""}${m.granted ? " — automatic" : ""}
           </label>
-          ${m.description ? `<details class="mh2-move-details"><summary>read move</summary><div class="mh2-move-desc">${m.description}</div></details>` : ""}
+          ${desc ? `<details class="mh2-move-details"><summary>read move</summary><div class="mh2-move-desc">${desc}</div></details>` : ""}
         </div>`);
     });
     const moveRows = [...dlgGroups.entries()]
@@ -399,7 +406,7 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
       .join("");
 
     const content = `
-      <div class="mh2-skin-dialog">
+      <div class="mh2-skin-dialog mh2-scroll-dialog">
         <fieldset><legend>Stat line</legend>
           <label class="mh2-choice"><input type="radio" name="statline" value="a" checked> ${statLine(s.statlines.a)}</label>
           <label class="mh2-choice"><input type="radio" name="statline" value="b"> ${statLine(s.statlines.b)}</label>
@@ -494,7 +501,7 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
       </label>`).join("");
 
     const content = `
-      <div class="mh2-skin-dialog">
+      <div class="mh2-skin-dialog mh2-scroll-dialog">
         ${rows.trim() ? `<fieldset><legend>Choose an advancement</legend>${rows}</fieldset>` : "<p>No advancements left on this skin's list — write a custom one below.</p>"}
         <div class="form-group"><label>Or custom</label><input name="custom" placeholder="e.g. +1 Hot"></div>
       </div>`;
@@ -551,13 +558,17 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
           .filter(({ m }) => m.name && !existing.has(m.name) && !seen.has(m.name))
           .map(({ m, i }) => {
             seen.add(m.name);
+            const desc = m.description || (() => {
+              const it = game.items.find(x => x.type === "move" && x.name === m.name);
+              return it?.system.description ?? "";
+            })();
             return `
               <div class="mh2-choice-block">
                 <label class="mh2-choice">
                   <input type="checkbox" name="move" value="${pool.key}:${i}">
                   ${esc(m.name)}${m.group ? ` <em>[${esc(m.group)}]</em>` : ""}${m.stat ? ` <em>(${esc(MH2.stats[m.stat] ?? m.stat)})</em>` : ""}
                 </label>
-                ${m.description ? `<details class="mh2-move-details"><summary>read move</summary><div class="mh2-move-desc">${m.description}</div></details>` : ""}
+                ${desc ? `<details class="mh2-move-details"><summary>read move</summary><div class="mh2-move-desc">${desc}</div></details>` : ""}
               </div>`;
           }).join("");
         if (rows) sections.push(`<fieldset><legend>${esc(pool.name)}</legend>${rows}</fieldset>`);
@@ -566,8 +577,8 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
       if (sections.length) {
         const picked = await DialogV2.prompt({
           window: { title: anySkin ? "Take a move from any skin" : "Take a new skin move" },
-          position: { width: 440 },
-          content: `<div class="mh2-skin-dialog">${sections.join("")}</div>`,
+          position: { width: 460 },
+          content: `<div class="mh2-skin-dialog mh2-scroll-dialog">${sections.join("")}</div>`,
           ok: {
             label: "Take",
             callback: (event, button) =>

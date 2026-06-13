@@ -1,9 +1,14 @@
-<div class="mh2-sheet">
+<div class="mh2-sheet{{#if darkestSelfActive}} mh2-is-darkest{{/if}}">
 
   <header class="mh2-header">
     <img class="mh2-portrait" data-action="editImage" src="{{actor.img}}" alt="{{actor.name}}" title="Change portrait">
     <div class="mh2-identity">
-      <input class="mh2-name" type="text" name="name" value="{{actor.name}}" placeholder="Name">
+      <div class="mh2-name-row">
+        <input class="mh2-name" type="text" name="name" value="{{actor.name}}" placeholder="Name">
+        <a class="mh2-darkest-toggle{{#if darkestSelfActive}} active{{/if}}" data-action="toggleDarkest" title="Toggle Darkest Self">
+          <i class="fa-solid fa-moon"></i> {{#if darkestSelfActive}}Darkest Self{{else}}Darkest Self?{{/if}}
+        </a>
+      </div>
       <div class="mh2-identity-grid">
         <label><span>Skin</span>
           <select class="mh2-skin-picker" title="Pick a skin to apply it to this character">

@@ -2,7 +2,7 @@
   "id": "monsterhearts2",
   "title": "Monsterhearts 2 (Hausgemacht)",
   "description": "A lightweight, personal-table implementation of Monsterhearts 2. Stats, moves, Strings, Conditions, Harm, and Experience — functional first, fancy later.",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "compatibility": {
     "minimum": "13",
     "verified": "14"
@@ -62,5 +62,5 @@
   "secondaryTokenAttribute": "experience",
   "url": "https://github.com/Emoly01/monsterhearts2",
   "manifest": "https://raw.githubusercontent.com/Emoly01/monsterhearts2/main/system.json",
-  "download": "https://github.com/Emoly01/monsterhearts2/releases/download/v0.8.0/monsterhearts2.zip"
+  "download": "https://github.com/Emoly01/monsterhearts2/releases/download/v0.9.0/monsterhearts2.zip"
 }

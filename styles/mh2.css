@@ -634,3 +634,38 @@
   padding: 0.3rem;
 }
 .mh2-npc-strings-btn:hover { background: rgba(210, 59, 99, 0.25); }
+
+/* v0.9: Darkest Self toggle + active state */
+.monsterhearts2 .mh2-name-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.monsterhearts2 .mh2-name-row .mh2-name { flex: 1; }
+.monsterhearts2 .mh2-darkest-toggle {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--mh2-bone-dim);
+  border: 1px solid var(--mh2-line);
+  border-radius: 2px;
+  padding: 0.2rem 0.45rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.monsterhearts2 .mh2-darkest-toggle:hover { color: var(--mh2-bone); border-color: var(--mh2-bone-dim); }
+.monsterhearts2 .mh2-darkest-toggle.active {
+  color: var(--mh2-bone);
+  border-color: var(--mh2-thread);
+  background: rgba(210, 59, 99, 0.18);
+  box-shadow: 0 0 8px rgba(210, 59, 99, 0.4);
+}
+/* whole-sheet tint when in Darkest Self */
+.monsterhearts2 .mh2-is-darkest .mh2-header {
+  background: linear-gradient(180deg, #2a1320, var(--mh2-ink));
+  border-bottom-color: var(--mh2-thread-dim);
+}

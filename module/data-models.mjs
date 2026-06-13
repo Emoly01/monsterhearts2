@@ -62,12 +62,6 @@ export class CharacterData extends foundry.abstract.TypeDataModel {
         count: new NumberField({ required: true, integer: true, min: 0, initial: 1 })
       })),
 
-      /** Strings that others (NPCs, side characters) hold on this character. */
-      npcStrings: new ArrayField(new SchemaField({
-        name: new StringField({ required: true, blank: true }),
-        count: new NumberField({ required: true, integer: true, min: 0, initial: 1 })
-      })),
-
       advancements: new StringField({ required: true, blank: true }),
       /** Indices of skin advancement lines already taken (each is once-only). */
       advancementsTaken: new ArrayField(new NumberField({ required: true, integer: true, min: 0 })),

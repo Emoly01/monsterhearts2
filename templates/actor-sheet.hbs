@@ -84,23 +84,6 @@
         {{/each}}
       </section>
 
-      <section class="mh2-panel mh2-strings mh2-npcstrings">
-        <header class="mh2-panel-header">
-          <h2>Strings on Me</h2>
-          <a class="mh2-btn" data-action="addNpcString" title="Add a String others hold on you">＋</a>
-        </header>
-        {{#each system.npcStrings}}
-        <div class="mh2-row mh2-string-row">
-          <input type="text" name="system.npcStrings.{{@index}}.name" value="{{this.name}}" placeholder="Who holds it?">
-          <a class="mh2-btn" data-action="npcStringMinus" data-index="{{@index}}" title="Remove one">−</a>
-          <input class="mh2-count" type="number" name="system.npcStrings.{{@index}}.count" value="{{this.count}}" step="1" min="0">
-          <a class="mh2-btn" data-action="npcStringPlus" data-index="{{@index}}" title="Add one">＋</a>
-          <a class="mh2-btn mh2-del" data-action="deleteNpcString" data-index="{{@index}}" title="Delete"><i class="fa-solid fa-xmark"></i></a>
-        </div>
-        {{else}}
-        <p class="mh2-empty">Nobody has a hold on you. Yet.</p>
-        {{/each}}
-      </section>
 
       <section class="mh2-panel mh2-conditions">
         <header class="mh2-panel-header">

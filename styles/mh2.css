@@ -584,3 +584,53 @@
   color: #d23b63;
   min-width: 1.6rem;
 }
+
+/* v0.8: MC NPC-strings tracker */
+.monsterhearts2.mh2-npc-tracker .window-content {
+  background: var(--mh2-ink);
+  color: var(--mh2-bone);
+  padding: 0.6rem 0.75rem;
+}
+.mh2-npc-strings-window { display: flex; flex-direction: column; height: 100%; }
+.mh2-npc-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--mh2-line);
+  margin-bottom: 0.5rem;
+}
+.mh2-npc-list { flex: 1; overflow-y: auto; }
+.mh2-npc-row {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0;
+  border-bottom: 1px dotted var(--mh2-line);
+}
+.mh2-npc-row input[type="text"] { flex: 1; min-width: 4rem; }
+.mh2-npc-row .mh2-count { width: 2.6rem; text-align: center; flex: 0 0 auto; }
+.mh2-npc-arrow { color: var(--mh2-thread); flex: 0 0 auto; }
+.mh2-npc-holder { flex: 1; font-weight: 600; }
+.mh2-npc-target { flex: 1; }
+.mh2-npc-count {
+  flex: 0 0 auto;
+  min-width: 1.6rem;
+  text-align: center;
+  font-weight: bold;
+  color: var(--mh2-thread);
+}
+
+/* sidebar launch button */
+.mh2-npc-strings-btn {
+  width: 100%;
+  margin-top: 0.25rem;
+  background: rgba(210, 59, 99, 0.12);
+  border: 1px solid var(--mh2-thread-dim);
+  color: var(--mh2-bone);
+  border-radius: 3px;
+  cursor: pointer;
+  padding: 0.3rem;
+}
+.mh2-npc-strings-btn:hover { background: rgba(210, 59, 99, 0.25); }

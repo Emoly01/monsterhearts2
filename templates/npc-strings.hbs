@@ -1,0 +1,31 @@
+<div class="mh2-sheet mh2-npc-strings-window">
+
+  <div class="mh2-npc-head">
+    <p class="mh2-hint">Every String an NPC or side character holds — out in the open.</p>
+    {{#if isGM}}<a class="mh2-btn mh2-btn-text" data-action="addEntry" title="Add a row">＋ add</a>{{/if}}
+  </div>
+
+  <div class="mh2-npc-list">
+    {{#each entries}}
+    <div class="mh2-npc-row">
+      {{#if @root.isGM}}
+      <input type="text" data-field="holder" data-index="{{@index}}" value="{{this.holder}}" placeholder="Holder (NPC)">
+      <span class="mh2-npc-arrow">→</span>
+      <input type="text" data-field="target" data-index="{{@index}}" value="{{this.target}}" placeholder="On whom">
+      <a class="mh2-btn" data-action="minus" data-index="{{@index}}" title="Remove one">−</a>
+      <input class="mh2-count" type="number" data-field="count" data-index="{{@index}}" value="{{this.count}}" min="0" step="1">
+      <a class="mh2-btn" data-action="plus" data-index="{{@index}}" title="Add one">＋</a>
+      <a class="mh2-btn mh2-del" data-action="deleteEntry" data-index="{{@index}}" title="Delete"><i class="fa-solid fa-xmark"></i></a>
+      {{else}}
+      <span class="mh2-npc-holder">{{this.holder}}</span>
+      <span class="mh2-npc-arrow">→</span>
+      <span class="mh2-npc-target">{{this.target}}</span>
+      <span class="mh2-npc-count">{{this.count}}</span>
+      {{/if}}
+    </div>
+    {{else}}
+    <p class="mh2-empty">No NPC Strings tracked yet.</p>
+    {{/each}}
+  </div>
+
+</div>

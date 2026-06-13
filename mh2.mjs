@@ -4,6 +4,7 @@ import { MH2Actor } from "./module/documents.mjs";
 import { MH2ActorSheet } from "./module/actor-sheet.mjs";
 import { MH2ItemSheet } from "./module/item-sheet.mjs";
 import { MH2SkinSheet } from "./module/skin-sheet.mjs";
+import { MH2NpcStrings } from "./module/npc-strings.mjs";
 
 Hooks.once("init", () => {
   console.log("Monsterhearts 2 | Keeping the story feral.");
@@ -42,4 +43,24 @@ Hooks.once("init", () => {
     makeDefault: true,
     label: "MH2 Skin Sheet"
   });
+
+  // MC's open NPC-Strings tracker (shared world setting).
+  MH2NpcStrings.registerSetting();
+  game.system.mh2 = { openNpcStrings: () => new MH2NpcStrings().render(true) };
+});
+
+/* Add a launch button to the Actors directory header for everyone. */
+Hooks.on("renderActorDirectory", (app, html) => {
+  const root = html instanceof HTMLElement ? html : html?.[0];
+  if (!root) return;
+  const header = root.querySelector(".directory-header .header-actions")
+    ?? root.querySelector(".directory-header");
+  if (!header || header.querySelector(".mh2-npc-strings-btn")) return;
+
+  const btn = document.createElement("button");
+  btn.type = "button";
+  btn.className = "mh2-npc-strings-btn";
+  btn.innerHTML = `<i class="fa-solid fa-link"></i> NPC Strings`;
+  btn.addEventListener("click", () => new MH2NpcStrings().render(true));
+  header.appendChild(btn);
 });

@@ -553,3 +553,34 @@
   overflow-y: auto;
   padding-right: 0.4rem;
 }
+
+/* v0.7: conditional forwards + strings-on-me */
+.monsterhearts2 .mh2-npcstrings .mh2-panel-header { border-bottom-color: var(--mh2-thread-dim); }
+.monsterhearts2 .mh2-npcstrings h2 { color: var(--mh2-thread); }
+.monsterhearts2 .mh2-forward-row .mh2-count { width: 2.8rem; }
+.monsterhearts2 .mh2-forward-row input[type="text"] { flex: 1; }
+
+.mh2-fwd-set {
+  border: 1px solid #3a3147;
+  border-radius: 3px;
+  margin-top: 0.6rem;
+  padding: 0.4rem 0.6rem;
+}
+.mh2-fwd-set legend {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 0 0.3rem;
+}
+.mh2-fwd-choice {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.15rem 0;
+  cursor: pointer;
+}
+.mh2-fwd-choice .mh2-fwd-val {
+  font-weight: bold;
+  color: #d23b63;
+  min-width: 1.6rem;
+}

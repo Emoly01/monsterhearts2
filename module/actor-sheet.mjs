@@ -31,6 +31,12 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
       stringPlus: MH2ActorSheet.#onStringPlus,
       stringMinus: MH2ActorSheet.#onStringMinus,
       spendString: MH2ActorSheet.#onSpendString,
+      addNpcString: MH2ActorSheet.#onAddNpcString,
+      deleteNpcString: MH2ActorSheet.#onDeleteNpcString,
+      npcStringPlus: MH2ActorSheet.#onNpcStringPlus,
+      npcStringMinus: MH2ActorSheet.#onNpcStringMinus,
+      addForward: MH2ActorSheet.#onAddForward,
+      deleteForward: MH2ActorSheet.#onDeleteForward,
       createMove: MH2ActorSheet.#onCreateMove,
       addBasicMoves: MH2ActorSheet.#onAddBasicMoves,
       rollMove: MH2ActorSheet.#onRollMove,
@@ -150,6 +156,8 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
       if (sys.strings && !Array.isArray(sys.strings)) sys.strings = Object.values(sys.strings);
       if (sys.conditions && !Array.isArray(sys.conditions)) sys.conditions = Object.values(sys.conditions);
       if (sys.custom && !Array.isArray(sys.custom)) sys.custom = Object.values(sys.custom);
+      if (sys.npcStrings && !Array.isArray(sys.npcStrings)) sys.npcStrings = Object.values(sys.npcStrings);
+      if (sys.forwards && !Array.isArray(sys.forwards)) sys.forwards = Object.values(sys.forwards);
     }
     return submitData;
   }
@@ -267,6 +275,46 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
 
   static async #onSpendString(event, target) {
     return this.actor.spendString(Number(target.dataset.index));
+  }
+
+  static async #onAddNpcString(event, target) {
+    const arr = this.#sourceArray("npcStrings");
+    arr.push({ name: "", count: 1 });
+    return this.actor.update({ "system.npcStrings": arr });
+  }
+
+  static async #onDeleteNpcString(event, target) {
+    const arr = this.#sourceArray("npcStrings");
+    arr.splice(Number(target.dataset.index), 1);
+    return this.actor.update({ "system.npcStrings": arr });
+  }
+
+  static async #onNpcStringPlus(event, target) {
+    const arr = this.#sourceArray("npcStrings");
+    const e = arr[Number(target.dataset.index)];
+    if (!e) return;
+    e.count += 1;
+    return this.actor.update({ "system.npcStrings": arr });
+  }
+
+  static async #onNpcStringMinus(event, target) {
+    const arr = this.#sourceArray("npcStrings");
+    const e = arr[Number(target.dataset.index)];
+    if (!e) return;
+    e.count = Math.max(0, e.count - 1);
+    return this.actor.update({ "system.npcStrings": arr });
+  }
+
+  static async #onAddForward(event, target) {
+    const arr = this.#sourceArray("forwards");
+    arr.push({ label: "", value: 1 });
+    return this.actor.update({ "system.forwards": arr });
+  }
+
+  static async #onDeleteForward(event, target) {
+    const arr = this.#sourceArray("forwards");
+    arr.splice(Number(target.dataset.index), 1);
+    return this.actor.update({ "system.forwards": arr });
   }
 
   static async #onCreateMove(event, target) {

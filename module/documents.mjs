@@ -22,33 +22,48 @@ export class MH2Actor extends Actor {
     const sys = this.system;
     const statLabel = stat ? (MH2.stats[stat] ?? stat) : null;
     const statValue = stat ? (sys.stats?.[stat] ?? 0) : 0;
-    const forward = sys.forward ?? 0;
     const ongoing = sys.ongoing ?? 0;
+    const forwards = sys.forwards ?? [];
+
+    // Build a checkbox per recorded conditional Forward.
+    const fwdRows = forwards.map((f, i) => `
+      <label class="mh2-fwd-choice">
+        <input type="checkbox" name="fwd" value="${i}">
+        <span class="mh2-fwd-val">${f.value >= 0 ? "+" : ""}${f.value}</span>
+        ${(f.label || "Forward").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+      </label>`).join("");
 
     // Ask for a situational modifier (Strings spent, Conditions exploited...).
     const DialogV2 = foundry.applications.api.DialogV2;
     const title = label ?? (statLabel ? `Roll with ${statLabel}` : "Roll 2d6");
-    let mod;
+    let choice;
     try {
-      mod = await DialogV2.prompt({
+      choice = await DialogV2.prompt({
         window: { title },
         content: `
           <div class="form-group">
             <label>Situational modifier</label>
             <input type="number" name="mod" value="0" step="1" autofocus>
             <p class="hint">Strings spent against them, exploited Conditions, gang bonuses…</p>
-          </div>`,
+          </div>
+          ${fwdRows ? `<fieldset class="mh2-fwd-set"><legend>Forward — tick any that apply</legend>${fwdRows}</fieldset>` : ""}`,
         ok: {
           label: "Roll 2d6",
           icon: "fa-solid fa-dice",
-          callback: (event, button) => Number(button.form.elements.mod.value) || 0
+          callback: (event, button) => ({
+            mod: Number(button.form.elements.mod.value) || 0,
+            fwd: Array.from(button.form.querySelectorAll('input[name="fwd"]:checked')).map(el => Number(el.value))
+          })
         },
         rejectClose: false
       });
     } catch (err) {
-      mod = null;
+      choice = null;
     }
-    if (mod === null || mod === undefined) return; // dialog dismissed
+    if (!choice) return; // dialog dismissed
+    const mod = choice.mod;
+    const chosenForwards = choice.fwd ?? [];
+    const forward = chosenForwards.reduce((sum, i) => sum + (forwards[i]?.value ?? 0), 0);
 
     // Build the formula from only the parts that matter.
     const parts = ["2d6"];
@@ -80,7 +95,10 @@ export class MH2Actor extends Actor {
         xpNote = `<p class="mh2-xp-note">Experience track is full (${sys.experience.max}/${sys.experience.max}) — time to advance.</p>`;
       }
     }
-    if (forward) updates["system.forward"] = 0;
+    if (chosenForwards.length) {
+      const remaining = forwards.filter((_, i) => !chosenForwards.includes(i));
+      updates["system.forwards"] = remaining;
+    }
     if (!foundry.utils.isEmpty(updates)) await this.update(updates);
 
     const bits = [];

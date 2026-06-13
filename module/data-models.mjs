@@ -42,10 +42,14 @@ export class CharacterData extends foundry.abstract.TypeDataModel {
         max: new NumberField({ required: true, integer: true, min: 1, initial: 5 })
       }),
 
-      /** One-shot bonus consumed by the next roll. */
-      forward: new NumberField({ required: true, integer: true, initial: 0 }),
       /** Persistent bonus applied to every roll until cleared. */
       ongoing: new NumberField({ required: true, integer: true, initial: 0 }),
+
+      /** Conditional one-shot bonuses: each fires only when you choose it. */
+      forwards: new ArrayField(new SchemaField({
+        label: new StringField({ required: true, blank: true }),
+        value: new NumberField({ required: true, integer: true, initial: 1 })
+      })),
 
       conditions: new ArrayField(new StringField({ required: true, blank: true })),
 
@@ -54,6 +58,12 @@ export class CharacterData extends foundry.abstract.TypeDataModel {
       custom: new ArrayField(new StringField({ required: true, blank: true })),
 
       strings: new ArrayField(new SchemaField({
+        name: new StringField({ required: true, blank: true }),
+        count: new NumberField({ required: true, integer: true, min: 0, initial: 1 })
+      })),
+
+      /** Strings that others (NPCs, side characters) hold on this character. */
+      npcStrings: new ArrayField(new SchemaField({
         name: new StringField({ required: true, blank: true }),
         count: new NumberField({ required: true, integer: true, min: 0, initial: 1 })
       })),

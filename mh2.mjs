@@ -90,6 +90,23 @@ function applyMH2Theme(theme) {
 
 Hooks.once("ready", () => { applyMH2Theme(); applyMH2Flowers(); });
 
+/* Socket: apply a String grant on an actor the acting user can't write to.
+   Executed by the first GM online. */
+Hooks.once("ready", () => {
+  game.socket.on("system.monsterhearts2", async (payload) => {
+    if (!payload || payload.type !== "grantString") return;
+    if (!game.user.isGM) return;               // only a GM applies it
+    if (game.users.find(u => u.isGM && u.active)?.id !== game.user.id) return; // just the first GM
+    const actor = game.actors.get(payload.actorId);
+    if (!actor) return;
+    const strings = foundry.utils.deepClone(actor.system.toObject().strings ?? []);
+    const match = strings.find(s => s.name === payload.name);
+    if (match) match.count += payload.count ?? 1;
+    else strings.push({ name: payload.name, count: payload.count ?? 1 });
+    await actor.update({ "system.strings": strings });
+  });
+});
+
 /* Add a launch button to the Actors directory header for everyone. */
 Hooks.on("renderActorDirectory", (app, html) => {
   const root = html instanceof HTMLElement ? html : html?.[0];

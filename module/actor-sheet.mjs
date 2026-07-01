@@ -392,11 +392,24 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     await this.actor.update({ "system.strings": sourceStrings });
 
     // Add one to recipient, merging by name.
-    const recStrings = foundry.utils.deepClone(recipient.system.toObject().strings ?? []);
-    const match = recStrings.find(s => s.name === entry.name);
-    if (match) match.count += 1;
-    else recStrings.push({ name: entry.name, count: 1 });
-    await recipient.update({ "system.strings": recStrings });
+    // Add one to recipient, merging by name — directly if we own them,
+    // otherwise ask a GM to apply it via socket (permissions).
+    if (recipient.isOwner) {
+      const recStrings = foundry.utils.deepClone(recipient.system.toObject().strings ?? []);
+      const match = recStrings.find(s => s.name === entry.name);
+      if (match) match.count += 1;
+      else recStrings.push({ name: entry.name, count: 1 });
+      await recipient.update({ "system.strings": recStrings });
+    } else if (game.users.find(u => u.isGM && u.active)) {
+      game.socket.emit("system.monsterhearts2", {
+        type: "grantString",
+        actorId: recipient.id,
+        name: entry.name,
+        count: 1
+      });
+    } else {
+      ui.notifications.warn(`Passed the String, but no GM is online to update ${recipient.name}'s sheet.`);
+    }
 
     return ChatMessage.implementation.create({
       speaker: ChatMessage.implementation.getSpeaker({ actor: this.actor }),

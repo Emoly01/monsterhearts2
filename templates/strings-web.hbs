@@ -1,7 +1,7 @@
 <div class="mh2-sheet mh2-web-window">
 
   <div class="mh2-web-head">
-    <p class="mh2-hint">Every String between characters. Arrows point from holder to the one they hold.</p>
+    <p class="mh2-hint">Every String between people. Arrows point from holder to the one they hold. Named people without a sheet appear as plain circles.</p>
     <a class="mh2-btn mh2-btn-text" data-action="refresh" title="Recompute"><i class="fa-solid fa-rotate"></i> refresh</a>
   </div>
 
@@ -27,27 +27,19 @@
       {{#each nodes}}
       <g class="mh2-web-node{{#if this.darkest}} darkest{{/if}}">
         <circle cx="{{this.x}}" cy="{{this.y}}" r="30" fill="var(--mh2-ink-soft)" stroke="{{#if this.darkest}}var(--mh2-thread){{else}}var(--mh2-bone-dim){{/if}}" stroke-width="{{#if this.darkest}}3{{else}}2{{/if}}"/>
+        {{#if this.isActor}}
         <clipPath id="clip-{{this.id}}"><circle cx="{{this.x}}" cy="{{this.y}}" r="28"/></clipPath>
         <image href="{{this.img}}" x="{{this.x}}" y="{{this.y}}" width="56" height="56" transform="translate(-28,-28)" clip-path="url(#clip-{{this.id}})" preserveAspectRatio="xMidYMid slice"/>
-        <text x="{{this.x}}" y="{{this.y}}" dy="46" text-anchor="middle" font-size="14" fill="var(--mh2-bone)" font-family="Georgia, serif">{{this.name}}</text>
+        {{else}}
+        <text x="{{this.x}}" y="{{this.y}}" text-anchor="middle" dominant-baseline="central" font-size="22" fill="var(--mh2-bone-dim)">&#9734;</text>
+        {{/if}}
+        <text x="{{this.x}}" y="{{this.y}}" dy="46" text-anchor="middle" font-size="14" fill="var(--mh2-bone)" font-family="Georgia, serif">{{this.label}}</text>
       </g>
       {{/each}}
     </svg>
   </div>
-
-  {{#if unresolved.length}}
-  <details class="mh2-web-unresolved">
-    <summary>Strings on names that aren't characters ({{unresolved.length}})</summary>
-    <ul>
-      {{#each unresolved}}
-      <li>{{this.from}} → {{this.on}} ({{this.count}})</li>
-      {{/each}}
-    </ul>
-  </details>
-  {{/if}}
-
   {{else}}
-  <p class="mh2-empty">No characters yet — the web needs at least a couple of souls with Strings between them.</p>
+  <p class="mh2-empty">No Strings yet — the web fills in as characters gain Strings on people.</p>
   {{/if}}
 
 </div>

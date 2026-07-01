@@ -817,34 +817,29 @@
 }
 
 /* Hibiscus corner decorations — off by default, toggled per-user.
-   Applied to the sheet body so they sit behind the content. */
-[data-mh2-flowers] .monsterhearts2 .mh2-sheet {
-  position: relative;
-}
+   High z-index so they paint over the opaque header/body backgrounds, but
+   pointer-events:none so they never block clicks on the sheet beneath. */
+[data-mh2-flowers] .monsterhearts2 .mh2-sheet { position: relative; }
 [data-mh2-flowers] .monsterhearts2 .mh2-sheet::before,
 [data-mh2-flowers] .monsterhearts2 .mh2-sheet::after {
   content: "";
   position: absolute;
-  width: 120px;
-  height: 120px;
+  width: 100px; height: 100px;
   background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-140 -150 280 300'><defs><radialGradient id='w' cx='50%' cy='92%' r='105%'><stop offset='0%' stop-color='#7d1245'/><stop offset='22%' stop-color='#d6296a'/><stop offset='55%' stop-color='#f0578a'/><stop offset='80%' stop-color='#f98a6e'/><stop offset='100%' stop-color='#ffb27a'/></radialGradient><radialGradient id='t' cx='50%' cy='50%' r='60%'><stop offset='0%' stop-color='#6a0f3e'/><stop offset='70%' stop-color='#a01a55'/><stop offset='100%' stop-color='#a01a55' stop-opacity='0'/></radialGradient><g id='p'><path d='M0,0 C-40,-8 -74,-30 -86,-70 C-95,-100 -84,-126 -60,-134 C-52,-120 -44,-124 -36,-132 C-30,-120 -20,-124 -12,-132 C-4,-122 6,-126 12,-132 C18,-120 8,-40 0,0 Z' fill='url(#w)' stroke='#c02460' stroke-width='1' stroke-opacity='0.35'/><g stroke='#fff' stroke-opacity='0.18' stroke-width='3' fill='none' stroke-linecap='round'><path d='M-20,-20 C-34,-50 -44,-80 -50,-116'/><path d='M-8,-24 C-12,-56 -14,-90 -20,-122'/></g></g></defs><use href='#p' transform='rotate(0)'/><use href='#p' transform='rotate(72)'/><use href='#p' transform='rotate(144)'/><use href='#p' transform='rotate(216)'/><use href='#p' transform='rotate(288)'/><ellipse cx='0' cy='0' rx='30' ry='26' fill='url(#t)'/><path d='M2,2 C-14,-20 -30,-40 -44,-58' stroke='#f7cdb0' stroke-width='5' fill='none' stroke-linecap='round'/><g fill='#f2c33d'><circle cx='-40' cy='-56' r='3.5'/><circle cx='-34' cy='-50' r='3'/><circle cx='-44' cy='-50' r='2.6'/><circle cx='-30' cy='-44' r='3'/><circle cx='-38' cy='-44' r='2.4'/></g></svg>");
   background-size: contain;
   background-repeat: no-repeat;
   pointer-events: none;
-  opacity: 0.9;
-  z-index: 0;
+  opacity: 0.8;
+  z-index: 50;
 }
 [data-mh2-flowers] .monsterhearts2 .mh2-sheet::before {
-  top: -14px; right: -10px;
+  top: 2px; right: 4px;
   transform: rotate(12deg);
 }
 [data-mh2-flowers] .monsterhearts2 .mh2-sheet::after {
-  bottom: -16px; left: -12px;
-  transform: rotate(-24deg) scale(0.85);
+  bottom: 4px; left: 4px;
+  transform: rotate(-18deg) scale(0.85);
 }
-/* keep interactive content above the blooms */
-[data-mh2-flowers] .monsterhearts2 .mh2-header,
-[data-mh2-flowers] .monsterhearts2 .mh2-body { position: relative; z-index: 1; }
 
 /* island chat cards */
 [data-mh2-theme="island"] .mh2-roll-card {

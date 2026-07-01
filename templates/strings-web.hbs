@@ -1,0 +1,53 @@
+<div class="mh2-sheet mh2-web-window">
+
+  <div class="mh2-web-head">
+    <p class="mh2-hint">Every String between characters. Arrows point from holder to the one they hold.</p>
+    <a class="mh2-btn mh2-btn-text" data-action="refresh" title="Recompute"><i class="fa-solid fa-rotate"></i> refresh</a>
+  </div>
+
+  {{#if hasNodes}}
+  <div class="mh2-web-canvas">
+    <svg viewBox="0 0 {{W}} {{H}}" xmlns="http://www.w3.org/2000/svg" class="mh2-web-svg">
+      <defs>
+        <marker id="mh2arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--mh2-thread)"/>
+        </marker>
+      </defs>
+
+      {{#each edges}}
+      <path d="{{this.path}}" fill="none" stroke="var(--mh2-thread)" stroke-width="2" opacity="0.7" marker-end="url(#mh2arrow)">
+        <title>{{this.from}} holds {{this.count}} on {{this.to}}</title>
+      </path>
+      <g>
+        <circle cx="{{this.labelX}}" cy="{{this.labelY}}" r="11" fill="var(--mh2-ink)" stroke="var(--mh2-thread)" stroke-width="1.5"/>
+        <text x="{{this.labelX}}" y="{{this.labelY}}" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="bold" fill="var(--mh2-thread)">{{this.count}}</text>
+      </g>
+      {{/each}}
+
+      {{#each nodes}}
+      <g class="mh2-web-node{{#if this.darkest}} darkest{{/if}}">
+        <circle cx="{{this.x}}" cy="{{this.y}}" r="30" fill="var(--mh2-ink-soft)" stroke="{{#if this.darkest}}var(--mh2-thread){{else}}var(--mh2-bone-dim){{/if}}" stroke-width="{{#if this.darkest}}3{{else}}2{{/if}}"/>
+        <clipPath id="clip-{{this.id}}"><circle cx="{{this.x}}" cy="{{this.y}}" r="28"/></clipPath>
+        <image href="{{this.img}}" x="{{this.x}}" y="{{this.y}}" width="56" height="56" transform="translate(-28,-28)" clip-path="url(#clip-{{this.id}})" preserveAspectRatio="xMidYMid slice"/>
+        <text x="{{this.x}}" y="{{this.y}}" dy="46" text-anchor="middle" font-size="14" fill="var(--mh2-bone)" font-family="Georgia, serif">{{this.name}}</text>
+      </g>
+      {{/each}}
+    </svg>
+  </div>
+
+  {{#if unresolved.length}}
+  <details class="mh2-web-unresolved">
+    <summary>Strings on names that aren't characters ({{unresolved.length}})</summary>
+    <ul>
+      {{#each unresolved}}
+      <li>{{this.from}} → {{this.on}} ({{this.count}})</li>
+      {{/each}}
+    </ul>
+  </details>
+  {{/if}}
+
+  {{else}}
+  <p class="mh2-empty">No characters yet — the web needs at least a couple of souls with Strings between them.</p>
+  {{/if}}
+
+</div>

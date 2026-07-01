@@ -5,6 +5,7 @@ import { MH2ActorSheet } from "./module/actor-sheet.mjs";
 import { MH2ItemSheet } from "./module/item-sheet.mjs";
 import { MH2SkinSheet } from "./module/skin-sheet.mjs";
 import { MH2NpcStrings } from "./module/npc-strings.mjs";
+import { MH2StringsWeb } from "./module/strings-web.mjs";
 
 Hooks.once("init", () => {
   console.log("Monsterhearts 2 | Keeping the story feral.");
@@ -46,7 +47,10 @@ Hooks.once("init", () => {
 
   // MC's open NPC-Strings tracker (shared world setting).
   MH2NpcStrings.registerSetting();
-  game.system.mh2 = { openNpcStrings: () => new MH2NpcStrings().render(true) };
+  game.system.mh2 = {
+    openNpcStrings: () => new MH2NpcStrings().render(true),
+    openStringsWeb: () => new MH2StringsWeb().render(true)
+  };
 
   // Per-player sheet theme (client-scoped: each user picks their own).
   game.settings.register("monsterhearts2", "theme", {
@@ -55,11 +59,28 @@ Hooks.once("init", () => {
     scope: "client",
     config: true,
     type: String,
-    choices: { dark: "Dark (ink & thread)", light: "Light (bone & thread)", karibik: "Karibik (sand & sea)", trinidad: "Trinidad (Carnival warmth)" },
+    choices: { dark: "Dark (ink & thread)", light: "Light (bone & thread)", karibik: "Karibik (sand & sea)", trinidad: "Trinidad (Carnival warmth)", island: "Island (sea & hibiscus)" },
     default: "dark",
     onChange: value => applyMH2Theme(value)
   });
+
+  // Optional hibiscus corner decorations (per-user).
+  game.settings.register("monsterhearts2", "flowers", {
+    name: "Corner Flowers",
+    hint: "Show watercolor hibiscus blooms in the corners of character sheets.",
+    scope: "client",
+    config: true,
+    type: Boolean,
+    default: false,
+    onChange: value => applyMH2Flowers(value)
+  });
 });
+
+/** Reflect the flower toggle onto the document root. */
+function applyMH2Flowers(on) {
+  const v = on ?? game.settings.get("monsterhearts2", "flowers") ?? false;
+  document.documentElement.toggleAttribute("data-mh2-flowers", !!v);
+}
 
 /** Reflect the chosen theme onto the document root for CSS to read. */
 function applyMH2Theme(theme) {
@@ -67,7 +88,7 @@ function applyMH2Theme(theme) {
   document.documentElement.setAttribute("data-mh2-theme", t);
 }
 
-Hooks.once("ready", () => applyMH2Theme());
+Hooks.once("ready", () => { applyMH2Theme(); applyMH2Flowers(); });
 
 /* Add a launch button to the Actors directory header for everyone. */
 Hooks.on("renderActorDirectory", (app, html) => {
@@ -83,4 +104,11 @@ Hooks.on("renderActorDirectory", (app, html) => {
   btn.innerHTML = `<i class="fa-solid fa-link"></i> NPC Strings`;
   btn.addEventListener("click", () => new MH2NpcStrings().render(true));
   header.appendChild(btn);
+
+  const webBtn = document.createElement("button");
+  webBtn.type = "button";
+  webBtn.className = "mh2-npc-strings-btn mh2-web-btn";
+  webBtn.innerHTML = `<i class="fa-solid fa-diagram-project"></i> Strings Web`;
+  webBtn.addEventListener("click", () => new MH2StringsWeb().render(true));
+  header.appendChild(webBtn);
 });

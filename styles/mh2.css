@@ -789,3 +789,106 @@
 [data-mh2-theme="trinidad"] .mh2-roll-card.tier-weak { border-left-color: #e0a419; }
 [data-mh2-theme="trinidad"] .mh2-roll-card.tier-miss { border-left-color: #c8102e; }
 [data-mh2-theme="trinidad"] .mh2-roll-card.mh2-string-card { border-left-color: #da1a32; }
+
+
+/* =====================================================
+   v0.13: Island theme + hibiscus corner decorations
+   ===================================================== */
+
+[data-mh2-theme="island"] .monsterhearts2 {
+  --mh2-ink: #eefaf9;          /* pale sea-glass */
+  --mh2-ink-soft: #dff4f2;     /* raised panels */
+  --mh2-bone: #0f3a44;         /* deep teal ink text */
+  --mh2-bone-dim: #4c8a86;     /* muted seafoam */
+  --mh2-thread: #e83f6f;       /* hibiscus pink thread */
+  --mh2-thread-dim: #f2a7bd;
+  --mh2-line: #a9dce0;         /* soft sky hairlines */
+  --mh2-miss: #e0654a;
+  --mh2-weak: #e6a935;
+  --mh2-strong: #12a3b8;
+  --mh2-input-bg: rgba(255, 255, 255, 0.6);
+  --mh2-header-grad-a: #bfeaf0; /* sky wash at the top */
+}
+[data-mh2-theme="island"] .monsterhearts2 .mh2-pips-xp .mh2-pip.filled {
+  background: #12a3b8; border-color: #12a3b8;   /* turquoise xp */
+}
+[data-mh2-theme="island"] .monsterhearts2 .mh2-move-stat {
+  background: #12a3b8; color: #ffffff;          /* turquoise move tags */
+}
+
+/* Hibiscus corner decorations — off by default, toggled per-user.
+   Applied to the sheet body so they sit behind the content. */
+[data-mh2-flowers] .monsterhearts2 .mh2-sheet {
+  position: relative;
+}
+[data-mh2-flowers] .monsterhearts2 .mh2-sheet::before,
+[data-mh2-flowers] .monsterhearts2 .mh2-sheet::after {
+  content: "";
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-140 -150 280 300'><defs><radialGradient id='w' cx='50%' cy='92%' r='105%'><stop offset='0%' stop-color='#7d1245'/><stop offset='22%' stop-color='#d6296a'/><stop offset='55%' stop-color='#f0578a'/><stop offset='80%' stop-color='#f98a6e'/><stop offset='100%' stop-color='#ffb27a'/></radialGradient><radialGradient id='t' cx='50%' cy='50%' r='60%'><stop offset='0%' stop-color='#6a0f3e'/><stop offset='70%' stop-color='#a01a55'/><stop offset='100%' stop-color='#a01a55' stop-opacity='0'/></radialGradient><g id='p'><path d='M0,0 C-40,-8 -74,-30 -86,-70 C-95,-100 -84,-126 -60,-134 C-52,-120 -44,-124 -36,-132 C-30,-120 -20,-124 -12,-132 C-4,-122 6,-126 12,-132 C18,-120 8,-40 0,0 Z' fill='url(#w)' stroke='#c02460' stroke-width='1' stroke-opacity='0.35'/><g stroke='#fff' stroke-opacity='0.18' stroke-width='3' fill='none' stroke-linecap='round'><path d='M-20,-20 C-34,-50 -44,-80 -50,-116'/><path d='M-8,-24 C-12,-56 -14,-90 -20,-122'/></g></g></defs><use href='#p' transform='rotate(0)'/><use href='#p' transform='rotate(72)'/><use href='#p' transform='rotate(144)'/><use href='#p' transform='rotate(216)'/><use href='#p' transform='rotate(288)'/><ellipse cx='0' cy='0' rx='30' ry='26' fill='url(#t)'/><path d='M2,2 C-14,-20 -30,-40 -44,-58' stroke='#f7cdb0' stroke-width='5' fill='none' stroke-linecap='round'/><g fill='#f2c33d'><circle cx='-40' cy='-56' r='3.5'/><circle cx='-34' cy='-50' r='3'/><circle cx='-44' cy='-50' r='2.6'/><circle cx='-30' cy='-44' r='3'/><circle cx='-38' cy='-44' r='2.4'/></g></svg>");
+  background-size: contain;
+  background-repeat: no-repeat;
+  pointer-events: none;
+  opacity: 0.9;
+  z-index: 0;
+}
+[data-mh2-flowers] .monsterhearts2 .mh2-sheet::before {
+  top: -14px; right: -10px;
+  transform: rotate(12deg);
+}
+[data-mh2-flowers] .monsterhearts2 .mh2-sheet::after {
+  bottom: -16px; left: -12px;
+  transform: rotate(-24deg) scale(0.85);
+}
+/* keep interactive content above the blooms */
+[data-mh2-flowers] .monsterhearts2 .mh2-header,
+[data-mh2-flowers] .monsterhearts2 .mh2-body { position: relative; z-index: 1; }
+
+/* island chat cards */
+[data-mh2-theme="island"] .mh2-roll-card {
+  background: #eefaf9; border-color: #a9dce0; color: #0f3a44;
+}
+[data-mh2-theme="island"] .mh2-roll-card .mh2-card-header h3 {
+  color: #0f3a44; border-bottom-color: #a9dce0;
+}
+[data-mh2-theme="island"] .mh2-roll-card .mh2-roll-breakdown { color: #4c8a86; }
+[data-mh2-theme="island"] .mh2-roll-card.tier-strong .mh2-roll-tier { color: #12a3b8; }
+[data-mh2-theme="island"] .mh2-roll-card.tier-strong { border-left-color: #12a3b8; }
+[data-mh2-theme="island"] .mh2-roll-card.mh2-string-card { border-left-color: #e83f6f; }
+
+/* v0.13: pass-string button, darkest chat card, strings web */
+.monsterhearts2 .mh2-btn.mh2-pass { color: var(--mh2-thread); }
+.monsterhearts2 .mh2-btn.mh2-pass:hover { border-color: var(--mh2-thread); }
+
+.mh2-roll-card.mh2-darkest-card {
+  border-left: 3px solid #8f1226;
+  background: linear-gradient(180deg, #2a1320, #17121f);
+}
+[data-mh2-theme="light"] .mh2-roll-card.mh2-darkest-card,
+[data-mh2-theme="karibik"] .mh2-roll-card.mh2-darkest-card,
+[data-mh2-theme="trinidad"] .mh2-roll-card.mh2-darkest-card,
+[data-mh2-theme="island"] .mh2-roll-card.mh2-darkest-card {
+  background: linear-gradient(180deg, #f3d9e0, #efe7d8);
+}
+
+/* strings web window */
+.monsterhearts2.mh2-strings-web .window-content {
+  background: var(--mh2-ink);
+  color: var(--mh2-bone);
+  padding: 0.6rem 0.75rem;
+}
+.mh2-web-window { display: flex; flex-direction: column; height: 100%; }
+.mh2-web-head {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 0.5rem; padding-bottom: 0.4rem; margin-bottom: 0.5rem;
+  border-bottom: 1px solid var(--mh2-line);
+}
+.mh2-web-canvas { flex: 1; overflow: auto; min-height: 0; }
+.mh2-web-svg { width: 100%; height: 100%; display: block; }
+.mh2-web-node text { paint-order: stroke; stroke: var(--mh2-ink); stroke-width: 3px; }
+.mh2-web-unresolved { margin-top: 0.5rem; font-size: 0.82rem; color: var(--mh2-bone-dim); }
+.mh2-web-unresolved summary { cursor: pointer; text-transform: uppercase; letter-spacing: 0.06em; font-size: 0.72rem; }
+.mh2-web-unresolved ul { margin: 0.3rem 0 0 1.1rem; }
+.mh2-web-btn { margin-top: 0.25rem; }

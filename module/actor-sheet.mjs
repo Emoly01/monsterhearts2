@@ -32,6 +32,7 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
       stringPlus: MH2ActorSheet.#onStringPlus,
       stringMinus: MH2ActorSheet.#onStringMinus,
       spendString: MH2ActorSheet.#onSpendString,
+      passString: MH2ActorSheet.#onPassString,
       addForward: MH2ActorSheet.#onAddForward,
       deleteForward: MH2ActorSheet.#onDeleteForward,
       createMove: MH2ActorSheet.#onCreateMove,
@@ -217,7 +218,25 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
   }
 
   static async #onToggleDarkest(event, target) {
-    return this.actor.update({ "system.darkestSelfActive": !this.actor.system.darkestSelfActive });
+    const nowActive = !this.actor.system.darkestSelfActive;
+    await this.actor.update({ "system.darkestSelfActive": nowActive });
+    if (nowActive) return this.#announceDarkest();
+  }
+
+  /** Post the character's Darkest Self text to chat as a dramatic beat. */
+  async #announceDarkest() {
+    const TE = foundry.applications.ux?.TextEditor?.implementation ?? TextEditor;
+    const text = await TE.enrichHTML(this.actor.system.darkestSelf || "", {
+      relativeTo: this.actor, secrets: false
+    });
+    return ChatMessage.implementation.create({
+      speaker: ChatMessage.implementation.getSpeaker({ actor: this.actor }),
+      content: `
+        <div class="mh2-roll-card mh2-darkest-card">
+          <header class="mh2-card-header"><h3><i class="fa-solid fa-moon"></i> ${esc(this.actor.name)} — Darkest Self</h3></header>
+          ${text || "<p><em>They descend into their Darkest Self.</em></p>"}
+        </div>`
+    });
   }
 
   /**
@@ -325,6 +344,68 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
 
   static async #onSpendString(event, target) {
     return this.actor.spendString(Number(target.dataset.index));
+  }
+
+  /**
+   * Hand one String from this character over to another character. Decrements
+   * (or removes) the source row and adds/increments a matching row on the
+   * recipient, keyed by the same target name.
+   */
+  static async #onPassString(event, target) {
+    const i = Number(target.dataset.index);
+    const strings = this.#sourceArray("strings");
+    const entry = strings[i];
+    if (!entry || entry.count < 1) {
+      return ui.notifications.warn("No String there to pass.");
+    }
+
+    // Candidate recipients: other character actors the user owns.
+    const candidates = game.actors.filter(a =>
+      a.type === "character" && a.id !== this.actor.id && a.isOwner);
+    if (!candidates.length) {
+      return ui.notifications.warn("No other characters to pass a String to.");
+    }
+
+    const opts = candidates.map(a => `<option value="${a.id}">${esc(a.name)}</option>`).join("");
+    const recipientId = await foundry.applications.api.DialogV2.prompt({
+      window: { title: `Pass a String on ${entry.name || "someone"}` },
+      content: `
+        <div class="mh2-skin-dialog">
+          <p>Hand one String on <strong>${esc(entry.name || "someone")}</strong> to:</p>
+          <div class="form-group"><select name="who">${opts}</select></div>
+        </div>`,
+      ok: {
+        label: "Pass String",
+        icon: "fa-solid fa-hands-holding",
+        callback: (event, button) => button.form.elements.who.value
+      },
+      rejectClose: false
+    });
+    if (!recipientId) return;
+
+    const recipient = game.actors.get(recipientId);
+    if (!recipient) return;
+
+    // Remove one from source.
+    entry.count -= 1;
+    const sourceStrings = entry.count > 0 ? strings : strings.filter((_, idx) => idx !== i);
+    await this.actor.update({ "system.strings": sourceStrings });
+
+    // Add one to recipient, merging by name.
+    const recStrings = foundry.utils.deepClone(recipient.system.toObject().strings ?? []);
+    const match = recStrings.find(s => s.name === entry.name);
+    if (match) match.count += 1;
+    else recStrings.push({ name: entry.name, count: 1 });
+    await recipient.update({ "system.strings": recStrings });
+
+    return ChatMessage.implementation.create({
+      speaker: ChatMessage.implementation.getSpeaker({ actor: this.actor }),
+      content: `
+        <div class="mh2-roll-card mh2-string-card">
+          <header class="mh2-card-header"><h3>String Passed</h3></header>
+          <p><strong>${esc(this.actor.name)}</strong> passes a String on ${esc(entry.name || "someone")} to <strong>${esc(recipient.name)}</strong>.</p>
+        </div>`
+    });
   }
 
   static async #onAddForward(event, target) {

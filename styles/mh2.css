@@ -34,6 +34,56 @@
   --mh2-header-grad-a: #ece2d0;
 }
 
+/* Karibik theme: warm sand paper, turquoise sea accent, coral & gold pops.
+   Colourful in the accents, calm in the base. */
+[data-mh2-theme="karibik"] .monsterhearts2 {
+  --mh2-ink: #fbf4e4;          /* pale sand paper */
+  --mh2-ink-soft: #f1e7d0;     /* raised panels, warmer sand */
+  --mh2-bone: #1f3d3a;         /* primary text: deep sea-teal ink */
+  --mh2-bone-dim: #5f8079;     /* secondary text: muted seafoam */
+  --mh2-thread: #0f9b8e;       /* the "thread" becomes turquoise sea */
+  --mh2-thread-dim: #7fc9c0;
+  --mh2-line: #d8c6a4;         /* hairlines: soft sand */
+  --mh2-miss: #e0654a;         /* coral for a miss */
+  --mh2-weak: #e6a935;         /* sunset gold for partial */
+  --mh2-strong: #159e7f;       /* sea-green for a hit */
+  --mh2-input-bg: rgba(255, 255, 255, 0.6);
+  --mh2-header-grad-a: #ffe9c2; /* a warm sunrise wash at the top */
+}
+
+/* Trinidad: warm cream paper, black ink, flag-red thread, Carnival gold &
+   green accents. Subtle base, colourful in the details. */
+[data-mh2-theme="trinidad"] .monsterhearts2 {
+  --mh2-ink: #fdf6e9;          /* warm cream paper */
+  --mh2-ink-soft: #f6ead2;     /* raised panels, soft sand-gold */
+  --mh2-bone: #1a1613;         /* primary text: near-black (the flag's black) */
+  --mh2-bone-dim: #7a6c57;     /* secondary text: warm taupe */
+  --mh2-thread: #da1a32;       /* the thread becomes Trinidad flag red */
+  --mh2-thread-dim: #e88a97;
+  --mh2-line: #e2cfa8;         /* hairlines: light gold-sand */
+  --mh2-miss: #c8102e;         /* deep red for a miss */
+  --mh2-weak: #e0a419;         /* steelpan gold for partial */
+  --mh2-strong: #159b5c;       /* island green for a hit */
+  --mh2-input-bg: rgba(255, 255, 255, 0.6);
+  --mh2-header-grad-a: #ffe6a8; /* warm gold wash at the top */
+}
+/* Carnival touches: rotate accent colours across the trackers so it reads
+   colourful without overwhelming the cream base. */
+[data-mh2-theme="trinidad"] .monsterhearts2 .mh2-stat-roll:hover {
+  color: #e0a419;             /* gold on hover */
+  text-shadow: 0 0 6px rgba(224, 164, 25, 0.4);
+}
+[data-mh2-theme="trinidad"] .monsterhearts2 .mh2-pips-harm .mh2-pip.filled {
+  background: #da1a32; border-color: #da1a32;   /* red harm diamonds */
+}
+[data-mh2-theme="trinidad"] .monsterhearts2 .mh2-pips-xp .mh2-pip.filled {
+  background: #e0a419; border-color: #e0a419;   /* gold xp circles */
+}
+[data-mh2-theme="trinidad"] .monsterhearts2 .mh2-statline-tag { color: #159b5c; }
+[data-mh2-theme="trinidad"] .monsterhearts2 .mh2-move-stat {
+  background: #e0a419; color: #1a1613;          /* gold move-stat tags */
+}
+
 .monsterhearts2 .window-content {
   background: var(--mh2-ink);
   color: var(--mh2-bone);
@@ -701,3 +751,41 @@
 }
 [data-mh2-theme="light"] .mh2-roll-card .mh2-roll-breakdown { color: #6c5f68; }
 [data-mh2-theme="light"] .mh2-roll-card.mh2-string-card { border-left-color: #c02454; }
+
+/* Karibik chat cards follow the reader's theme */
+[data-mh2-theme="karibik"] .mh2-roll-card {
+  background: #f6ecd6;
+  border-color: #d8c6a4;
+  color: #1f3d3a;
+}
+[data-mh2-theme="karibik"] .mh2-roll-card .mh2-card-header h3 {
+  color: #1f3d3a;
+  border-bottom-color: #d8c6a4;
+}
+[data-mh2-theme="karibik"] .mh2-roll-card .mh2-roll-breakdown { color: #5f8079; }
+[data-mh2-theme="karibik"] .mh2-roll-card.tier-strong .mh2-roll-tier { color: #159e7f; }
+[data-mh2-theme="karibik"] .mh2-roll-card.tier-weak .mh2-roll-tier { color: #cf9420; }
+[data-mh2-theme="karibik"] .mh2-roll-card.tier-miss .mh2-roll-tier { color: #e0654a; }
+[data-mh2-theme="karibik"] .mh2-roll-card.tier-strong { border-left-color: #159e7f; }
+[data-mh2-theme="karibik"] .mh2-roll-card.tier-weak { border-left-color: #e6a935; }
+[data-mh2-theme="karibik"] .mh2-roll-card.tier-miss { border-left-color: #e0654a; }
+[data-mh2-theme="karibik"] .mh2-roll-card.mh2-string-card { border-left-color: #0f9b8e; }
+
+/* Trinidad chat cards */
+[data-mh2-theme="trinidad"] .mh2-roll-card {
+  background: #fdf6e9;
+  border-color: #e2cfa8;
+  color: #1a1613;
+}
+[data-mh2-theme="trinidad"] .mh2-roll-card .mh2-card-header h3 {
+  color: #1a1613;
+  border-bottom-color: #e2cfa8;
+}
+[data-mh2-theme="trinidad"] .mh2-roll-card .mh2-roll-breakdown { color: #7a6c57; }
+[data-mh2-theme="trinidad"] .mh2-roll-card.tier-strong .mh2-roll-tier { color: #159b5c; }
+[data-mh2-theme="trinidad"] .mh2-roll-card.tier-weak .mh2-roll-tier { color: #e0a419; }
+[data-mh2-theme="trinidad"] .mh2-roll-card.tier-miss .mh2-roll-tier { color: #c8102e; }
+[data-mh2-theme="trinidad"] .mh2-roll-card.tier-strong { border-left-color: #159b5c; }
+[data-mh2-theme="trinidad"] .mh2-roll-card.tier-weak { border-left-color: #e0a419; }
+[data-mh2-theme="trinidad"] .mh2-roll-card.tier-miss { border-left-color: #c8102e; }
+[data-mh2-theme="trinidad"] .mh2-roll-card.mh2-string-card { border-left-color: #da1a32; }

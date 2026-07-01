@@ -55,7 +55,7 @@ Hooks.once("init", () => {
     scope: "client",
     config: true,
     type: String,
-    choices: { dark: "Dark (ink & thread)", light: "Light (bone & thread)" },
+    choices: { dark: "Dark (ink & thread)", light: "Light (bone & thread)", karibik: "Karibik (sand & sea)", trinidad: "Trinidad (Carnival warmth)" },
     default: "dark",
     onChange: value => applyMH2Theme(value)
   });

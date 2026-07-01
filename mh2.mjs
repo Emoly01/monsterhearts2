@@ -47,7 +47,27 @@ Hooks.once("init", () => {
   // MC's open NPC-Strings tracker (shared world setting).
   MH2NpcStrings.registerSetting();
   game.system.mh2 = { openNpcStrings: () => new MH2NpcStrings().render(true) };
+
+  // Per-player sheet theme (client-scoped: each user picks their own).
+  game.settings.register("monsterhearts2", "theme", {
+    name: "Sheet Theme",
+    hint: "Choose the look of Monsterhearts sheets. This is per-user.",
+    scope: "client",
+    config: true,
+    type: String,
+    choices: { dark: "Dark (ink & thread)", light: "Light (bone & thread)" },
+    default: "dark",
+    onChange: value => applyMH2Theme(value)
+  });
 });
+
+/** Reflect the chosen theme onto the document root for CSS to read. */
+function applyMH2Theme(theme) {
+  const t = theme ?? game.settings.get("monsterhearts2", "theme") ?? "dark";
+  document.documentElement.setAttribute("data-mh2-theme", t);
+}
+
+Hooks.once("ready", () => applyMH2Theme());
 
 /* Add a launch button to the Actors directory header for everyone. */
 Hooks.on("renderActorDirectory", (app, html) => {

@@ -9,6 +9,25 @@ function escapeHTML(str) {
 export class MH2Actor extends Actor {
 
   /**
+   * Seed the six basic moves onto a freshly created character so they're
+   * always present, skin or no skin.
+   * @override
+   */
+  async _onCreate(data, options, userId) {
+    super._onCreate(data, options, userId);
+    if (game.user.id !== userId) return;
+    if (this.type !== "character") return;
+    const hasMoves = this.items.some(i => i.type === "move");
+    if (hasMoves) return;
+    const toCreate = MH2.basicMoves.map(m => ({
+      name: m.name,
+      type: "move",
+      system: { stat: m.stat, category: "basic", description: m.description }
+    }));
+    await this.createEmbeddedDocuments("Item", toCreate);
+  }
+
+  /**
    * Roll 2d6 (+ stat + forward + ongoing + situational modifier),
    * report the tier, auto-mark XP on a miss, and consume Forward.
    *

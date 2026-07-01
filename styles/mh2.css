@@ -14,6 +14,24 @@
   --mh2-miss: #8c3b3b;
   --mh2-weak: #b08a3e;
   --mh2-strong: #4e8a6a;
+  --mh2-input-bg: rgba(0, 0, 0, 0.35);
+  --mh2-header-grad-a: #1b1524;
+}
+
+/* Light theme: bone paper, ink text, the same red thread. */
+[data-mh2-theme="light"] .monsterhearts2 {
+  --mh2-ink: #f3ede1;          /* warm bone paper */
+  --mh2-ink-soft: #e7decb;     /* raised panels */
+  --mh2-bone: #241a20;         /* primary text (dark ink) */
+  --mh2-bone-dim: #6c5f68;     /* secondary text */
+  --mh2-thread: #c02454;       /* the red thread, a touch deeper for contrast */
+  --mh2-thread-dim: #d68ba2;
+  --mh2-line: #c8bba9;         /* hairlines */
+  --mh2-miss: #a83e3e;
+  --mh2-weak: #9a7420;
+  --mh2-strong: #3d7a5a;
+  --mh2-input-bg: rgba(255, 255, 255, 0.55);
+  --mh2-header-grad-a: #ece2d0;
 }
 
 .monsterhearts2 .window-content {
@@ -44,7 +62,7 @@
 .monsterhearts2 input[type="text"],
 .monsterhearts2 input[type="number"],
 .monsterhearts2 select {
-  background: rgba(0, 0, 0, 0.35);
+  background: var(--mh2-input-bg);
   border: 1px solid var(--mh2-line);
   border-radius: 2px;
   color: var(--mh2-bone);
@@ -56,7 +74,7 @@
   box-shadow: 0 0 4px var(--mh2-thread-dim);
   outline: none;
 }
-.monsterhearts2 input::placeholder { color: #5d5470; }
+.monsterhearts2 input::placeholder { color: var(--mh2-bone-dim); opacity: 0.6; }
 
 /* ---------- header ---------- */
 
@@ -65,7 +83,7 @@
   gap: 0.75rem;
   padding: 0.75rem;
   border-bottom: 1px solid var(--mh2-line);
-  background: linear-gradient(180deg, #1b1524, var(--mh2-ink));
+  background: linear-gradient(180deg, var(--mh2-header-grad-a), var(--mh2-ink));
 }
 .monsterhearts2 .mh2-portrait {
   width: 72px;
@@ -669,3 +687,17 @@
   background: linear-gradient(180deg, #2a1320, var(--mh2-ink));
   border-bottom-color: var(--mh2-thread-dim);
 }
+
+
+/* v0.10: chat cards follow the reader's theme */
+[data-mh2-theme="light"] .mh2-roll-card {
+  background: #efe7d8;
+  border-color: #c8bba9;
+  color: #241a20;
+}
+[data-mh2-theme="light"] .mh2-roll-card .mh2-card-header h3 {
+  color: #241a20;
+  border-bottom-color: #c8bba9;
+}
+[data-mh2-theme="light"] .mh2-roll-card .mh2-roll-breakdown { color: #6c5f68; }
+[data-mh2-theme="light"] .mh2-roll-card.mh2-string-card { border-left-color: #c02454; }

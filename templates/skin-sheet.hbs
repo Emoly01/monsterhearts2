@@ -116,7 +116,8 @@
           <option value="{{this.value}}"{{#if this.selected}} selected{{/if}}>{{this.label}}</option>
           {{/each}}
         </select>
-        <input class="mh2-count" type="number" name="system.backstorySteps.{{@index}}.count" value="{{this.count}}" min="1" step="1" title="How many Strings">
+        <input class="mh2-count" type="number" name="system.backstorySteps.{{@index}}.count" value="{{this.count}}" min="1" step="1" title="Primary count: Strings / names / tokens">
+        <input class="mh2-count" type="number" name="system.backstorySteps.{{@index}}.count2" value="{{this.count2}}" min="0" step="1" title="Secondary count (Exchange only: how many you take back)">
         <a class="mh2-btn mh2-del" data-action="deleteBackstoryStep" data-index="{{@index}}" title="Delete"><i class="fa-solid fa-xmark"></i></a>
       </div>
       {{else}}

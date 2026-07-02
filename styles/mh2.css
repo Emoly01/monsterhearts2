@@ -942,3 +942,12 @@
 
 .monsterhearts2 .mh2-backstory-row select { flex: 0 0 14rem; }
 .monsterhearts2 .mh2-backstory-row .mh2-count { width: 2.6rem; }
+
+/* v0.16: divide/token dialog rows */
+.mh2-skin-dialog .mh2-divide-row {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+}
+.mh2-skin-dialog .mh2-divide-row input[type="text"] { flex: 1; }
+.mh2-skin-dialog .mh2-divide-row input[type="number"] { width: 3.4rem; text-align: center; }

@@ -147,7 +147,9 @@ export class SkinData extends foundry.abstract.TypeDataModel {
       backstorySteps: new ArrayField(new SchemaField({
         label: new StringField({ required: true, blank: true }),
         type: new StringField({ required: true, blank: false, initial: "note" }),
-        count: new NumberField({ required: true, integer: true, min: 1, initial: 1 })
+        count: new NumberField({ required: true, integer: true, min: 1, initial: 1 }),
+        /** Secondary count, used by "exchange" (you gain this many back). */
+        count2: new NumberField({ required: true, integer: true, min: 0, initial: 0 })
       })),
 
       /** Advancement options offered when the experience track is full. */

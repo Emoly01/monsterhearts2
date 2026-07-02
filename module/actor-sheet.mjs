@@ -752,6 +752,122 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
         continue;
       }
 
+      if (step.type === "mutual") {
+        const name = await DialogV2.prompt({
+          window: { title: "Backstory" },
+          content: `
+            <div class="mh2-skin-dialog">
+              <p>${esc(label)}</p>
+              <div class="form-group"><label>You gain ${count} on each other with:</label>
+              <input type="text" name="who" placeholder="Name" autofocus></div>
+            </div>`,
+          ok: { label: "Apply", callback: (ev, b) => b.form.elements.who.value },
+          rejectClose: false
+        });
+        if (name?.trim()) {
+          const clean = name.trim();
+          await this.#gainStringsOn(clean, count);
+          await this.#grantStringOnMe(clean, count);
+          done.push(`${label} — ${clean}: ${count} String${count > 1 ? "s" : ""} each way`);
+        }
+        continue;
+      }
+
+      if (step.type === "exchange") {
+        const c2 = Math.max(0, Number(step.count2) || 0);
+        const name = await DialogV2.prompt({
+          window: { title: "Backstory" },
+          content: `
+            <div class="mh2-skin-dialog">
+              <p>${esc(label)}</p>
+              <div class="form-group"><label>They gain ${count} String${count > 1 ? "s" : ""} on you${c2 ? `, you take ${c2} on them` : ""}:</label>
+              <input type="text" name="who" placeholder="Name" autofocus></div>
+            </div>`,
+          ok: { label: "Apply", callback: (ev, b) => b.form.elements.who.value },
+          rejectClose: false
+        });
+        if (name?.trim()) {
+          const clean = name.trim();
+          await this.#grantStringOnMe(clean, count);
+          if (c2) await this.#gainStringsOn(clean, c2);
+          done.push(`${label} — ${clean}: gains ${count} on you${c2 ? `, you take ${c2}` : ""}`);
+        }
+        continue;
+      }
+
+      if (step.type === "gainEach") {
+        const rows = Array.fromRange(count).map(i => `
+          <div class="form-group"><label>Name ${i + 1}</label>
+          <input type="text" name="who${i}" placeholder="Name"></div>`).join("");
+        const names = await DialogV2.prompt({
+          window: { title: "Backstory" },
+          content: `<div class="mh2-skin-dialog"><p>${esc(label)}</p><p>You gain 1 String on each:</p>${rows}</div>`,
+          ok: {
+            label: "Apply",
+            callback: (ev, b) => Array.fromRange(count)
+              .map(i => b.form.elements[`who${i}`].value.trim()).filter(Boolean)
+          },
+          rejectClose: false
+        });
+        if (names?.length) {
+          for (const nm of names) await this.#gainStringsOn(nm, 1);
+          done.push(`${label} — ${names.join(", ")}`);
+        }
+        continue;
+      }
+
+      if (step.type === "divide") {
+        const rows = Array.fromRange(count).map(i => `
+          <div class="mh2-divide-row form-group">
+            <input type="text" name="who${i}" placeholder="Name (person or Dark Power…)">
+            <input type="number" name="c${i}" value="${i === 0 ? count : 0}" min="0" step="1">
+          </div>`).join("");
+        const parts = await DialogV2.prompt({
+          window: { title: "Backstory" },
+          content: `<div class="mh2-skin-dialog"><p>${esc(label)}</p><p>Divide <strong>${count}</strong> Strings on you — any mix of people:</p>${rows}</div>`,
+          ok: {
+            label: "Apply",
+            callback: (ev, b) => Array.fromRange(count).map(i => ({
+              name: b.form.elements[`who${i}`].value.trim(),
+              c: Math.max(0, Number(b.form.elements[`c${i}`].value) || 0)
+            })).filter(p => p.name && p.c > 0)
+          },
+          rejectClose: false
+        });
+        if (parts?.length) {
+          const total = parts.reduce((s, p) => s + p.c, 0);
+          if (total !== count) ui.notifications.warn(`You divided ${total}, the step says ${count} — applying as entered.`);
+          for (const p of parts) await this.#grantStringOnMe(p.name, p.c);
+          done.push(`${label} — ${parts.map(p => `${p.name} ×${p.c}`).join(", ")}`);
+        }
+        continue;
+      }
+
+      if (step.type === "tokens") {
+        const rows = Array.fromRange(count).map(i => `
+          <div class="mh2-divide-row form-group">
+            <input type="text" name="who${i}" placeholder="Whose?">
+            <input type="text" name="what${i}" placeholder="What is it? (a lock of hair…)">
+          </div>`).join("");
+        const tokens = await DialogV2.prompt({
+          window: { title: "Backstory" },
+          content: `<div class="mh2-skin-dialog"><p>${esc(label)}</p><p>${count} Sympathetic Token${count > 1 ? "s" : ""} — each counts as a String on its person:</p>${rows}</div>`,
+          ok: {
+            label: "Apply",
+            callback: (ev, b) => Array.fromRange(count).map(i => ({
+              whose: b.form.elements[`who${i}`].value.trim(),
+              what: b.form.elements[`what${i}`].value.trim()
+            })).filter(t => t.whose)
+          },
+          rejectClose: false
+        });
+        if (tokens?.length) {
+          for (const t of tokens) await this.#gainStringsOn(t.whose, 1);
+          done.push(`${label} — ${tokens.map(t => `Token on ${t.whose}${t.what ? ` (${t.what})` : ""}`).join("; ")}`);
+        }
+        continue;
+      }
+
       // gainOn / giveTo need a name.
       const isGain = step.type === "gainOn";
       const name = await DialogV2.prompt({

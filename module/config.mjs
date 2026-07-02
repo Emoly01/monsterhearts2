@@ -26,7 +26,12 @@ MH2.backstoryTypes = [
   { value: "note", label: "Note (no automation)" },
   { value: "gainOn", label: "Gain String(s) on someone" },
   { value: "giveTo", label: "Give someone String(s) on you" },
-  { value: "giveAll", label: "Give everyone a String on you" }
+  { value: "giveAll", label: "Give everyone a String on you" },
+  { value: "mutual", label: "Mutual — you gain on each other" },
+  { value: "exchange", label: "Exchange — give N, take N2 (same person)" },
+  { value: "gainEach", label: "Gain 1 String on each of N names" },
+  { value: "divide", label: "Divide N Strings among people (on you)" },
+  { value: "tokens", label: "Sympathetic Tokens (count as Strings)" }
 ];
 
 /** MC-voice flavor lines appended to roll cards. */

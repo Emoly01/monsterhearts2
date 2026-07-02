@@ -951,3 +951,80 @@
 }
 .mh2-skin-dialog .mh2-divide-row input[type="text"] { flex: 1; }
 .mh2-skin-dialog .mh2-divide-row input[type="number"] { width: 3.4rem; text-align: center; }
+
+/* =====================================================
+   v0.17: Pinboard
+   ===================================================== */
+
+.monsterhearts2.mh2-pinboard .window-content {
+  background: var(--mh2-ink);
+  color: var(--mh2-bone);
+  padding: 0.5rem 0.6rem;
+}
+.mh2-board-window { display: flex; flex-direction: column; height: 100%; }
+.mh2-board-head {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding-bottom: 0.4rem;
+  margin-bottom: 0.4rem;
+  border-bottom: 1px solid var(--mh2-line);
+  flex-wrap: wrap;
+}
+.mh2-board-select { max-width: 14rem; }
+.mh2-board-canvas { flex: 1; overflow: auto; min-height: 0; border: 1px solid var(--mh2-line); border-radius: 3px; }
+.mh2-board-surface { position: relative; width: 1600px; height: 1000px; }
+
+/* backgrounds */
+.mh2-board-surface.bg-paper {
+  background:
+    radial-gradient(circle at 20% 15%, rgba(224,164,25,0.08), transparent 40%),
+    radial-gradient(circle at 80% 85%, rgba(18,163,184,0.07), transparent 40%),
+    #fdf3dc;
+}
+.mh2-board-surface.bg-grid {
+  background-color: #fdf6e9;
+  background-image:
+    linear-gradient(rgba(180,150,100,0.18) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(180,150,100,0.18) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+.mh2-board-surface.bg-night {
+  background:
+    radial-gradient(ellipse at 50% 30%, #1d1726 0%, #14101a 70%),
+    #14101a;
+}
+
+/* cards */
+.mh2-card {
+  position: absolute;
+  min-width: 110px;
+  max-width: 190px;
+  padding: 0.65rem 0.6rem 0.45rem;
+  border-radius: 3px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.28);
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+  font-family: "Signika", sans-serif;
+  line-height: 1.25;
+}
+.mh2-card.dragging { cursor: grabbing; box-shadow: 0 8px 18px rgba(0,0,0,0.4); z-index: 20; }
+.mh2-card-pin {
+  position: absolute;
+  top: -6px; left: 50%;
+  width: 12px; height: 12px;
+  margin-left: -6px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fff8, transparent 55%), #7d1029;
+  box-shadow: 0 2px 3px rgba(0,0,0,0.45);
+}
+.mh2-card-label { display: block; font-weight: 700; font-size: 0.9rem; color: #1a1613; }
+.mh2-card-note { display: block; font-size: 0.72rem; color: #5a4f45; margin-top: 0.15rem; }
+
+.mh2-card.card-red   { background: #fbe3e7; border: 2px solid #da1a32; }
+.mh2-card.card-gold  { background: #fdf3d9; border: 2px solid #e0a419; }
+.mh2-card.card-green { background: #e2f4ea; border: 2px solid #159b5c; }
+.mh2-card.card-sea   { background: #e0f4f7; border: 2px solid #12a3b8; }
+.mh2-card.card-pink  { background: #fde7ef; border: 2px solid #e83f6f; }
+.mh2-card.card-bone  { background: #f6efe2; border: 2px solid #b98a4a; }

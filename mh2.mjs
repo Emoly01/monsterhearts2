@@ -6,6 +6,7 @@ import { MH2ItemSheet } from "./module/item-sheet.mjs";
 import { MH2SkinSheet } from "./module/skin-sheet.mjs";
 import { MH2NpcStrings } from "./module/npc-strings.mjs";
 import { MH2StringsWeb } from "./module/strings-web.mjs";
+import { MH2Pinboard } from "./module/pinboard.mjs";
 
 Hooks.once("init", () => {
   console.log("Monsterhearts 2 | Keeping the story feral.");
@@ -47,9 +48,11 @@ Hooks.once("init", () => {
 
   // MC's open NPC-Strings tracker (shared world setting).
   MH2NpcStrings.registerSetting();
+  MH2Pinboard.registerSetting();
   game.system.mh2 = {
     openNpcStrings: () => new MH2NpcStrings().render(true),
     openStringsWeb: () => new MH2StringsWeb().render(true),
+    openPinboard: () => new MH2Pinboard().render(true),
     darkestFlare: (name) => {
       const el = document.createElement("div");
       el.className = "mh2-flare";
@@ -124,6 +127,13 @@ Hooks.once("ready", () => {
       return actor.update({ "system.strings": strings });
     }
 
+    if (payload.type === "setBoards") {
+      if (Array.isArray(payload.boards)) {
+        return game.settings.set("monsterhearts2", "boards", payload.boards);
+      }
+      return;
+    }
+
     if (payload.type === "grantNpcString") {
       const entries = foundry.utils.deepClone(game.settings.get("monsterhearts2", "npcStrings") ?? []);
       const match = entries.find(e => e.holder === payload.holder && e.target === payload.target);
@@ -155,4 +165,11 @@ Hooks.on("renderActorDirectory", (app, html) => {
   webBtn.innerHTML = `<i class="fa-solid fa-diagram-project"></i> Strings Web`;
   webBtn.addEventListener("click", () => new MH2StringsWeb().render(true));
   header.appendChild(webBtn);
+
+  const boardBtn = document.createElement("button");
+  boardBtn.type = "button";
+  boardBtn.className = "mh2-npc-strings-btn mh2-board-btn";
+  boardBtn.innerHTML = `<i class="fa-solid fa-map-location-dot"></i> Pinboard`;
+  boardBtn.addEventListener("click", () => new MH2Pinboard().render(true));
+  header.appendChild(boardBtn);
 });

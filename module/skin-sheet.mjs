@@ -15,7 +15,9 @@ export class MH2SkinSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
       editImage: MH2SkinSheet.#onEditImage,
       deleteSkinMove: MH2SkinSheet.#onDeleteSkinMove,
       addAdvancement: MH2SkinSheet.#onAddAdvancement,
-      deleteAdvancement: MH2SkinSheet.#onDeleteAdvancement
+      deleteAdvancement: MH2SkinSheet.#onDeleteAdvancement,
+      addBackstoryStep: MH2SkinSheet.#onAddBackstoryStep,
+      deleteBackstoryStep: MH2SkinSheet.#onDeleteBackstoryStep
     }
   };
 
@@ -38,6 +40,10 @@ export class MH2SkinSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
     context.item = item;
     context.system = item.system;
     context.statLabels = MH2.stats;
+    context.backstorySteps = (item.system.backstorySteps ?? []).map(s => ({
+      ...s,
+      typeOptions: MH2.backstoryTypes.map(o => ({ ...o, selected: o.value === s.type }))
+    }));
 
     const enrichOpts = { relativeTo: item, secrets: item.isOwner };
     context.enriched = {
@@ -75,7 +81,7 @@ export class MH2SkinSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
     const submitData = super._prepareSubmitData(event, form, formData, updateData);
     const sys = submitData.system;
     if (sys) {
-      for (const key of ["moves", "advancements"]) {
+      for (const key of ["moves", "advancements", "backstorySteps"]) {
         if (sys[key] && !Array.isArray(sys[key])) {
           const src = this.item.system.toObject()[key] ?? [];
           sys[key] = src.map((entry, i) =>
@@ -147,5 +153,17 @@ export class MH2SkinSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
     const advancements = this.item.system.toObject().advancements ?? [];
     advancements.splice(Number(target.dataset.index), 1);
     return this.item.update({ "system.advancements": advancements });
+  }
+
+  static async #onAddBackstoryStep(event, target) {
+    const steps = this.item.system.toObject().backstorySteps ?? [];
+    steps.push({ label: "", type: "note", count: 1 });
+    return this.item.update({ "system.backstorySteps": steps });
+  }
+
+  static async #onDeleteBackstoryStep(event, target) {
+    const steps = this.item.system.toObject().backstorySteps ?? [];
+    steps.splice(Number(target.dataset.index), 1);
+    return this.item.update({ "system.backstorySteps": steps });
   }
 }

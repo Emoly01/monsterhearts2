@@ -49,7 +49,14 @@ Hooks.once("init", () => {
   MH2NpcStrings.registerSetting();
   game.system.mh2 = {
     openNpcStrings: () => new MH2NpcStrings().render(true),
-    openStringsWeb: () => new MH2StringsWeb().render(true)
+    openStringsWeb: () => new MH2StringsWeb().render(true),
+    darkestFlare: (name) => {
+      const el = document.createElement("div");
+      el.className = "mh2-flare";
+      el.innerHTML = `<div class="mh2-flare-inner"><i class="fa-solid fa-moon"></i><span>${(name ?? "").replace(/[&<>"']/g, "")}</span><em>Darkest Self</em></div>`;
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 3200);
+    }
   };
 
   // Per-player sheet theme (client-scoped: each user picks their own).
@@ -93,17 +100,37 @@ Hooks.once("ready", () => { applyMH2Theme(); applyMH2Flowers(); });
 /* Socket: apply a String grant on an actor the acting user can't write to.
    Executed by the first GM online. */
 Hooks.once("ready", () => {
+  const isFirstActiveGM = () =>
+    game.user.isGM && game.users.find(u => u.isGM && u.active)?.id === game.user.id;
+
   game.socket.on("system.monsterhearts2", async (payload) => {
-    if (!payload || payload.type !== "grantString") return;
-    if (!game.user.isGM) return;               // only a GM applies it
-    if (game.users.find(u => u.isGM && u.active)?.id !== game.user.id) return; // just the first GM
-    const actor = game.actors.get(payload.actorId);
-    if (!actor) return;
-    const strings = foundry.utils.deepClone(actor.system.toObject().strings ?? []);
-    const match = strings.find(s => s.name === payload.name);
-    if (match) match.count += payload.count ?? 1;
-    else strings.push({ name: payload.name, count: payload.count ?? 1 });
-    await actor.update({ "system.strings": strings });
+    if (!payload) return;
+
+    // Everyone renders the Darkest Self flare.
+    if (payload.type === "darkestFlare") {
+      return game.system.mh2?.darkestFlare?.(payload.name);
+    }
+
+    // GM-executed writes below.
+    if (!isFirstActiveGM()) return;
+
+    if (payload.type === "grantString") {
+      const actor = game.actors.get(payload.actorId);
+      if (!actor) return;
+      const strings = foundry.utils.deepClone(actor.system.toObject().strings ?? []);
+      const match = strings.find(s => s.name === payload.name);
+      if (match) match.count += payload.count ?? 1;
+      else strings.push({ name: payload.name, count: payload.count ?? 1 });
+      return actor.update({ "system.strings": strings });
+    }
+
+    if (payload.type === "grantNpcString") {
+      const entries = foundry.utils.deepClone(game.settings.get("monsterhearts2", "npcStrings") ?? []);
+      const match = entries.find(e => e.holder === payload.holder && e.target === payload.target);
+      if (match) match.count = (Number(match.count) || 0) + (payload.count ?? 1);
+      else entries.push({ holder: payload.holder, target: payload.target, count: payload.count ?? 1 });
+      return game.settings.set("monsterhearts2", "npcStrings", entries);
+    }
   });
 });
 

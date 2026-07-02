@@ -22,6 +22,30 @@ MH2.statOptions = [
   { value: "dark", label: "Dark" }
 ];
 
+MH2.backstoryTypes = [
+  { value: "note", label: "Note (no automation)" },
+  { value: "gainOn", label: "Gain String(s) on someone" },
+  { value: "giveTo", label: "Give someone String(s) on you" },
+  { value: "giveAll", label: "Give everyone a String on you" }
+];
+
+/** MC-voice flavor lines appended to roll cards. */
+MH2.flavorMiss = [
+  "The abyss takes notice.",
+  "Somewhere, something smiles with too many teeth.",
+  "The night files this away for later.",
+  "Your heart wanted this. The dice disagreed.",
+  "This is how rumors start.",
+  "The town gets a little hungrier."
+];
+MH2.flavorStrong = [
+  "The room tilts your way.",
+  "Feral. Effortless. Unfair.",
+  "Someone should really stop you. No one will.",
+  "The monster in you purrs.",
+  "For a heartbeat, everyone forgets to breathe."
+];
+
 MH2.categoryOptions = [
   { value: "basic", label: "Basic move" },
   { value: "skin", label: "Skin move" }

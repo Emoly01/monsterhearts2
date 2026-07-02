@@ -887,3 +887,58 @@
 .mh2-web-unresolved summary { cursor: pointer; text-transform: uppercase; letter-spacing: 0.06em; font-size: 0.72rem; }
 .mh2-web-unresolved ul { margin: 0.3rem 0 0 1.1rem; }
 .mh2-web-btn { margin-top: 0.25rem; }
+
+/* v0.15: darkest flare, flavor lines, backstory rows */
+.mh2-flare {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(ellipse at center, rgba(20,10,18,0) 30%, rgba(90,10,30,0.55) 100%);
+  animation: mh2FlareFade 3.2s ease-in-out forwards;
+}
+.mh2-flare-inner {
+  text-align: center;
+  color: #f3d9e0;
+  text-shadow: 0 0 22px rgba(210, 59, 99, 0.9), 0 2px 6px rgba(0,0,0,0.8);
+  animation: mh2FlarePulse 3.2s ease-in-out forwards;
+}
+.mh2-flare-inner i { font-size: 3.2rem; display: block; margin-bottom: 0.4rem; }
+.mh2-flare-inner span {
+  display: block;
+  font-family: Georgia, serif;
+  font-size: 2.6rem;
+  letter-spacing: 0.12em;
+}
+.mh2-flare-inner em {
+  display: block;
+  font-size: 1rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  opacity: 0.85;
+  margin-top: 0.3rem;
+}
+@keyframes mh2FlareFade {
+  0% { opacity: 0; } 12% { opacity: 1; } 78% { opacity: 1; } 100% { opacity: 0; }
+}
+@keyframes mh2FlarePulse {
+  0% { transform: scale(0.92); } 16% { transform: scale(1.02); } 100% { transform: scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mh2-flare, .mh2-flare-inner { animation-duration: 1.2s; }
+}
+
+.mh2-roll-card .mh2-flavor {
+  font-style: italic;
+  font-size: 0.78rem;
+  opacity: 0.75;
+  margin: 0.35rem 0 0 0;
+  border-top: 1px dotted #3a3147;
+  padding-top: 0.3rem;
+}
+
+.monsterhearts2 .mh2-backstory-row select { flex: 0 0 14rem; }
+.monsterhearts2 .mh2-backstory-row .mh2-count { width: 2.6rem; }

@@ -143,6 +143,13 @@ export class SkinData extends foundry.abstract.TypeDataModel {
         description: new StringField({ required: true, blank: true })
       })),
 
+      /** Backstory steps run after the skin is applied. type: gainOn | giveTo | giveAll | note */
+      backstorySteps: new ArrayField(new SchemaField({
+        label: new StringField({ required: true, blank: true }),
+        type: new StringField({ required: true, blank: false, initial: "note" }),
+        count: new NumberField({ required: true, integer: true, min: 1, initial: 1 })
+      })),
+
       /** Advancement options offered when the experience track is full. */
       advancements: new ArrayField(new SchemaField({
         label: new StringField({ required: true, blank: true }),

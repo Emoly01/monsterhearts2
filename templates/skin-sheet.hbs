@@ -103,6 +103,28 @@
     </section>
 
     <section class="mh2-panel">
+      <header class="mh2-panel-header">
+        <h2>Backstory Steps</h2>
+        <a class="mh2-btn" data-action="addBackstoryStep" title="Add step">＋</a>
+      </header>
+      <p class="mh2-hint">Run in order after the skin is applied. Automated types write Strings for the player.</p>
+      {{#each backstorySteps}}
+      <div class="mh2-row mh2-backstory-row">
+        <input type="text" name="system.backstorySteps.{{@index}}.label" value="{{this.label}}" placeholder="e.g. You've captured someone's fancy">
+        <select name="system.backstorySteps.{{@index}}.type">
+          {{#each this.typeOptions}}
+          <option value="{{this.value}}"{{#if this.selected}} selected{{/if}}>{{this.label}}</option>
+          {{/each}}
+        </select>
+        <input class="mh2-count" type="number" name="system.backstorySteps.{{@index}}.count" value="{{this.count}}" min="1" step="1" title="How many Strings">
+        <a class="mh2-btn mh2-del" data-action="deleteBackstoryStep" data-index="{{@index}}" title="Delete"><i class="fa-solid fa-xmark"></i></a>
+      </div>
+      {{else}}
+      <p class="mh2-empty">No steps — the skin applies without a backstory walkthrough.</p>
+      {{/each}}
+    </section>
+
+    <section class="mh2-panel">
       <header class="mh2-panel-header"><h2>Backstory</h2></header>
       <prose-mirror name="system.backstory" value="{{system.backstory}}" toggled>{{{enriched.backstory}}}</prose-mirror>
     </section>

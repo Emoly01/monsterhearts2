@@ -225,6 +225,9 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
 
   /** Post the character's Darkest Self text to chat as a dramatic beat. */
   async #announceDarkest() {
+    // Table-wide flare: everyone sees the descent.
+    game.socket.emit("system.monsterhearts2", { type: "darkestFlare", name: this.actor.name });
+    game.system.mh2?.darkestFlare?.(this.actor.name);
     const TE = foundry.applications.ux?.TextEditor?.implementation ?? TextEditor;
     const text = await TE.enrichHTML(this.actor.system.darkestSelf || "", {
       relativeTo: this.actor, secrets: false
@@ -644,7 +647,148 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     if (toCreate.length) await this.actor.createEmbeddedDocuments("Item", toCreate);
 
     ui.notifications.info(`${this.actor.name} is now ${skin.name}.`);
+
+    // Walk the skin's backstory steps, if any.
+    if ((s.backstorySteps ?? []).length) await this.#runBackstory(s.backstorySteps);
     return true;
+  }
+
+  /* -------------------------------------------- */
+  /*  Backstory walkthrough                       */
+  /* -------------------------------------------- */
+
+  /**
+   * Grant `count` Strings held BY `holderName` ON... wait, semantics:
+   * gives `targetName` a row "{holderName} x count"? No — a String row on an
+   * actor lists who THEY hold Strings on. To give X a String on ME, add a row
+   * named after ME to X's list. If X isn't a character, record it in the open
+   * NPC tracker instead (holder = X, target = me).
+   */
+  async #grantStringOnMe(targetName, count) {
+    const me = this.actor;
+    const clean = targetName.trim();
+    if (!clean) return false;
+    const target = game.actors.find(a =>
+      a.type === "character" && a.name.trim().toLowerCase() === clean.toLowerCase());
+
+    if (target && target.id !== me.id) {
+      if (target.isOwner) {
+        const strings = foundry.utils.deepClone(target.system.toObject().strings ?? []);
+        const match = strings.find(x => x.name === me.name);
+        if (match) match.count += count;
+        else strings.push({ name: me.name, count });
+        await target.update({ "system.strings": strings });
+      } else if (game.users.find(u => u.isGM && u.active)) {
+        game.socket.emit("system.monsterhearts2", {
+          type: "grantString", actorId: target.id, name: me.name, count
+        });
+      } else {
+        ui.notifications.warn(`No GM online to give ${target.name} their String on ${me.name}.`);
+        return false;
+      }
+      return true;
+    }
+
+    // Not a character: record in the shared NPC-Strings tracker via GM.
+    if (game.user.isGM) {
+      const entries = foundry.utils.deepClone(game.settings.get("monsterhearts2", "npcStrings") ?? []);
+      const match = entries.find(e => e.holder === clean && e.target === me.name);
+      if (match) match.count = (Number(match.count) || 0) + count;
+      else entries.push({ holder: clean, target: me.name, count });
+      await game.settings.set("monsterhearts2", "npcStrings", entries);
+    } else if (game.users.find(u => u.isGM && u.active)) {
+      game.socket.emit("system.monsterhearts2", {
+        type: "grantNpcString", holder: clean, target: me.name, count
+      });
+    } else {
+      ui.notifications.warn(`No GM online to record ${clean}'s String in the tracker.`);
+      return false;
+    }
+    return true;
+  }
+
+  /** Add Strings to this actor's own list, merged by name. */
+  async #gainStringsOn(name, count) {
+    const clean = name.trim();
+    if (!clean) return false;
+    const strings = this.#sourceArray("strings");
+    const match = strings.find(x => x.name === clean);
+    if (match) match.count += count;
+    else strings.push({ name: clean, count });
+    await this.actor.update({ "system.strings": strings });
+    return true;
+  }
+
+  async #runBackstory(steps) {
+    const DialogV2 = foundry.applications.api.DialogV2;
+    const done = [];
+
+    for (const step of steps) {
+      const label = step.label || "(unnamed step)";
+      const count = Math.max(1, Number(step.count) || 1);
+
+      if (step.type === "note") {
+        await DialogV2.prompt({
+          window: { title: "Backstory" },
+          content: `<div class="mh2-skin-dialog"><p>${esc(label)}</p></div>`,
+          ok: { label: "Noted" },
+          rejectClose: false
+        });
+        done.push(label);
+        continue;
+      }
+
+      if (step.type === "giveAll") {
+        const others = game.actors.filter(a => a.type === "character" && a.id !== this.actor.id);
+        const go = await DialogV2.confirm({
+          window: { title: "Backstory" },
+          content: `<div class="mh2-skin-dialog"><p>${esc(label)}</p><p>Every other main character (${others.length}) gains a String on <strong>${esc(this.actor.name)}</strong>. Apply?</p></div>`,
+          rejectClose: false
+        });
+        if (go) {
+          for (const other of others) await this.#grantStringOnMe(other.name, 1);
+          done.push(`${label} — everyone gained a String`);
+        }
+        continue;
+      }
+
+      // gainOn / giveTo need a name.
+      const isGain = step.type === "gainOn";
+      const name = await DialogV2.prompt({
+        window: { title: "Backstory" },
+        content: `
+          <div class="mh2-skin-dialog">
+            <p>${esc(label)}</p>
+            <div class="form-group">
+              <label>${isGain ? `You gain ${count} String${count > 1 ? "s" : ""} on:` : `They gain ${count} String${count > 1 ? "s" : ""} on you:`}</label>
+              <input type="text" name="who" placeholder="Name" autofocus>
+            </div>
+          </div>`,
+        ok: {
+          label: "Apply",
+          callback: (event, button) => button.form.elements.who.value
+        },
+        rejectClose: false
+      });
+      if (!name || !name.trim()) continue;
+
+      const ok = isGain
+        ? await this.#gainStringsOn(name, count)
+        : await this.#grantStringOnMe(name, count);
+      if (ok) done.push(`${label} — ${name.trim()}`);
+    }
+
+    if (done.length) {
+      const items = done.map(d => `<li>${esc(d)}</li>`).join("");
+      return ChatMessage.implementation.create({
+        speaker: ChatMessage.implementation.getSpeaker({ actor: this.actor }),
+        content: `
+          <div class="mh2-roll-card mh2-string-card">
+            <header class="mh2-card-header"><h3>Backstory — ${esc(this.actor.name)}</h3></header>
+            <ul>${items}</ul>
+          </div>`
+      });
+    }
   }
 
   /* -------------------------------------------- */

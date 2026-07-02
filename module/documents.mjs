@@ -127,6 +127,13 @@ export class MH2Actor extends Actor {
     if (ongoing) bits.push(`Ongoing ${ongoing >= 0 ? "+" : ""}${ongoing}`);
     if (mod) bits.push(`Mod ${mod >= 0 ? "+" : ""}${mod}`);
 
+    let flavor = "";
+    if (tier === "miss" && MH2.flavorMiss?.length) {
+      flavor = MH2.flavorMiss[Math.floor(Math.random() * MH2.flavorMiss.length)];
+    } else if (tier === "strong" && MH2.flavorStrong?.length) {
+      flavor = MH2.flavorStrong[Math.floor(Math.random() * MH2.flavorStrong.length)];
+    }
+
     const content = `
       <div class="mh2-roll-card tier-${tier}">
         <header class="mh2-card-header"><h3>${escapeHTML(title)}</h3></header>
@@ -137,6 +144,7 @@ export class MH2Actor extends Actor {
         </div>
         ${bits.length ? `<div class="mh2-roll-breakdown">${bits.join(" · ")}</div>` : ""}
         ${xpNote}
+        ${flavor ? `<p class="mh2-flavor">${flavor}</p>` : ""}
       </div>`;
 
     const messageData = {

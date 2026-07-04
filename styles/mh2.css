@@ -953,7 +953,7 @@
 .mh2-skin-dialog .mh2-divide-row input[type="number"] { width: 3.4rem; text-align: center; }
 
 /* =====================================================
-   v0.17: Pinboard
+   v0.18: Map editor (boxes / text / lines)
    ===================================================== */
 
 .monsterhearts2.mh2-pinboard .window-content {
@@ -963,23 +963,19 @@
 }
 .mh2-board-window { display: flex; flex-direction: column; height: 100%; }
 .mh2-board-head {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-  padding-bottom: 0.4rem;
-  margin-bottom: 0.4rem;
-  border-bottom: 1px solid var(--mh2-line);
-  flex-wrap: wrap;
+  display: flex; align-items: center; gap: 0.35rem;
+  padding-bottom: 0.4rem; margin-bottom: 0.4rem;
+  border-bottom: 1px solid var(--mh2-line); flex-wrap: wrap;
 }
-.mh2-board-select { max-width: 14rem; }
+.mh2-board-select { max-width: 13rem; }
+.mh2-board-tools { display: inline-flex; gap: 0.2rem; }
 .mh2-board-canvas { flex: 1; overflow: auto; min-height: 0; border: 1px solid var(--mh2-line); border-radius: 3px; }
-.mh2-board-surface { position: relative; width: 1600px; height: 1000px; }
+.mh2-board-surface { position: relative; width: 1800px; height: 1200px; }
 
-/* backgrounds */
 .mh2-board-surface.bg-paper {
   background:
-    radial-gradient(circle at 20% 15%, rgba(224,164,25,0.08), transparent 40%),
-    radial-gradient(circle at 80% 85%, rgba(18,163,184,0.07), transparent 40%),
+    radial-gradient(circle at 18% 12%, rgba(224,164,25,0.08), transparent 42%),
+    radial-gradient(circle at 82% 88%, rgba(18,163,184,0.07), transparent 42%),
     #fdf3dc;
 }
 .mh2-board-surface.bg-grid {
@@ -990,41 +986,75 @@
   background-size: 50px 50px;
 }
 .mh2-board-surface.bg-night {
+  background: radial-gradient(ellipse at 50% 30%, #1d1726 0%, #14101a 70%), #14101a;
+}
+.mh2-board-surface.bg-sea {
   background:
-    radial-gradient(ellipse at 50% 30%, #1d1726 0%, #14101a 70%),
-    #14101a;
+    radial-gradient(circle at 30% 20%, rgba(18,163,184,0.16), transparent 45%),
+    radial-gradient(circle at 75% 80%, rgba(21,155,92,0.12), transparent 45%),
+    #eaf6f3;
 }
 
-/* cards */
-.mh2-card {
-  position: absolute;
-  min-width: 110px;
-  max-width: 190px;
-  padding: 0.65rem 0.6rem 0.45rem;
-  border-radius: 3px;
-  box-shadow: 0 3px 8px rgba(0,0,0,0.28);
+/* shared element base */
+.mh2-el { position: absolute; }
+.mh2-el.active { z-index: 30; }
+
+/* boxes */
+.mh2-box {
+  display: flex; align-items: center; justify-content: center;
+  text-align: center;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.22);
   cursor: grab;
-  user-select: none;
-  touch-action: none;
-  font-family: "Signika", sans-serif;
-  line-height: 1.25;
+  user-select: none; touch-action: none;
+  padding: 0.3rem 0.5rem;
 }
-.mh2-card.dragging { cursor: grabbing; box-shadow: 0 8px 18px rgba(0,0,0,0.4); z-index: 20; }
-.mh2-card-pin {
-  position: absolute;
-  top: -6px; left: 50%;
-  width: 12px; height: 12px;
-  margin-left: -6px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, #fff8, transparent 55%), #7d1029;
-  box-shadow: 0 2px 3px rgba(0,0,0,0.45);
+.mh2-box.active { cursor: grabbing; box-shadow: 0 8px 16px rgba(0,0,0,0.4); }
+.mh2-box-label { font-family: Georgia, serif; font-weight: 700; font-size: 0.92rem; color: #1a1613; line-height: 1.15; }
+.mh2-resize {
+  position: absolute; right: -3px; bottom: -3px;
+  width: 14px; height: 14px;
+  border-radius: 2px;
+  background: rgba(0,0,0,0.35);
+  cursor: nwse-resize;
 }
-.mh2-card-label { display: block; font-weight: 700; font-size: 0.9rem; color: #1a1613; }
-.mh2-card-note { display: block; font-size: 0.72rem; color: #5a4f45; margin-top: 0.15rem; }
+.mh2-box.box-red   { background: #fbe3e7; border: 2px solid #da1a32; }
+.mh2-box.box-gold  { background: #fdf3d9; border: 2px solid #e0a419; }
+.mh2-box.box-green { background: #e2f4ea; border: 2px solid #159b5c; }
+.mh2-box.box-sea   { background: #e0f4f7; border: 2px solid #12a3b8; }
+.mh2-box.box-pink  { background: #fde7ef; border: 2px solid #e83f6f; }
+.mh2-box.box-bone  { background: #f6efe2; border: 2px solid #b98a4a; }
+.mh2-box.box-grey  { background: #eceae6; border: 2px solid #8a827a; }
 
-.mh2-card.card-red   { background: #fbe3e7; border: 2px solid #da1a32; }
-.mh2-card.card-gold  { background: #fdf3d9; border: 2px solid #e0a419; }
-.mh2-card.card-green { background: #e2f4ea; border: 2px solid #159b5c; }
-.mh2-card.card-sea   { background: #e0f4f7; border: 2px solid #12a3b8; }
-.mh2-card.card-pink  { background: #fde7ef; border: 2px solid #e83f6f; }
-.mh2-card.card-bone  { background: #f6efe2; border: 2px solid #b98a4a; }
+/* text labels */
+.mh2-text {
+  cursor: grab; user-select: none; touch-action: none;
+  font-family: Georgia, serif; font-weight: 600;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.15);
+  white-space: nowrap;
+}
+.mh2-text.active { cursor: grabbing; }
+.mh2-text.size-sm { font-size: 0.8rem; }
+.mh2-text.size-md { font-size: 1.05rem; }
+.mh2-text.size-lg { font-size: 1.5rem; }
+.mh2-text.size-xl { font-size: 2.1rem; }
+.mh2-text.text-red { color: #c01430; }
+.mh2-text.text-gold { color: #b5820f; }
+.mh2-text.text-green { color: #0f7a46; }
+.mh2-text.text-sea { color: #0c7d8f; }
+.mh2-text.text-pink { color: #c02460; }
+.mh2-text.text-bone { color: #6a5c48; }
+.mh2-text.text-grey { color: #55504a; }
+
+/* connector lines */
+.mh2-line-el { left: 0; top: 0; width: 100%; height: 100%; }
+.mh2-line-svg { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; }
+.mh2-line-svg line { stroke-width: 4; stroke-linecap: round; pointer-events: stroke; cursor: grab; }
+.mh2-line-svg .line-red { stroke: #da1a32; }
+.mh2-line-svg .line-gold { stroke: #e0a419; }
+.mh2-line-svg .line-green { stroke: #159b5c; }
+.mh2-line-svg .line-sea { stroke: #12a3b8; }
+.mh2-line-svg .line-pink { stroke: #e83f6f; }
+.mh2-line-svg .line-bone { stroke: #b98a4a; }
+.mh2-line-svg .line-grey { stroke: #8a827a; }
+.mh2-lineend { fill: #fff; stroke: #7d1029; stroke-width: 2; pointer-events: all; cursor: crosshair; }

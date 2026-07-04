@@ -738,6 +738,20 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
         continue;
       }
 
+      if (step.type === "gainAll") {
+        const others = game.actors.filter(a => a.type === "character" && a.id !== this.actor.id);
+        const go = await DialogV2.confirm({
+          window: { title: "Backstory" },
+          content: `<div class="mh2-skin-dialog"><p>${esc(label)}</p><p><strong>${esc(this.actor.name)}</strong> gains a String on every other main character (${others.length}). Apply?</p></div>`,
+          rejectClose: false
+        });
+        if (go) {
+          for (const other of others) await this.#gainStringsOn(other.name, 1);
+          done.push(`${label} — gained a String on everyone`);
+        }
+        continue;
+      }
+
       if (step.type === "giveAll") {
         const others = game.actors.filter(a => a.type === "character" && a.id !== this.actor.id);
         const go = await DialogV2.confirm({

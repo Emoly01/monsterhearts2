@@ -27,6 +27,7 @@ MH2.backstoryTypes = [
   { value: "gainOn", label: "Gain String(s) on someone" },
   { value: "giveTo", label: "Give someone String(s) on you" },
   { value: "giveAll", label: "Give everyone a String on you" },
+  { value: "gainAll", label: "Gain a String on everyone" },
   { value: "mutual", label: "Mutual — you gain on each other" },
   { value: "exchange", label: "Exchange — give N, take N2 (same person)" },
   { value: "gainEach", label: "Gain 1 String on each of N names" },

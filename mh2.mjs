@@ -169,7 +169,7 @@ Hooks.on("renderActorDirectory", (app, html) => {
   const boardBtn = document.createElement("button");
   boardBtn.type = "button";
   boardBtn.className = "mh2-npc-strings-btn mh2-board-btn";
-  boardBtn.innerHTML = `<i class="fa-solid fa-map-location-dot"></i> Pinboard`;
+  boardBtn.innerHTML = `<i class="fa-solid fa-map-location-dot"></i> Map Editor`;
   boardBtn.addEventListener("click", () => new MH2Pinboard().render(true));
   header.appendChild(boardBtn);
 });

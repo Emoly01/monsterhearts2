@@ -951,3 +951,8 @@
 }
 .mh2-skin-dialog .mh2-divide-row input[type="text"] { flex: 1; }
 .mh2-skin-dialog .mh2-divide-row input[type="number"] { width: 3.4rem; text-align: center; }
+
+/* v0.20: growing up + sex move card */
+.mh2-skin-dialog .mh2-gu legend { color: #d8b35d; }
+.mh2-roll-card.mh2-sex-card { border-left: 3px solid #e83f6f; }
+.mh2-roll-card.mh2-sex-card .mh2-card-header h3 i { color: #e83f6f; }

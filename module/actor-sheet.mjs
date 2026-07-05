@@ -23,6 +23,7 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
       setHarm: MH2ActorSheet.#onSetHarm,
       setXp: MH2ActorSheet.#onSetXp,
       toggleDarkest: MH2ActorSheet.#onToggleDarkest,
+      postSexMove: MH2ActorSheet.#onPostSexMove,
       addCondition: MH2ActorSheet.#onAddCondition,
       deleteCondition: MH2ActorSheet.#onDeleteCondition,
       addCustom: MH2ActorSheet.#onAddCustom,
@@ -107,7 +108,8 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     context.darkestSelfActive = sys.darkestSelfActive;
     context.skinItem = actor.items.find(i => i.type === "skin") ?? null;
 
-    const worldSkins = game.items.filter(i => i.type === "skin")
+    const worldSkins = game.items.filter(i =>
+        i.type === "skin" && i.name.trim().toLowerCase() !== "growing up")
       .sort((a, b) => a.name.localeCompare(b.name));
     context.skinOptions = worldSkins.map(s => ({
       id: s.id, name: s.name, selected: s.name === sys.skin
@@ -509,6 +511,22 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
 
   static async #onAdvance(event, target) {
     return this.#advance();
+  }
+
+  /** Post the character's Sex Move to chat — for the moment the table needs the fine print. */
+  static async #onPostSexMove(event, target) {
+    const TE = foundry.applications.ux?.TextEditor?.implementation ?? TextEditor;
+    const text = await TE.enrichHTML(this.actor.system.sexMove || "", {
+      relativeTo: this.actor, secrets: false
+    });
+    return ChatMessage.implementation.create({
+      speaker: ChatMessage.implementation.getSpeaker({ actor: this.actor }),
+      content: `
+        <div class="mh2-roll-card mh2-sex-card">
+          <header class="mh2-card-header"><h3><i class="fa-solid fa-heart"></i> ${esc(this.actor.name)} — Sex Move</h3></header>
+          ${text || "<p><em>No sex move recorded on this sheet.</em></p>"}
+        </div>`
+    });
   }
 
   /* -------------------------------------------- */
@@ -925,6 +943,13 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
   /*  Advancement                                 */
   /* -------------------------------------------- */
 
+
+  /** The world's shared "Growing Up" pseudo-skin, if the MC has built one. */
+  #growingUpSkin() {
+    return game.items.find(i =>
+      i.type === "skin" && i.name.trim().toLowerCase() === "growing up") ?? null;
+  }
+
   async #advance() {
     const actor = this.actor;
     const DialogV2 = foundry.applications.api.DialogV2;
@@ -938,9 +963,23 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
         ${esc(a.label)}${a.grantsMove || a.anySkin ? ' <em>(grants a move)</em>' : ""}
       </label>`).join("");
 
+    // Growing Up: unlocked once five advancements have been taken.
+    const guSkin = this.#growingUpSkin();
+    const grownUp = (actor.system.advancementsTaken ?? []).length >= 5;
+    const guTaken = new Set(actor.system.growingUpTaken ?? []);
+    const guAdvs = (grownUp && guSkin) ? (guSkin.system.advancements ?? []) : [];
+    const guRows = guAdvs.map((a, i) => guTaken.has(i) ? "" : `
+      <label class="mh2-choice">
+        <input type="radio" name="adv" value="g${i}">
+        ${esc(a.label)}${a.grantsMove || a.anySkin ? ' <em>(grants a move)</em>' : ""}
+      </label>`).join("");
+    const guNote = (grownUp && !guSkin)
+      ? `<p class="mh2-hint">This character has grown up — build a skin item named exactly "Growing Up" to offer the second-tier list here.</p>` : "";
+
     const content = `
       <div class="mh2-skin-dialog mh2-scroll-dialog">
         ${rows.trim() ? `<fieldset><legend>Choose an advancement</legend>${rows}</fieldset>` : "<p>No advancements left on this skin's list — write a custom one below.</p>"}
+        ${guRows.trim() ? `<fieldset class="mh2-gu"><legend>✧ Growing Up</legend>${guRows}</fieldset>` : guNote}
         <div class="form-group"><label>Or custom</label><input name="custom" placeholder="e.g. +1 Hot"></div>
       </div>`;
 
@@ -964,12 +1003,24 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     let grantsMove = false;
     let anySkin = false;
     let usedIndex = null;
+    let usedGu = null;
+    let sourceSkin = skinItem;
     if (!label && res.index !== "") {
-      const a = advs[Number(res.index)];
-      label = a?.label ?? "";
-      grantsMove = !!a?.grantsMove || !!a?.anySkin;
-      anySkin = !!a?.anySkin;
-      usedIndex = Number(res.index);
+      if (String(res.index).startsWith("g")) {
+        const gi = Number(String(res.index).slice(1));
+        const a = guAdvs[gi];
+        label = a?.label ?? "";
+        grantsMove = !!a?.grantsMove || !!a?.anySkin;
+        anySkin = !!a?.anySkin;
+        usedGu = gi;
+        sourceSkin = guSkin;
+      } else {
+        const a = advs[Number(res.index)];
+        label = a?.label ?? "";
+        grantsMove = !!a?.grantsMove || !!a?.anySkin;
+        anySkin = !!a?.anySkin;
+        usedIndex = Number(res.index);
+      }
     }
     if (!label) return ui.notifications.warn("Pick an advancement or write a custom one.");
 
@@ -980,10 +1031,11 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
 
       // Build the pools of candidate moves.
       const pools = [];
-      if (skinItem) pools.push({ key: "self", name: skinItem.name, moves: skinItem.system.moves ?? [] });
+      if (sourceSkin) pools.push({ key: "self", name: sourceSkin.name, moves: sourceSkin.system.moves ?? [] });
       if (anySkin) {
         for (const world of game.items.filter(i => i.type === "skin")) {
-          if (skinItem && world.id === skinItem.id) continue;
+          if (sourceSkin && world.id === sourceSkin.id) continue;
+          if (world.name.trim().toLowerCase() === "growing up") continue;
           pools.push({ key: world.id, name: world.name, moves: world.system.moves ?? [] });
         }
       }
@@ -1050,13 +1102,16 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     if (usedIndex !== null) {
       update["system.advancementsTaken"] = [...(actor.system.advancementsTaken ?? []), usedIndex];
     }
+    if (usedGu !== null) {
+      update["system.growingUpTaken"] = [...(actor.system.growingUpTaken ?? []), usedGu];
+    }
     await actor.update(update);
 
     return ChatMessage.implementation.create({
       speaker: ChatMessage.implementation.getSpeaker({ actor }),
       content: `
         <div class="mh2-roll-card mh2-string-card">
-          <header class="mh2-card-header"><h3>Advancement</h3></header>
+          <header class="mh2-card-header"><h3>${usedGu !== null ? "✧ Growing Up" : "Advancement"}</h3></header>
           <p><strong>${esc(actor.name)}</strong> advances: ${esc(label)}. The experience track resets.</p>
         </div>`
     });

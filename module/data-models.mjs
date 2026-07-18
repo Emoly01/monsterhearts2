@@ -145,7 +145,7 @@ export class SkinData extends foundry.abstract.TypeDataModel {
         description: new StringField({ required: true, blank: true })
       })),
 
-      /** Backstory steps run after the skin is applied. type: gainOn | giveTo | giveAll | note */
+      /** Backstory steps run after the skin is applied. type is one of MH2.backstoryTypes (note, gainOn, giveTo, giveAll, gainAll, mutual, exchange, gainEach, divide, tokens). */
       backstorySteps: new ArrayField(new SchemaField({
         label: new StringField({ required: true, blank: true }),
         type: new StringField({ required: true, blank: false, initial: "note" }),

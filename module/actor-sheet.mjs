@@ -1,13 +1,8 @@
 import { MH2 } from "./config.mjs";
+import { escapeHTML as esc, sameName } from "./utils.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
-
-function esc(str) {
-  return String(str ?? "").replace(/[&<>"']/g, c => ({
-    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
-  })[c]);
-}
 
 export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
 
@@ -401,7 +396,7 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     // otherwise ask a GM to apply it via socket (permissions).
     if (recipient.isOwner) {
       const recStrings = foundry.utils.deepClone(recipient.system.toObject().strings ?? []);
-      const match = recStrings.find(s => s.name === entry.name);
+      const match = recStrings.find(s => sameName(s.name, entry.name));
       if (match) match.count += 1;
       else recStrings.push({ name: entry.name, count: 1 });
       await recipient.update({ "system.strings": recStrings });
@@ -484,7 +479,7 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
       speaker: ChatMessage.implementation.getSpeaker({ actor: this.actor }),
       content: `
         <div class="mh2-roll-card">
-          <header class="mh2-card-header"><h3>${move.name}</h3></header>
+          <header class="mh2-card-header"><h3>${esc(move.name)}</h3></header>
           <div class="mh2-move-text">${description}</div>
         </div>`
     });
@@ -499,7 +494,7 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     if (!move) return;
     const confirmed = await foundry.applications.api.DialogV2.confirm({
       window: { title: `Delete ${move.name}?` },
-      content: `<p>Delete the move <strong>${move.name}</strong> from this sheet?</p>`,
+      content: `<p>Delete the move <strong>${esc(move.name)}</strong> from this sheet?</p>`,
       rejectClose: false
     });
     if (confirmed) return move.delete();
@@ -639,6 +634,7 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
       "system.origin": result.origin,
       "system.customLabel": s.customLabel,
       "system.advancementsTaken": [],
+      "system.growingUpTaken": [],
       "system.darkestSelf": s.darkestSelf,
       "system.sexMove": s.sexMove,
       "system.backstory": s.backstory
@@ -692,7 +688,7 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     if (target && target.id !== me.id) {
       if (target.isOwner) {
         const strings = foundry.utils.deepClone(target.system.toObject().strings ?? []);
-        const match = strings.find(x => x.name === me.name);
+        const match = strings.find(x => sameName(x.name, me.name));
         if (match) match.count += count;
         else strings.push({ name: me.name, count });
         await target.update({ "system.strings": strings });
@@ -710,7 +706,7 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     // Not a character: record in the shared NPC-Strings tracker via GM.
     if (game.user.isGM) {
       const entries = foundry.utils.deepClone(game.settings.get("monsterhearts2", "npcStrings") ?? []);
-      const match = entries.find(e => e.holder === clean && e.target === me.name);
+      const match = entries.find(e => sameName(e.holder, clean) && sameName(e.target, me.name));
       if (match) match.count = (Number(match.count) || 0) + count;
       else entries.push({ holder: clean, target: me.name, count });
       await game.settings.set("monsterhearts2", "npcStrings", entries);
@@ -730,7 +726,7 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     const clean = name.trim();
     if (!clean) return false;
     const strings = this.#sourceArray("strings");
-    const match = strings.find(x => x.name === clean);
+    const match = strings.find(x => sameName(x.name, clean));
     if (match) match.count += count;
     else strings.push({ name: clean, count });
     await this.actor.update({ "system.strings": strings });

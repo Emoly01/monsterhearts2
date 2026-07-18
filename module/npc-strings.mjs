@@ -2,12 +2,6 @@ const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 const SETTING = "npcStrings";
 
-function esc(str) {
-  return String(str ?? "").replace(/[&<>"']/g, c => ({
-    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
-  })[c]);
-}
-
 /**
  * A single open list the MC keeps of every String an NPC holds, on anyone.
  * Stored in a world setting so it's shared and visible to everyone.
@@ -22,7 +16,13 @@ export class MH2NpcStrings extends HandlebarsApplicationMixin(ApplicationV2) {
       scope: "world",
       config: false,
       type: Array,
-      default: []
+      default: [],
+      // Refresh any open tracker on every client when the list changes.
+      onChange: () => {
+        for (const app of foundry.applications.instances.values()) {
+          if (app instanceof MH2NpcStrings) app.render();
+        }
+      }
     });
   }
 
@@ -32,10 +32,6 @@ export class MH2NpcStrings extends HandlebarsApplicationMixin(ApplicationV2) {
 
   static async save(entries) {
     await game.settings.set("monsterhearts2", SETTING, entries);
-    // Refresh any open instance for everyone.
-    for (const app of foundry.applications.instances.values()) {
-      if (app instanceof MH2NpcStrings) app.render();
-    }
   }
 
   /** @override */

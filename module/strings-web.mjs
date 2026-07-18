@@ -1,11 +1,5 @@
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
-function esc(str) {
-  return String(str ?? "").replace(/[&<>"']/g, c => ({
-    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
-  })[c]);
-}
-
 /**
  * A live map of every String. Nodes are built from the Strings themselves:
  * every character actor is a node, and every *name* a character holds a String

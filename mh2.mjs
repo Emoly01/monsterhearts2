@@ -6,6 +6,8 @@ import { MH2ItemSheet } from "./module/item-sheet.mjs";
 import { MH2SkinSheet } from "./module/skin-sheet.mjs";
 import { MH2NpcStrings } from "./module/npc-strings.mjs";
 import { MH2StringsWeb } from "./module/strings-web.mjs";
+import { MH2Pinboard } from "./module/pinboard.mjs";
+import { escapeHTML, sameName } from "./module/utils.mjs";
 
 Hooks.once("init", () => {
   console.log("Monsterhearts 2 | Keeping the story feral.");
@@ -45,15 +47,17 @@ Hooks.once("init", () => {
     label: "MH2 Skin Sheet"
   });
 
-  // MC's open NPC-Strings tracker (shared world setting).
+  // Shared world settings: NPC-Strings tracker and pinboard maps.
   MH2NpcStrings.registerSetting();
+  MH2Pinboard.registerSetting();
   game.system.mh2 = {
     openNpcStrings: () => new MH2NpcStrings().render(true),
     openStringsWeb: () => new MH2StringsWeb().render(true),
+    openPinboard: () => new MH2Pinboard().render(true),
     darkestFlare: (name) => {
       const el = document.createElement("div");
       el.className = "mh2-flare";
-      el.innerHTML = `<div class="mh2-flare-inner"><i class="fa-solid fa-moon"></i><span>${(name ?? "").replace(/[&<>"']/g, "")}</span><em>Darkest Self</em></div>`;
+      el.innerHTML = `<div class="mh2-flare-inner"><i class="fa-solid fa-moon"></i><span>${escapeHTML(name)}</span><em>Darkest Self</em></div>`;
       document.body.appendChild(el);
       setTimeout(() => el.remove(), 3200);
     }
@@ -118,7 +122,7 @@ Hooks.once("ready", () => {
       const actor = game.actors.get(payload.actorId);
       if (!actor) return;
       const strings = foundry.utils.deepClone(actor.system.toObject().strings ?? []);
-      const match = strings.find(s => s.name === payload.name);
+      const match = strings.find(s => sameName(s.name, payload.name));
       if (match) match.count += payload.count ?? 1;
       else strings.push({ name: payload.name, count: payload.count ?? 1 });
       return actor.update({ "system.strings": strings });
@@ -126,10 +130,14 @@ Hooks.once("ready", () => {
 
     if (payload.type === "grantNpcString") {
       const entries = foundry.utils.deepClone(game.settings.get("monsterhearts2", "npcStrings") ?? []);
-      const match = entries.find(e => e.holder === payload.holder && e.target === payload.target);
+      const match = entries.find(e => sameName(e.holder, payload.holder) && sameName(e.target, payload.target));
       if (match) match.count = (Number(match.count) || 0) + (payload.count ?? 1);
       else entries.push({ holder: payload.holder, target: payload.target, count: payload.count ?? 1 });
       return game.settings.set("monsterhearts2", "npcStrings", entries);
+    }
+
+    if (payload.type === "setBoards") {
+      return game.settings.set("monsterhearts2", "boards", payload.boards ?? []);
     }
   });
 });
@@ -155,5 +163,12 @@ Hooks.on("renderActorDirectory", (app, html) => {
   webBtn.innerHTML = `<i class="fa-solid fa-diagram-project"></i> Strings Web`;
   webBtn.addEventListener("click", () => new MH2StringsWeb().render(true));
   header.appendChild(webBtn);
+
+  const mapBtn = document.createElement("button");
+  mapBtn.type = "button";
+  mapBtn.className = "mh2-npc-strings-btn mh2-map-btn";
+  mapBtn.innerHTML = `<i class="fa-solid fa-map-location-dot"></i> Maps`;
+  mapBtn.addEventListener("click", () => new MH2Pinboard().render(true));
+  header.appendChild(mapBtn);
 
 });

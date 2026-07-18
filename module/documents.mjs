@@ -1,10 +1,5 @@
 import { MH2 } from "./config.mjs";
-
-function escapeHTML(str) {
-  return String(str ?? "").replace(/[&<>"']/g, c => ({
-    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
-  })[c]);
-}
+import { escapeHTML } from "./utils.mjs";
 
 export class MH2Actor extends Actor {
 
@@ -49,7 +44,7 @@ export class MH2Actor extends Actor {
       <label class="mh2-fwd-choice">
         <input type="checkbox" name="fwd" value="${i}">
         <span class="mh2-fwd-val">${f.value >= 0 ? "+" : ""}${f.value}</span>
-        ${(f.label || "Forward").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+        ${escapeHTML(f.label || "Forward")}
       </label>`).join("");
 
     // Ask for a situational modifier (Strings spent, Conditions exploited...).

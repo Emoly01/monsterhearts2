@@ -1,0 +1,52 @@
+name: Release
+
+# On every push, read the version from system.json; if no release exists for
+# it yet, build the zip and publish release v{version} from that commit.
+# Bump the version, push, and the release appears.
+on:
+  push:
+    branches:
+      - "**"
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Read version
+        id: version
+        run: echo "tag=v$(jq -r .version system.json)" >> "$GITHUB_OUTPUT"
+
+      - name: Check for existing release
+        id: existing
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "${{ steps.version.outputs.tag }}" -R "$GITHUB_REPOSITORY" > /dev/null 2>&1; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build system archive
+        if: steps.existing.outputs.exists == 'false'
+        run: zip -r monsterhearts2.zip system.json mh2.mjs README.md lang module styles templates
+
+      - name: Create GitHub release
+        if: steps.existing.outputs.exists == 'false'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.tag }}
+          name: ${{ steps.version.outputs.tag }}
+          target_commitish: ${{ github.sha }}
+          files: |
+            monsterhearts2.zip
+            system.json
+          generate_release_notes: true

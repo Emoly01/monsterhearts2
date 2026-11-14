@@ -4,7 +4,46 @@ import { escapeHTML as esc, sameName } from "./utils.mjs";
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
 
+/** A move's own text, or — when it has none — the world move of the same name. */
+function moveText(name, description) {
+  if (description) return description;
+  const it = game.items.find(i => i.type === "move" && i.name === name);
+  return it?.system.description ?? "";
+}
+
+/**
+ * A skin stores only a snapshot of each move, taken when it was dropped on.
+ * The world move of the same name is the one that keeps getting edited, so
+ * its stat, bonus, text and icon win; the snapshot fills in when it is gone.
+ * Group and "auto" are set on the skin itself and always come from there.
+ */
+function resolveSkinMove(m) {
+  const live = game.items.find(i => i.type === "move" && i.name === m.name);
+  if (!live) return m;
+  return {
+    ...m,
+    img: live.img || m.img,
+    stat: live.system.stat ?? m.stat,
+    bonus: live.system.bonus ?? m.bonus ?? 0,
+    description: live.system.description || m.description
+  };
+}
+
+/** Item data for a skin move being added to a character. */
+function skinMoveItem(snapshot) {
+  const m = resolveSkinMove(snapshot);
+  return {
+    name: m.name,
+    type: "move",
+    img: m.img || undefined,
+    system: { stat: m.stat, category: "skin", bonus: m.bonus ?? 0, group: m.group ?? "", description: m.description }
+  };
+}
+
 export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
+
+  /** Moves whose description the user has flipped from its default state. */
+  #toggledMoves = new Set();
 
   /** @override */
   static DEFAULT_OPTIONS = {
@@ -75,24 +114,33 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
       index: i, filled: i < sys.experience.value
     }));
 
-    const decorate = m => ({
+    // Skin moves show their text by default, basic moves keep it folded.
+    const decorate = (m, description) => ({
       id: m.id,
       name: m.name,
       stat: m.system.stat,
       bonus: m.system.bonus ?? 0,
-      bonusLabel: (m.system.bonus ?? 0) >= 0 ? `+${m.system.bonus}` : `${m.system.bonus}`
+      bonusLabel: (m.system.bonus ?? 0) >= 0 ? `+${m.system.bonus}` : `${m.system.bonus}`,
+      description,
+      open: (m.system.category !== "basic") !== this.#toggledMoves.has(m.id)
     });
     const allMoves = actor.items
       .filter(i => i.type === "move")
       .sort((a, b) => (a.sort ?? 0) - (b.sort ?? 0) || a.name.localeCompare(b.name));
-    context.basicMoves = allMoves.filter(m => m.system.category === "basic").map(decorate);
+    const moveTexts = new Map(await Promise.all(allMoves.map(async m => [
+      m.id,
+      await TE.enrichHTML(moveText(m.name, m.system.description), { relativeTo: m, secrets: actor.isOwner })
+    ])));
+    const decorated = allMoves.map(m => decorate(m, moveTexts.get(m.id)));
+    const byId = new Map(decorated.map(d => [d.id, d]));
+    context.basicMoves = allMoves.filter(m => m.system.category === "basic").map(m => byId.get(m.id));
 
     // Skin moves render grouped: ungrouped first, then groups alphabetically.
     const groupMap = new Map();
     for (const m of allMoves.filter(m => m.system.category !== "basic")) {
       const g = (m.system.group ?? "").trim();
       if (!groupMap.has(g)) groupMap.set(g, []);
-      groupMap.get(g).push(decorate(m));
+      groupMap.get(g).push(byId.get(m.id));
     }
     context.skinMoveGroups = [...groupMap.entries()]
       .sort((a, b) => (a[0] === "" ? -1 : b[0] === "" ? 1 : a[0].localeCompare(b[0])))
@@ -134,6 +182,16 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
       const applied = await this.#applySkin(skin);
       if (!applied) this.render(); // dialog cancelled — snap the select back
     });
+
+    // Remember which move texts are folded/unfolded across re-renders.
+    for (const details of this.element.querySelectorAll(".mh2-move-details")) {
+      const id = details.closest("[data-item-id]")?.dataset.itemId;
+      const initial = details.open;
+      details.addEventListener("toggle", () => {
+        if (details.open !== initial) this.#toggledMoves.add(id);
+        else this.#toggledMoves.delete(id);
+      });
+    }
   }
 
   /* -------------------------------------------- */
@@ -417,7 +475,7 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     const move = this.#getMove(target);
     if (!move) return;
     const TE = foundry.applications.ux?.TextEditor?.implementation ?? TextEditor;
-    const description = await TE.enrichHTML(move.system.description, {
+    const description = await TE.enrichHTML(moveText(move.name, move.system.description), {
       relativeTo: move, secrets: false
     });
 
@@ -509,12 +567,6 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
    */
   async #applySkin(skin) {
     const s = skin.system;
-    // Snapshot descriptions can be empty (older skins, or moves built without
-    // text). Fall back to the live move item's description, matched by name.
-    const liveDesc = name => {
-      const it = game.items.find(i => i.type === "move" && i.name === name);
-      return it?.system.description ?? "";
-    };
     const statLine = sl => `Hot ${sl.hot} · Cold ${sl.cold} · Volatile ${sl.volatile} · Dark ${sl.dark}`;
     const datalist = (id, csv) => {
       const opts = (csv ?? "").split(",").map(x => x.trim()).filter(Boolean)
@@ -523,10 +575,11 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     };
 
     const dlgGroups = new Map();
-    (s.moves ?? []).forEach((m, i) => {
+    (s.moves ?? []).forEach((snapshot, i) => {
+      const m = resolveSkinMove(snapshot);
       const g = (m.group ?? "").trim() || "Moves";
       if (!dlgGroups.has(g)) dlgGroups.set(g, []);
-      const desc = m.description || liveDesc(m.name);
+      const desc = m.description;
       dlgGroups.get(g).push(`
         <div class="mh2-choice-block">
           <label class="mh2-choice">
@@ -608,12 +661,7 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     const toCreate = [...indices]
       .map(i => s.moves[i])
       .filter(m => m && m.name && !existing.has(m.name))
-      .map(m => ({
-        name: m.name,
-        type: "move",
-        img: m.img || undefined,
-        system: { stat: m.stat, category: "skin", bonus: m.bonus ?? 0, group: m.group ?? "", description: m.description }
-      }));
+      .map(skinMoveItem);
     if (toCreate.length) await this.actor.createEmbeddedDocuments("Item", toCreate);
 
     ui.notifications.info(`${this.actor.name} is now ${skin.name}.`);
@@ -1000,10 +1048,7 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
           .filter(({ m }) => m.name && !existing.has(m.name) && !seen.has(m.name))
           .map(({ m, i }) => {
             seen.add(m.name);
-            const desc = m.description || (() => {
-              const it = game.items.find(x => x.type === "move" && x.name === m.name);
-              return it?.system.description ?? "";
-            })();
+            const desc = resolveSkinMove(m).description;
             return `
               <div class="mh2-choice-block">
                 <label class="mh2-choice">
@@ -1033,12 +1078,7 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
           const creates = picked.map(v => {
             const [key, idx] = v.split(":");
             return poolMap.get(key)?.[Number(idx)];
-          }).filter(m => m).map(m => ({
-            name: m.name,
-            type: "move",
-            img: m.img || undefined,
-            system: { stat: m.stat, category: "skin", bonus: m.bonus ?? 0, group: m.group ?? "", description: m.description }
-          }));
+          }).filter(m => m).map(skinMoveItem);
           if (creates.length) await actor.createEmbeddedDocuments("Item", creates);
         }
       } else {

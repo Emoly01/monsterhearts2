@@ -67,36 +67,43 @@ MH2.pullingStrings = [
 
 /**
  * The six basic moves with their rules text, taken from the player reference
- * sheet you provided.
+ * sheet you provided. `match` spots a skin move that counts as that basic
+ * move from its wording ("when you gaze into the abyss…").
  */
 MH2.basicMoves = [
   {
     name: "Turn Someone On",
+    match: /turn(s|ing)? \S+ on\b/i,
     stat: "hot",
     description: "<p>When you turn someone on, roll with Hot. On a 10 up, gain a String on them and they choose a reaction from below. On a 7-9, they can either give you a String or choose one of the reactions.</p><ul><li>I give myself to you,</li><li>I promise something I think you want, or</li><li>I get embarrassed and act awkward.</li></ul>"
   },
   {
     name: "Shut Someone Down",
+    match: /shut(s|ting)? \S+ down\b/i,
     stat: "cold",
     description: "<p>When you shut someone down, roll with Cold. On a 10 up, choose one from below. On a 7-9, choose one from below, but you come across poorly, and they give you a Condition in return.</p><ul><li>They lose a String on you,</li><li>If they have no Strings on you, gain one on them,</li><li>They gain a Condition, or</li><li>You take 1 Forward.</li></ul>"
   },
   {
     name: "Keep Your Cool",
+    match: /keep(s|ing)? (your|their) cool\b/i,
     stat: "cold",
     description: "<p>When you keep your cool and act despite fear, name what you're afraid of and roll with Cold. On a 10 up, you keep your cool and gain insight: ask the MC a question about the situation and take 1 Forward to acting on that information. On a 7-9, the MC will tell you how your actions would leave you vulnerable, and you can choose to back down or go through with it.</p>"
   },
   {
     name: "Lash Out Physically",
+    match: /lash(es|ing)? out\b/i,
     stat: "volatile",
     description: "<p>When you lash out physically, roll with Volatile. On a 10 up, you deal them harm, and they choke up momentarily before they can react. On a 7-9, you harm them but choose one:</p><ul><li>They learn something about your true nature and gain a String on you,</li><li>The MC decides how bad the harm turns out,</li><li>You become your Darkest Self.</li></ul>"
   },
   {
     name: "Run Away",
+    match: /\brun(s|ning)? away\b/i,
     stat: "volatile",
     description: "<p>When you run away, roll with Volatile. On a 10 up, you get away to a safe place. On a 7-9, you get away but choose one:</p><ul><li>You run into something worse,</li><li>You cause a big scene, or</li><li>You leave something behind.</li></ul>"
   },
   {
     name: "Gaze Into the Abyss",
+    match: /gaz(e|es|ing) into the abyss/i,
     stat: "dark",
     description: "<p>When you gaze into the abyss, name what you're looking for and roll with Dark. On a 10 up, the abyss shows you lucid visions, and you take 1 Forward to addressing them. On a 7-9, the abyss shows you confusing and alarming visions, but you get your answer nonetheless.</p>"
   }

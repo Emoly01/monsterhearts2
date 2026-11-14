@@ -1187,3 +1187,22 @@
 }
 .monsterhearts2 .mh2-move .mh2-move-desc p { margin: 0 0 0.3rem 0; }
 .monsterhearts2 .mh2-move .mh2-move-desc ul { margin: 0.2rem 0 0.2rem 1.1rem; padding: 0; }
+
+/* The basic move a skin move counts as, small print on the chat card */
+.mh2-roll-card .mh2-base-move {
+  font-size: 0.72rem;
+  line-height: 1.3;
+  opacity: 0.85;
+  border-left: 2px solid #3a3147;
+  padding-left: 0.45rem;
+  margin: 0 0 0.4rem 0;
+}
+.mh2-roll-card .mh2-base-move h4 {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin: 0 0 0.15rem 0;
+  border: none;
+}
+.mh2-roll-card .mh2-base-move p { margin: 0 0 0.2rem 0; }
+.mh2-roll-card .mh2-base-move ul { font-size: inherit; }

@@ -116,6 +116,12 @@ export class MoveData extends foundry.abstract.TypeDataModel {
       bonus: new NumberField({ required: true, integer: true, initial: 0 }),
       /** Optional grouping label, e.g. "Hexes", "Bargains". */
       group: new StringField({ required: true, blank: true }),
+      /**
+       * The basic move this one counts as, so its text can ride along on the
+       * roll card. "" = work it out from the description, "none" = never,
+       * otherwise the basic move's name.
+       */
+      basedOn: new StringField({ required: true, blank: true }),
       description: new HTMLField()
     };
   }
@@ -157,6 +163,7 @@ export class SkinData extends foundry.abstract.TypeDataModel {
         stat: new StringField({ required: true, blank: true }),
         bonus: new NumberField({ required: true, integer: true, initial: 0 }),
         group: new StringField({ required: true, blank: true }),
+        basedOn: new StringField({ required: true, blank: true }),
         granted: new BooleanField({ initial: false }),
         description: new StringField({ required: true, blank: true })
       })),

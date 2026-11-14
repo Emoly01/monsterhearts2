@@ -65,8 +65,10 @@ export class MH2Actor extends Actor {
    * @param {string|null} options.label   Heading for the chat card.
    * @param {string} options.description  Pre-enriched HTML shown on the card.
    * @param {number} options.bonus        Flat bonus baked into the move itself.
+   * @param {{name: string, description: string}|null} options.basis
+   *   The basic move this roll counts as; its (pre-enriched) text is shown small.
    */
-  async rollMH({ stat = null, label = null, description = "", bonus = 0 } = {}) {
+  async rollMH({ stat = null, label = null, description = "", bonus = 0, basis = null } = {}) {
     const sys = this.system;
     const statLabel = stat ? (MH2.stats[stat] ?? stat) : null;
     const statValue = stat ? (sys.stats?.[stat] ?? 0) : 0;
@@ -219,6 +221,7 @@ export class MH2Actor extends Actor {
         <header class="mh2-card-header"><h3>${escapeHTML(title)}</h3></header>
         ${target ? `<p class="mh2-against">against <strong>${escapeHTML(target.name)}</strong></p>` : ""}
         ${description ? `<div class="mh2-move-text">${description}</div>` : ""}
+        ${basis?.description ? `<div class="mh2-base-move"><h4>${escapeHTML(basis.name)}</h4>${basis.description}</div>` : ""}
         <div class="mh2-roll-result">
           <span class="mh2-roll-total">${total}</span>
           <span class="mh2-roll-tier">${tierLabel}</span>

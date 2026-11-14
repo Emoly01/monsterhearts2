@@ -1,5 +1,6 @@
 import { MH2 } from "./config.mjs";
-import { escapeHTML } from "./utils.mjs";
+import { escapeHTML, sameName } from "./utils.mjs";
+import { cardActions, rollActions } from "./chat.mjs";
 
 export class MH2Actor extends Actor {
 
@@ -23,8 +24,41 @@ export class MH2Actor extends Actor {
   }
 
   /**
-   * Roll 2d6 (+ stat + forward + ongoing + situational modifier),
-   * report the tier, auto-mark XP on a miss, and consume Forward.
+   * Everyone this character could roll against: the other characters, plus
+   * any sheet-less name that shows up in a String somewhere. Each entry says
+   * how many Strings we hold on them and which Conditions they carry.
+   */
+  #rollTargets() {
+    const targets = [];
+    const seen = new Set([this.name.trim().toLowerCase()]);
+    const mine = this.system.strings ?? [];
+    const add = (name, actor = null) => {
+      const clean = String(name ?? "").trim();
+      const key = clean.toLowerCase();
+      if (!key || seen.has(key)) return;
+      seen.add(key);
+      targets.push({
+        name: clean,
+        held: mine.find(s => sameName(s.name, clean))?.count ?? 0,
+        conditions: (actor?.system.conditions ?? []).map(c => c.name.trim()).filter(Boolean)
+      });
+    };
+    const chars = game.actors.filter(a => a.type === "character")
+      .sort((a, b) => a.name.localeCompare(b.name));
+    for (const a of chars) add(a.name, a);
+    for (const s of mine) add(s.name);
+    for (const e of (game.settings.get("monsterhearts2", "npcStrings") ?? [])) {
+      add(e.holder);
+      add(e.target);
+    }
+    return targets;
+  }
+
+  /**
+   * Roll 2d6 (+ stat + forward + ongoing + situational modifier), optionally
+   * against someone — spending Strings on them and exploiting their
+   * Conditions from the dialog. Reports the tier, auto-marks XP on a miss,
+   * consumes Forward and spent Strings, and offers follow-up buttons on a hit.
    *
    * @param {object} options
    * @param {string|null} options.stat    Stat key, or null for a bare 2d6 roll.
@@ -47,7 +81,37 @@ export class MH2Actor extends Actor {
         ${escapeHTML(f.label || "Forward")}
       </label>`).join("");
 
-    // Ask for a situational modifier (Strings spent, Conditions exploited...).
+    // Who is this against? Picking someone reveals what you can use on them.
+    const targets = this.#rollTargets();
+    const targetRows = targets.map((t, i) => {
+      const spend = t.held > 0 ? `
+        <label class="mh2-fwd-choice">
+          <input type="number" name="str-${i}" value="0" min="0" max="${t.held}" step="1">
+          Strings to spend for +1 each <em>(you hold ${t.held})</em>
+        </label>` : "";
+      const conds = t.conditions.map((c, j) => `
+        <label class="mh2-fwd-choice">
+          <input type="checkbox" name="cond-${i}" value="${j}">
+          <span class="mh2-fwd-val">+1</span>
+          exploit their Condition: ${escapeHTML(c)}
+        </label>`).join("");
+      const opts = (spend || conds)
+        ? spend + conds
+        : `<p class="hint">No Strings on them, no Conditions to exploit.</p>`;
+      return `
+        <div class="mh2-tgt">
+          <label class="mh2-tgt-chip"><input type="radio" name="target" value="${i}"> ${escapeHTML(t.name)}</label>
+          <div class="mh2-tgt-opts">${opts}</div>
+        </div>`;
+    }).join("");
+    const targetSet = targets.length ? `
+      <fieldset class="mh2-fwd-set mh2-tgt-set">
+        <legend>Against</legend>
+        <div class="mh2-tgt"><label class="mh2-tgt-chip"><input type="radio" name="target" value="" checked> no one</label></div>
+        ${targetRows}
+      </fieldset>` : "";
+
+    // Ask for a situational modifier (gang bonuses, anything unlisted...).
     const DialogV2 = foundry.applications.api.DialogV2;
     const title = label ?? (statLabel ? `Roll with ${statLabel}` : "Roll 2d6");
     let choice;
@@ -58,16 +122,24 @@ export class MH2Actor extends Actor {
           <div class="form-group">
             <label>Situational modifier</label>
             <input type="number" name="mod" value="0" step="1" autofocus>
-            <p class="hint">Strings spent against them, exploited Conditions, gang bonuses…</p>
+            <p class="hint">Gang bonuses, MC rulings, anything not listed below…</p>
           </div>
+          ${targetSet}
           ${fwdRows ? `<fieldset class="mh2-fwd-set"><legend>Forward — tick any that apply</legend>${fwdRows}</fieldset>` : ""}`,
         ok: {
           label: "Roll 2d6",
           icon: "fa-solid fa-dice",
-          callback: (event, button) => ({
-            mod: Number(button.form.elements.mod.value) || 0,
-            fwd: Array.from(button.form.querySelectorAll('input[name="fwd"]:checked')).map(el => Number(el.value))
-          })
+          callback: (event, button) => {
+            const form = button.form;
+            const picked = form.querySelector('input[name="target"]:checked')?.value ?? "";
+            return {
+              mod: Number(form.elements.mod.value) || 0,
+              fwd: Array.from(form.querySelectorAll('input[name="fwd"]:checked')).map(el => Number(el.value)),
+              target: picked === "" ? null : Number(picked),
+              spend: picked === "" ? 0 : Number(form.querySelector(`input[name="str-${picked}"]`)?.value) || 0,
+              conds: picked === "" ? [] : Array.from(form.querySelectorAll(`input[name="cond-${picked}"]:checked`)).map(el => Number(el.value))
+            };
+          }
         },
         rejectClose: false
       });
@@ -78,6 +150,9 @@ export class MH2Actor extends Actor {
     const mod = choice.mod;
     const chosenForwards = choice.fwd ?? [];
     const forward = chosenForwards.reduce((sum, i) => sum + (forwards[i]?.value ?? 0), 0);
+    const target = (choice.target === null) ? null : (targets[choice.target] ?? null);
+    const spent = target ? Math.clamp(Math.trunc(choice.spend), 0, target.held) : 0;
+    const exploited = target ? choice.conds.map(j => target.conditions[j]).filter(Boolean) : [];
 
     // Build the formula from only the parts that matter.
     const parts = ["2d6"];
@@ -86,6 +161,8 @@ export class MH2Actor extends Actor {
     if (bonus) { parts.push("@bonus"); data.bonus = bonus; }
     if (forward) { parts.push("@forward"); data.forward = forward; }
     if (ongoing) { parts.push("@ongoing"); data.ongoing = ongoing; }
+    if (spent) { parts.push("@strings"); data.strings = spent; }
+    if (exploited.length) { parts.push("@conditions"); data.conditions = exploited.length; }
     if (mod) { parts.push("@mod"); data.mod = mod; }
 
     const roll = new Roll(parts.join(" + "), data);
@@ -97,7 +174,7 @@ export class MH2Actor extends Actor {
     else if (total >= 7) { tier = "weak"; tierLabel = "Partial hit (7–9)"; }
     else { tier = "miss"; tierLabel = "Miss"; }
 
-    // Bookkeeping: mark XP on a miss, consume Forward.
+    // Bookkeeping: mark XP on a miss, consume Forward and spent Strings.
     const updates = {};
     let xpNote = "";
     if (tier === "miss") {
@@ -113,6 +190,12 @@ export class MH2Actor extends Actor {
       const remaining = forwards.filter((_, i) => !chosenForwards.includes(i));
       updates["system.forwards"] = remaining;
     }
+    if (spent) {
+      const strings = foundry.utils.deepClone(sys.toObject().strings ?? []);
+      const row = strings.find(s => sameName(s.name, target.name));
+      if (row) row.count = Math.max(0, row.count - spent);
+      updates["system.strings"] = strings;
+    }
     if (!foundry.utils.isEmpty(updates)) await this.update(updates);
 
     const bits = [];
@@ -120,6 +203,8 @@ export class MH2Actor extends Actor {
     if (bonus) bits.push(`Move ${bonus >= 0 ? "+" : ""}${bonus}`);
     if (forward) bits.push(`Forward ${forward >= 0 ? "+" : ""}${forward} (spent)`);
     if (ongoing) bits.push(`Ongoing ${ongoing >= 0 ? "+" : ""}${ongoing}`);
+    if (spent) bits.push(`${spent} String${spent > 1 ? "s" : ""} +${spent} (spent)`);
+    for (const c of exploited) bits.push(`${escapeHTML(c)} +1`);
     if (mod) bits.push(`Mod ${mod >= 0 ? "+" : ""}${mod}`);
 
     let flavor = "";
@@ -132,6 +217,7 @@ export class MH2Actor extends Actor {
     const content = `
       <div class="mh2-roll-card tier-${tier}">
         <header class="mh2-card-header"><h3>${escapeHTML(title)}</h3></header>
+        ${target ? `<p class="mh2-against">against <strong>${escapeHTML(target.name)}</strong></p>` : ""}
         ${description ? `<div class="mh2-move-text">${description}</div>` : ""}
         <div class="mh2-roll-result">
           <span class="mh2-roll-total">${total}</span>
@@ -140,13 +226,15 @@ export class MH2Actor extends Actor {
         ${bits.length ? `<div class="mh2-roll-breakdown">${bits.join(" · ")}</div>` : ""}
         ${xpNote}
         ${flavor ? `<p class="mh2-flavor">${flavor}</p>` : ""}
+        ${tier === "miss" ? "" : rollActions(target?.name ?? "")}
       </div>`;
 
     const messageData = {
       speaker: ChatMessage.implementation.getSpeaker({ actor: this }),
       rolls: [roll],
       sound: CONFIG.sounds.dice,
-      content
+      content,
+      flags: { monsterhearts2: { card: { actorId: this.id, targetName: target?.name ?? "" } } }
     };
     ChatMessage.implementation.applyRollMode(messageData, game.settings.get("core", "rollMode"));
     return ChatMessage.implementation.create(messageData);
@@ -174,11 +262,57 @@ export class MH2Actor extends Actor {
         <header class="mh2-card-header"><h3>Pulling Strings</h3></header>
         <p>${escapeHTML(this.name)} spends a String on <strong>${escapeHTML(entry.name || "someone")}</strong> (${entry.count} left). Choose one:</p>
         <ul>${options}</ul>
+        ${entry.name ? cardActions(["giveCondition", "harm"], entry.name) : ""}
       </div>`;
 
     return ChatMessage.implementation.create({
       speaker: ChatMessage.implementation.getSpeaker({ actor: this }),
-      content
+      content,
+      flags: { monsterhearts2: { card: { actorId: this.id, targetName: entry.name ?? "" } } }
+    });
+  }
+
+  /**
+   * Offer the Skirting Death choice: erase all harm, then either become your
+   * Darkest Self or lose every String you hold.
+   */
+  async skirtDeath() {
+    const DialogV2 = foundry.applications.api.DialogV2;
+    const choice = await DialogV2.wait({
+      window: { title: "Skirting Death", icon: "fa-solid fa-skull" },
+      position: { width: 440 },
+      content: `
+        <div class="mh2-skin-dialog">
+          <p>You've taken your fourth harm — you're staring death down. Erase all harm and choose one:</p>
+        </div>`,
+      buttons: [
+        { action: "darkest", label: "Become your Darkest Self", icon: "fa-solid fa-moon" },
+        { action: "strings", label: "Lose all Strings you hold", icon: "fa-solid fa-link-slash" },
+        { action: "none", label: "Not yet — leave harm as is", icon: "fa-solid fa-xmark" }
+      ],
+      rejectClose: false
+    });
+
+    if (!choice || choice === "none") return;
+
+    const update = { "system.harm.value": 0 };
+    let line;
+    if (choice === "darkest") {
+      update["system.darkestSelfActive"] = true;
+      line = "erases all harm and descends into their Darkest Self";
+    } else {
+      update["system.strings"] = [];
+      line = "erases all harm and loses every String they held";
+    }
+    await this.update(update);
+
+    return ChatMessage.implementation.create({
+      speaker: ChatMessage.implementation.getSpeaker({ actor: this }),
+      content: `
+        <div class="mh2-roll-card mh2-string-card">
+          <header class="mh2-card-header"><h3>Skirting Death</h3></header>
+          <p><strong>${escapeHTML(this.name)}</strong> ${line}.</p>
+        </div>`
     });
   }
 }

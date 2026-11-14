@@ -1096,3 +1096,72 @@
 .text-grey { color: #55555e; }
 .bg-night .text-bone { color: #d9d0bb; }
 .bg-night .text-grey { color: #a9a9b4; }
+
+/* v0.22: roll targets, Condition sources, chat-card follow-ups */
+.mh2-tgt-set {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 0.4rem;
+  max-height: 16rem;
+  overflow-y: auto;
+}
+.mh2-tgt { display: contents; }
+.mh2-tgt-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.1rem 0.5rem 0.1rem 0.3rem;
+  border: 1px solid #3a3147;
+  border-radius: 999px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.mh2-tgt-chip:has(input:checked) { border-color: #d23b63; color: #d23b63; }
+.mh2-tgt-chip input { margin: 0; }
+.mh2-tgt-opts {
+  display: none;
+  order: 99;
+  flex-basis: 100%;
+  border-top: 1px dashed #3a3147;
+  margin-top: 0.2rem;
+  padding-top: 0.3rem;
+}
+.mh2-tgt:has(.mh2-tgt-chip input:checked) .mh2-tgt-opts { display: block; }
+.mh2-tgt-opts input[type="number"] { width: 3rem; flex: none; }
+.mh2-tgt-opts em { opacity: 0.7; }
+.mh2-tgt-opts .hint { margin: 0; }
+
+.monsterhearts2 .mh2-condition-row input[type="text"] { flex: 1; }
+.monsterhearts2 .mh2-condition-row .mh2-condition-from {
+  flex: 0 0 34%;
+  font-style: italic;
+  opacity: 0.8;
+}
+
+.mh2-roll-card .mh2-against { margin: 0 0 0.3rem 0; font-size: 0.85rem; font-style: italic; }
+.mh2-roll-card .mh2-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin-top: 0.45rem;
+  padding-top: 0.4rem;
+  border-top: 1px solid #3a3147;
+}
+.mh2-roll-card .mh2-card-actions button {
+  flex: 1 1 45%;
+  width: auto;
+  min-height: 0;
+  height: auto;
+  line-height: 1.2;
+  padding: 0.25rem 0.4rem;
+  font-size: 0.75rem;
+  background: transparent;
+  border: 1px solid #d23b63;
+  border-radius: 3px;
+  color: inherit;
+  cursor: pointer;
+}
+.mh2-roll-card .mh2-card-actions button:hover:not(:disabled) { background: #d23b63; color: #fff; }
+.mh2-roll-card .mh2-card-actions button:disabled { opacity: 0.5; cursor: default; }
+
+.mh2-web-node .mh2-web-conditions { font-style: italic; }

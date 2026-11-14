@@ -51,7 +51,11 @@ export class CharacterData extends foundry.abstract.TypeDataModel {
         value: new NumberField({ required: true, integer: true, initial: 1 })
       })),
 
-      conditions: new ArrayField(new StringField({ required: true, blank: true })),
+      /** Conditions, each with an optional note of who gave it. */
+      conditions: new ArrayField(new SchemaField({
+        name: new StringField({ required: true, blank: true }),
+        from: new StringField({ required: true, blank: true })
+      })),
 
       /** Skin-specific tracker, e.g. the Ghoul's Hungers or the Fae's promises. */
       customLabel: new StringField({ required: true, blank: true }),
@@ -75,6 +79,18 @@ export class CharacterData extends foundry.abstract.TypeDataModel {
       backstory: new HTMLField(),
       notes: new HTMLField()
     };
+  }
+
+  /**
+   * Conditions used to be plain strings; lift them into { name, from }.
+   * @override
+   */
+  static migrateData(source) {
+    if (Array.isArray(source.conditions)) {
+      source.conditions = source.conditions.map(c =>
+        (typeof c === "string") ? { name: c, from: "" } : c);
+    }
+    return super.migrateData(source);
   }
 
   /** @override */

@@ -28,6 +28,14 @@ https://raw.githubusercontent.com/Emoly01/monsterhearts2/main/system.json
 - **Rolling**: click a stat name (or a move) → modifier prompt with your recorded
   Forwards as checkboxes → 2d6 + stat + bonuses. Chat card shows 10+ / 7–9 / miss,
   marks Experience on a miss, and consumes the Forwards you ticked.
+- **Rolling against someone**: the roll prompt lists everyone at the table (and
+  every sheet-less name a String points at). Pick one and it offers the Strings
+  you hold on them (+1 each, spent on the roll) and their Conditions to exploit
+  (+1 each, not consumed — the table decides how many may stack).
+- **Follow-up buttons**: a hit's chat card carries buttons — gain a String, give
+  a String, give or take a Condition, deal harm, take 1 Forward — that write to
+  both sheets (through the GM when you don't own the other one). Only the
+  roller and the MC see them. Harm that fills the track offers Skirting Death.
 - **Harm** (4 diamonds): filling the fourth offers the Skirting Death choice —
   erase all harm and become your Darkest Self, or lose every String you hold.
 - **Experience** (5 circles): when the track fills, **advance** — pick from your
@@ -65,8 +73,8 @@ https://raw.githubusercontent.com/Emoly01/monsterhearts2/main/system.json
   your own books into each move's description (it's rich text, go wild).
 - "Ongoing" is a manual catch-all for persistent bonuses (gang, Sanctuary,
   etc.). Set it, clear it when it stops applying.
-- Conditions are simple text rows for now — exploit them via the situational
-  modifier in the roll dialog.
+- Conditions remember who gave them, and show under each portrait in the
+  Strings Web so the whole table can see what's there to exploit.
 
 ## Releases
 

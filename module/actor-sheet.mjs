@@ -11,6 +11,35 @@ function moveText(name, description) {
   return it?.system.description ?? "";
 }
 
+/**
+ * A skin stores only a snapshot of each move, taken when it was dropped on.
+ * The world move of the same name is the one that keeps getting edited, so
+ * its stat, bonus, text and icon win; the snapshot fills in when it is gone.
+ * Group and "auto" are set on the skin itself and always come from there.
+ */
+function resolveSkinMove(m) {
+  const live = game.items.find(i => i.type === "move" && i.name === m.name);
+  if (!live) return m;
+  return {
+    ...m,
+    img: live.img || m.img,
+    stat: live.system.stat ?? m.stat,
+    bonus: live.system.bonus ?? m.bonus ?? 0,
+    description: live.system.description || m.description
+  };
+}
+
+/** Item data for a skin move being added to a character. */
+function skinMoveItem(snapshot) {
+  const m = resolveSkinMove(snapshot);
+  return {
+    name: m.name,
+    type: "move",
+    img: m.img || undefined,
+    system: { stat: m.stat, category: "skin", bonus: m.bonus ?? 0, group: m.group ?? "", description: m.description }
+  };
+}
+
 export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
 
   /** Moves whose description the user has flipped from its default state. */
@@ -538,9 +567,6 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
    */
   async #applySkin(skin) {
     const s = skin.system;
-    // Snapshot descriptions can be empty (older skins, or moves built without
-    // text). Fall back to the live move item's description, matched by name.
-    const liveDesc = name => moveText(name, "");
     const statLine = sl => `Hot ${sl.hot} · Cold ${sl.cold} · Volatile ${sl.volatile} · Dark ${sl.dark}`;
     const datalist = (id, csv) => {
       const opts = (csv ?? "").split(",").map(x => x.trim()).filter(Boolean)
@@ -549,10 +575,11 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     };
 
     const dlgGroups = new Map();
-    (s.moves ?? []).forEach((m, i) => {
+    (s.moves ?? []).forEach((snapshot, i) => {
+      const m = resolveSkinMove(snapshot);
       const g = (m.group ?? "").trim() || "Moves";
       if (!dlgGroups.has(g)) dlgGroups.set(g, []);
-      const desc = m.description || liveDesc(m.name);
+      const desc = m.description;
       dlgGroups.get(g).push(`
         <div class="mh2-choice-block">
           <label class="mh2-choice">
@@ -634,12 +661,7 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     const toCreate = [...indices]
       .map(i => s.moves[i])
       .filter(m => m && m.name && !existing.has(m.name))
-      .map(m => ({
-        name: m.name,
-        type: "move",
-        img: m.img || undefined,
-        system: { stat: m.stat, category: "skin", bonus: m.bonus ?? 0, group: m.group ?? "", description: moveText(m.name, m.description) }
-      }));
+      .map(skinMoveItem);
     if (toCreate.length) await this.actor.createEmbeddedDocuments("Item", toCreate);
 
     ui.notifications.info(`${this.actor.name} is now ${skin.name}.`);
@@ -1026,10 +1048,7 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
           .filter(({ m }) => m.name && !existing.has(m.name) && !seen.has(m.name))
           .map(({ m, i }) => {
             seen.add(m.name);
-            const desc = m.description || (() => {
-              const it = game.items.find(x => x.type === "move" && x.name === m.name);
-              return it?.system.description ?? "";
-            })();
+            const desc = resolveSkinMove(m).description;
             return `
               <div class="mh2-choice-block">
                 <label class="mh2-choice">
@@ -1059,12 +1078,7 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
           const creates = picked.map(v => {
             const [key, idx] = v.split(":");
             return poolMap.get(key)?.[Number(idx)];
-          }).filter(m => m).map(m => ({
-            name: m.name,
-            type: "move",
-            img: m.img || undefined,
-            system: { stat: m.stat, category: "skin", bonus: m.bonus ?? 0, group: m.group ?? "", description: moveText(m.name, m.description) }
-          }));
+          }).filter(m => m).map(skinMoveItem);
           if (creates.length) await actor.createEmbeddedDocuments("Item", creates);
         }
       } else {

@@ -29,6 +29,16 @@
             {{/each}}
           </select>
         </label>
+        {{#if isSkinMove}}
+        <label class="mh2-stat-select">
+          <span>Counts as</span>
+          <select name="system.basedOn" title="The basic move this move counts as — its text is shown, smaller, on the roll card">
+            {{#each basedOnOptions}}
+            <option value="{{this.value}}"{{#if this.selected}} selected{{/if}}>{{this.label}}</option>
+            {{/each}}
+          </select>
+        </label>
+        {{/if}}
       </div>
     </div>
   </header>

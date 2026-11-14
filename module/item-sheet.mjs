@@ -38,6 +38,13 @@ export class MH2ItemSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
     context.categoryOptions = MH2.categoryOptions.map(o => ({
       ...o, selected: o.value === item.system.category
     }));
+    const basedOn = item.system.basedOn ?? "";
+    context.isSkinMove = item.system.category !== "basic";
+    context.basedOnOptions = [
+      { value: "", label: "Auto — from the text" },
+      { value: "none", label: "Nothing" },
+      ...MH2.basicMoves.map(m => ({ value: m.name, label: m.name }))
+    ].map(o => ({ ...o, selected: o.value === basedOn }));
     context.enrichedDescription = await TE.enrichHTML(item.system.description, {
       relativeTo: item, secrets: item.isOwner
     });

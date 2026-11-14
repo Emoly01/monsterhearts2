@@ -4,11 +4,26 @@ import { escapeHTML as esc, sameName } from "./utils.mjs";
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
 
-/** A move's own text, or — when it has none — the world move of the same name. */
-function moveText(name, description) {
-  if (description) return description;
-  const it = game.items.find(i => i.type === "move" && i.name === name);
-  return it?.system.description ?? "";
+/** The world move item with this name (case-insensitive), if any. */
+function worldMove(name) {
+  return game.items.find(i => i.type === "move" && sameName(i.name, name)) ?? null;
+}
+
+/**
+ * What a move on a character actually rolls. Anything the character's copy
+ * leaves blank (no stat, no bonus, no text, no basic move) is read from the
+ * world move of the same name, so sheets built before the presets were set
+ * pick them up without being rebuilt.
+ */
+function effectiveMove(move) {
+  const own = move.system;
+  const live = worldMove(move.name)?.system;
+  return {
+    stat: own.stat || live?.stat || "",
+    bonus: own.bonus || live?.bonus || 0,
+    basedOn: own.basedOn || live?.basedOn || "",
+    description: own.description || live?.description || ""
+  };
 }
 
 /**
@@ -18,13 +33,14 @@ function moveText(name, description) {
  * Group and "auto" are set on the skin itself and always come from there.
  */
 function resolveSkinMove(m) {
-  const live = game.items.find(i => i.type === "move" && i.name === m.name);
+  const live = worldMove(m.name);
   if (!live) return m;
   return {
     ...m,
     img: live.img || m.img,
-    stat: live.system.stat ?? m.stat,
-    bonus: live.system.bonus ?? m.bonus ?? 0,
+    stat: live.system.stat || m.stat,
+    bonus: live.system.bonus || m.bonus || 0,
+    basedOn: live.system.basedOn || m.basedOn || "",
     description: live.system.description || m.description
   };
 }
@@ -36,7 +52,10 @@ function skinMoveItem(snapshot) {
     name: m.name,
     type: "move",
     img: m.img || undefined,
-    system: { stat: m.stat, category: "skin", bonus: m.bonus ?? 0, group: m.group ?? "", description: m.description }
+    system: {
+      stat: m.stat, category: "skin", bonus: m.bonus ?? 0, group: m.group ?? "",
+      basedOn: m.basedOn ?? "", description: m.description
+    }
   };
 }
 
@@ -115,23 +134,23 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     }));
 
     // Skin moves show their text by default, basic moves keep it folded.
-    const decorate = (m, description) => ({
+    const decorate = (m, eff, description) => ({
       id: m.id,
       name: m.name,
-      stat: m.system.stat,
-      bonus: m.system.bonus ?? 0,
-      bonusLabel: (m.system.bonus ?? 0) >= 0 ? `+${m.system.bonus}` : `${m.system.bonus}`,
+      stat: eff.stat,
+      bonus: eff.bonus,
+      bonusLabel: eff.bonus >= 0 ? `+${eff.bonus}` : `${eff.bonus}`,
       description,
       open: (m.system.category !== "basic") !== this.#toggledMoves.has(m.id)
     });
     const allMoves = actor.items
       .filter(i => i.type === "move")
       .sort((a, b) => (a.sort ?? 0) - (b.sort ?? 0) || a.name.localeCompare(b.name));
-    const moveTexts = new Map(await Promise.all(allMoves.map(async m => [
-      m.id,
-      await TE.enrichHTML(moveText(m.name, m.system.description), { relativeTo: m, secrets: actor.isOwner })
-    ])));
-    const decorated = allMoves.map(m => decorate(m, moveTexts.get(m.id)));
+    const decorated = await Promise.all(allMoves.map(async m => {
+      const eff = effectiveMove(m);
+      return decorate(m, eff,
+        await TE.enrichHTML(eff.description, { relativeTo: m, secrets: actor.isOwner }));
+    }));
     const byId = new Map(decorated.map(d => [d.id, d]));
     context.basicMoves = allMoves.filter(m => m.system.category === "basic").map(m => byId.get(m.id));
 
@@ -471,20 +490,47 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     return this.actor.createEmbeddedDocuments("Item", toCreate);
   }
 
+  /**
+   * The basic move a skin move counts as, with its text ready for a chat
+   * card: named on the move, or spotted in its wording when left on auto.
+   * The character's own copy of the basic move wins, so pasted-in full text
+   * is what shows.
+   */
+  async #basisFor(move, eff) {
+    if (move.system.category === "basic" || eff.basedOn === "none") return null;
+    let name = eff.basedOn;
+    if (!name && eff.stat) {
+      const text = eff.description.replace(/<[^>]*>/g, " ");
+      name = MH2.basicMoves.find(b => b.match?.test(text))?.name ?? "";
+    }
+    if (!name || sameName(name, move.name)) return null;
+    const own = this.actor.items.find(i => i.type === "move" && sameName(i.name, name));
+    const text = own?.system.description
+      || worldMove(name)?.system.description
+      || MH2.basicMoves.find(b => sameName(b.name, name))?.description
+      || "";
+    if (!text) return null;
+    const TE = foundry.applications.ux?.TextEditor?.implementation ?? TextEditor;
+    return { name, description: await TE.enrichHTML(text, { relativeTo: own ?? move, secrets: false }) };
+  }
+
   static async #onRollMove(event, target) {
     const move = this.#getMove(target);
     if (!move) return;
+    const eff = effectiveMove(move);
     const TE = foundry.applications.ux?.TextEditor?.implementation ?? TextEditor;
-    const description = await TE.enrichHTML(moveText(move.name, move.system.description), {
+    const description = await TE.enrichHTML(eff.description, {
       relativeTo: move, secrets: false
     });
+    const basis = await this.#basisFor(move, eff);
 
-    if (move.system.stat) {
+    if (eff.stat) {
       return this.actor.rollMH({
-        stat: move.system.stat,
+        stat: eff.stat,
         label: move.name,
         description,
-        bonus: move.system.bonus ?? 0
+        bonus: eff.bonus,
+        basis
       });
     }
 
@@ -495,6 +541,7 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
         <div class="mh2-roll-card">
           <header class="mh2-card-header"><h3>${esc(move.name)}</h3></header>
           <div class="mh2-move-text">${description}</div>
+          ${basis ? `<div class="mh2-base-move"><h4>${esc(basis.name)}</h4>${basis.description}</div>` : ""}
         </div>`
     });
   }

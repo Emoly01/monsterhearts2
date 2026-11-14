@@ -1165,3 +1165,25 @@
 .mh2-roll-card .mh2-card-actions button:disabled { opacity: 0.5; cursor: default; }
 
 .mh2-web-node .mh2-web-conditions { font-style: italic; }
+
+/* Move text on the character sheet */
+.monsterhearts2 .mh2-move { flex-wrap: wrap; }
+.monsterhearts2 .mh2-move .mh2-move-details { flex-basis: 100%; min-width: 0; }
+.monsterhearts2 .mh2-move .mh2-move-details summary {
+  cursor: pointer;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--mh2-bone-dim);
+  width: max-content;
+}
+.monsterhearts2 .mh2-move .mh2-move-details summary:hover { color: var(--mh2-thread); }
+.monsterhearts2 .mh2-move .mh2-move-desc {
+  font-size: 0.85rem;
+  line-height: 1.35;
+  padding: 0.15rem 0 0.25rem 0.6rem;
+  border-left: 2px solid var(--mh2-line);
+  margin-top: 0.15rem;
+}
+.monsterhearts2 .mh2-move .mh2-move-desc p { margin: 0 0 0.3rem 0; }
+.monsterhearts2 .mh2-move .mh2-move-desc ul { margin: 0.2rem 0 0.2rem 1.1rem; padding: 0; }

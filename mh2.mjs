@@ -6,7 +6,6 @@ import { MH2ItemSheet } from "./module/item-sheet.mjs";
 import { MH2SkinSheet } from "./module/skin-sheet.mjs";
 import { MH2NpcStrings } from "./module/npc-strings.mjs";
 import { MH2StringsWeb } from "./module/strings-web.mjs";
-import { MH2Pinboard } from "./module/pinboard.mjs";
 import { escapeHTML } from "./module/utils.mjs";
 import { applyCondition, applyHarm, applyNpcString, applyString } from "./module/effects.mjs";
 import { registerChatActions } from "./module/chat.mjs";
@@ -51,13 +50,12 @@ Hooks.once("init", () => {
 
   registerChatActions();
 
-  // Shared world settings: NPC-Strings tracker and pinboard maps.
+  // Shared world setting: the NPC-Strings tracker.
   MH2NpcStrings.registerSetting();
-  MH2Pinboard.registerSetting();
+  MH2StringsWeb.registerLiveUpdates();
   game.system.mh2 = {
     openNpcStrings: () => new MH2NpcStrings().render(true),
     openStringsWeb: () => new MH2StringsWeb().render(true),
-    openPinboard: () => new MH2Pinboard().render(true),
     darkestFlare: (name) => {
       const el = document.createElement("div");
       el.className = "mh2-flare";
@@ -144,9 +142,6 @@ Hooks.once("ready", () => {
       return applyHarm(actor, Number(payload.amount) || 1);
     }
 
-    if (payload.type === "setBoards") {
-      return game.settings.set("monsterhearts2", "boards", payload.boards ?? []);
-    }
   });
 });
 
@@ -171,12 +166,4 @@ Hooks.on("renderActorDirectory", (app, html) => {
   webBtn.innerHTML = `<i class="fa-solid fa-diagram-project"></i> Strings Web`;
   webBtn.addEventListener("click", () => new MH2StringsWeb().render(true));
   header.appendChild(webBtn);
-
-  const mapBtn = document.createElement("button");
-  mapBtn.type = "button";
-  mapBtn.className = "mh2-npc-strings-btn mh2-map-btn";
-  mapBtn.innerHTML = `<i class="fa-solid fa-map-location-dot"></i> Maps`;
-  mapBtn.addEventListener("click", () => new MH2Pinboard().render(true));
-  header.appendChild(mapBtn);
-
 });

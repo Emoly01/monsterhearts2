@@ -49,11 +49,11 @@ https://raw.githubusercontent.com/Emoly01/monsterhearts2/main/system.json
   sheet). Name matching is case-insensitive, so "kayla" and "Kayla" are one row.
 - **NPC Strings tracker**: an open, shared list of every String an NPC holds —
   button in the Actors directory. Live-updates for everyone; only the MC edits.
-- **Strings Web**: a live relationship map of every String at the table, drawn
-  from the sheets themselves. Also in the Actors directory.
-- **Maps**: a shared pinboard/map editor (boxes, labels, connector lines on a
-  choice of backgrounds) for sketching the town. Players can edit; saves route
-  through the GM.
+- **Strings Web**: a live relationship map of every String at the table —
+  the ones on sheets and the ones in the NPC tracker. Characters sit on an
+  inner ring, everyone without a sheet around them; thicker arrows mean more
+  Strings. Hover a person (or click to pin) to light up only their Strings and
+  read them as a list in the side panel. Also in the Actors directory.
 - **Skins as Items**: build a skin with stat lines, identity suggestion lists,
   moves (drag move items onto it), backstory steps, and advancements. Drop it on
   a character (or use the sheet's picker) to run the full apply interview:

@@ -1,48 +1,91 @@
 <div class="mh2-sheet mh2-web-window">
 
-  <div class="mh2-web-head">
-    <p class="mh2-hint">Every String between people. Arrows point from holder to the one they hold. Named people without a sheet appear as plain circles.</p>
-    <a class="mh2-btn mh2-btn-text" data-action="refresh" title="Recompute"><i class="fa-solid fa-rotate"></i> refresh</a>
-  </div>
-
   {{#if hasNodes}}
   <div class="mh2-web-canvas">
-    <svg viewBox="0 0 {{W}} {{H}}" xmlns="http://www.w3.org/2000/svg" class="mh2-web-svg">
+    <svg viewBox="0 0 {{size}} {{size}}" xmlns="http://www.w3.org/2000/svg" class="mh2-web-svg">
       <defs>
-        <marker id="mh2arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-          <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--mh2-thread)"/>
+        <marker id="mh2arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto">
+          <path class="mh2-web-arrow" d="M 0 0 L 10 5 L 0 10 z"/>
+        </marker>
+        <marker id="mh2arrow-in" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto">
+          <path class="mh2-web-arrow in" d="M 0 0 L 10 5 L 0 10 z"/>
         </marker>
       </defs>
 
       {{#each edges}}
-      <path d="{{this.path}}" fill="none" stroke="var(--mh2-thread)" stroke-width="2" opacity="0.7" marker-end="url(#mh2arrow)">
-        <title>{{this.from}} holds {{this.count}} on {{this.to}}</title>
-      </path>
-      <g>
-        <circle cx="{{this.labelX}}" cy="{{this.labelY}}" r="11" fill="var(--mh2-ink)" stroke="var(--mh2-thread)" stroke-width="1.5"/>
-        <text x="{{this.labelX}}" y="{{this.labelY}}" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="bold" fill="var(--mh2-thread)">{{this.count}}</text>
+      <g class="mh2-web-edge" data-from="{{this.from}}" data-to="{{this.to}}">
+        <path d="{{this.path}}" stroke-width="{{this.width}}">
+          <title>{{this.fromLabel}} holds {{this.count}} on {{this.toLabel}}</title>
+        </path>
+        <circle cx="{{this.bx}}" cy="{{this.by}}" r="9"/>
+        <text x="{{this.bx}}" y="{{this.by}}" text-anchor="middle" dominant-baseline="central">{{this.count}}</text>
       </g>
       {{/each}}
 
       {{#each nodes}}
-      <g class="mh2-web-node{{#if this.darkest}} darkest{{/if}}">
-        <circle cx="{{this.x}}" cy="{{this.y}}" r="30" fill="var(--mh2-ink-soft)" stroke="{{#if this.darkest}}var(--mh2-thread){{else}}var(--mh2-bone-dim){{/if}}" stroke-width="{{#if this.darkest}}3{{else}}2{{/if}}"/>
+      <g class="mh2-web-node{{#if this.isActor}} pc{{else}} npc{{/if}}{{#if this.darkest}} darkest{{/if}}{{#if this.pinned}} pinned{{/if}}" data-node="{{this.id}}">
+        <circle class="mh2-web-disc" cx="{{this.x}}" cy="{{this.y}}" r="{{this.r}}"/>
         {{#if this.isActor}}
-        <clipPath id="clip-{{this.id}}"><circle cx="{{this.x}}" cy="{{this.y}}" r="28"/></clipPath>
-        <image href="{{this.img}}" x="{{this.x}}" y="{{this.y}}" width="56" height="56" transform="translate(-28,-28)" clip-path="url(#clip-{{this.id}})" preserveAspectRatio="xMidYMid slice"/>
-        {{else}}
-        <text x="{{this.x}}" y="{{this.y}}" text-anchor="middle" dominant-baseline="central" font-size="22" fill="var(--mh2-bone-dim)">&#9734;</text>
+        <clipPath id="clip-{{this.id}}"><circle cx="{{this.x}}" cy="{{this.y}}" r="{{this.r}}"/></clipPath>
+        <image href="{{this.img}}" x="{{this.x}}" y="{{this.y}}" width="{{this.imgSize}}" height="{{this.imgSize}}" transform="translate(-{{this.r}},-{{this.r}}) translate(2,2)" clip-path="url(#clip-{{this.id}})" preserveAspectRatio="xMidYMid slice"/>
+        <circle class="mh2-web-ring" cx="{{this.x}}" cy="{{this.y}}" r="{{this.r}}"/>
         {{/if}}
-        <text x="{{this.x}}" y="{{this.y}}" dy="46" text-anchor="middle" font-size="14" fill="var(--mh2-bone)" font-family="Georgia, serif">{{this.label}}</text>
+        <text class="mh2-web-label" x="{{this.x}}" y="{{this.y}}" dy="{{this.labelDy}}" text-anchor="middle">{{this.label}}</text>
         {{#if this.conditions}}
-        <text class="mh2-web-conditions" x="{{this.x}}" y="{{this.y}}" dy="61" text-anchor="middle" font-size="11" fill="var(--mh2-thread)">{{this.conditions}}</text>
+        <text class="mh2-web-conditions" x="{{this.x}}" y="{{this.y}}" dy="{{this.condDy}}" text-anchor="middle">{{this.conditions}}</text>
         {{/if}}
       </g>
       {{/each}}
     </svg>
   </div>
+
+  <aside class="mh2-web-side">
+
+    {{! Everyone, most tangled first. Always visible so rows never jump. }}
+    <h3>Everyone</h3>
+    {{#if hasEdges}}
+    <ul class="mh2-web-roster">
+      {{#each roster}}
+      <li data-node="{{this.id}}" class="{{#if this.isActor}}pc{{else}}npc{{/if}}{{#if this.pinned}} pinned{{/if}}">
+        <span class="mh2-web-who">{{this.label}}</span>
+        <span class="mh2-web-tally" title="Strings they hold"><i class="fa-solid fa-arrow-up-right-from-square"></i> {{this.holdsTotal}}</span>
+        <span class="mh2-web-tally in" title="Strings held on them"><i class="fa-solid fa-arrow-right-to-bracket"></i> {{this.heldTotal}}</span>
+      </li>
+      {{/each}}
+    </ul>
+    {{else}}
+    <p class="mh2-empty">No Strings yet — the web fills in as people gain Strings on each other.</p>
+    {{/if}}
+
+    <div class="mh2-web-panel" data-panel="">
+      <p class="mh2-hint">Hover someone to see only their Strings. Click to keep them lit.</p>
+    </div>
+
+    {{! One panel per person, shown while they're in focus. }}
+    {{#each nodes}}
+    <div class="mh2-web-panel" data-panel="{{this.id}}" hidden>
+      <h3>{{this.label}}{{#unless this.isActor}} <em>no sheet</em>{{/unless}}</h3>
+      {{#if this.conditions}}<p class="mh2-web-conds">{{this.conditions}}</p>{{/if}}
+
+      <h4 class="out">Holds Strings on</h4>
+      {{#if this.holds.length}}
+      <ul>{{#each this.holds}}<li><span>{{this.name}}</span><b>{{this.count}}</b></li>{{/each}}</ul>
+      {{else}}<p class="mh2-empty">No one.</p>{{/if}}
+
+      <h4 class="in">Strings held on them by</h4>
+      {{#if this.heldBy.length}}
+      <ul>{{#each this.heldBy}}<li><span>{{this.name}}</span><b>{{this.count}}</b></li>{{/each}}</ul>
+      {{else}}<p class="mh2-empty">No one.</p>{{/if}}
+
+      {{#if this.isActor}}
+      <a class="mh2-btn mh2-btn-text" data-action="openSheet" data-actor-id="{{this.actorId}}"><i class="fa-solid fa-id-card"></i> open sheet</a>
+      {{/if}}
+    </div>
+    {{/each}}
+
+  </aside>
   {{else}}
-  <p class="mh2-empty">No Strings yet — the web fills in as characters gain Strings on people.</p>
+  <p class="mh2-empty">No one here yet — the web fills in as characters are created and gain Strings.</p>
   {{/if}}
 
 </div>

@@ -158,6 +158,12 @@
         {{/if}}
         <a class="mh2-btn" data-action="editMove" title="Edit"><i class="fa-solid fa-pen"></i></a>
         <a class="mh2-btn mh2-del" data-action="deleteMove" title="Delete"><i class="fa-solid fa-trash"></i></a>
+        {{#if this.description}}
+        <details class="mh2-move-details"{{#if this.open}} open{{/if}}>
+          <summary>text</summary>
+          <div class="mh2-move-desc">{{{this.description}}}</div>
+        </details>
+        {{/if}}
       </div>
       {{else}}
       <p class="mh2-empty">Hit <em>basics</em> to seed the six basic moves.</p>
@@ -185,6 +191,12 @@
         {{/if}}
         <a class="mh2-btn" data-action="editMove" title="Edit"><i class="fa-solid fa-pen"></i></a>
         <a class="mh2-btn mh2-del" data-action="deleteMove" title="Delete"><i class="fa-solid fa-trash"></i></a>
+        {{#if this.description}}
+        <details class="mh2-move-details"{{#if this.open}} open{{/if}}>
+          <summary>text</summary>
+          <div class="mh2-move-desc">{{{this.description}}}</div>
+        </details>
+        {{/if}}
       </div>
       {{/each}}
       {{/each}}

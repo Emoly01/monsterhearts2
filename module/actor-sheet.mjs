@@ -210,7 +210,7 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     await this.actor.update({ "system.harm.value": value });
     // Filling the final harm box puts the character at death's door.
     if (value >= sys.harm.max && current < sys.harm.max) {
-      return this.#skirtDeath();
+      return this.actor.skirtDeath();
     }
   }
 
@@ -239,50 +239,6 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     });
   }
 
-  /**
-   * Offer the Skirting Death choice: erase all harm, then either become your
-   * Darkest Self or lose every String you hold.
-   */
-  async #skirtDeath() {
-    const DialogV2 = foundry.applications.api.DialogV2;
-    const choice = await DialogV2.wait({
-      window: { title: "Skirting Death", icon: "fa-solid fa-skull" },
-      position: { width: 440 },
-      content: `
-        <div class="mh2-skin-dialog">
-          <p>You've taken your fourth harm — you're staring death down. Erase all harm and choose one:</p>
-        </div>`,
-      buttons: [
-        { action: "darkest", label: "Become your Darkest Self", icon: "fa-solid fa-moon" },
-        { action: "strings", label: "Lose all Strings you hold", icon: "fa-solid fa-link-slash" },
-        { action: "none", label: "Not yet — leave harm as is", icon: "fa-solid fa-xmark" }
-      ],
-      rejectClose: false
-    });
-
-    if (!choice || choice === "none") return;
-
-    const update = { "system.harm.value": 0 };
-    let line;
-    if (choice === "darkest") {
-      update["system.darkestSelfActive"] = true;
-      line = "erases all harm and descends into their Darkest Self";
-    } else {
-      update["system.strings"] = [];
-      line = "erases all harm and loses every String they held";
-    }
-    await this.actor.update(update);
-
-    return ChatMessage.implementation.create({
-      speaker: ChatMessage.implementation.getSpeaker({ actor: this.actor }),
-      content: `
-        <div class="mh2-roll-card mh2-string-card">
-          <header class="mh2-card-header"><h3>Skirting Death</h3></header>
-          <p><strong>${esc(this.actor.name)}</strong> ${line}.</p>
-        </div>`
-    });
-  }
-
   static async #onSetXp(event, target) {
     const i = Number(target.dataset.value);
     const current = this.actor.system.experience.value;
@@ -292,7 +248,7 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
 
   static async #onAddCondition(event, target) {
     const conditions = this.#sourceArray("conditions");
-    conditions.push("");
+    conditions.push({ name: "", from: "" });
     return this.actor.update({ "system.conditions": conditions });
   }
 

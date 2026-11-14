@@ -34,6 +34,9 @@
         <text x="{{this.x}}" y="{{this.y}}" text-anchor="middle" dominant-baseline="central" font-size="22" fill="var(--mh2-bone-dim)">&#9734;</text>
         {{/if}}
         <text x="{{this.x}}" y="{{this.y}}" dy="46" text-anchor="middle" font-size="14" fill="var(--mh2-bone)" font-family="Georgia, serif">{{this.label}}</text>
+        {{#if this.conditions}}
+        <text class="mh2-web-conditions" x="{{this.x}}" y="{{this.y}}" dy="61" text-anchor="middle" font-size="11" fill="var(--mh2-thread)">{{this.conditions}}</text>
+        {{/if}}
       </g>
       {{/each}}
     </svg>

@@ -7,7 +7,9 @@ import { MH2SkinSheet } from "./module/skin-sheet.mjs";
 import { MH2NpcStrings } from "./module/npc-strings.mjs";
 import { MH2StringsWeb } from "./module/strings-web.mjs";
 import { MH2Pinboard } from "./module/pinboard.mjs";
-import { escapeHTML, sameName } from "./module/utils.mjs";
+import { escapeHTML } from "./module/utils.mjs";
+import { applyCondition, applyHarm, applyNpcString, applyString } from "./module/effects.mjs";
+import { registerChatActions } from "./module/chat.mjs";
 
 Hooks.once("init", () => {
   console.log("Monsterhearts 2 | Keeping the story feral.");
@@ -23,7 +25,7 @@ Hooks.once("init", () => {
   CONFIG.Actor.trackableAttributes = {
     character: {
       bar: ["harm", "experience"],
-      value: ["stats.hot", "stats.cold", "stats.volatile", "stats.dark", "forward"]
+      value: ["stats.hot", "stats.cold", "stats.volatile", "stats.dark"]
     }
   };
 
@@ -46,6 +48,8 @@ Hooks.once("init", () => {
     makeDefault: true,
     label: "MH2 Skin Sheet"
   });
+
+  registerChatActions();
 
   // Shared world settings: NPC-Strings tracker and pinboard maps.
   MH2NpcStrings.registerSetting();
@@ -120,20 +124,24 @@ Hooks.once("ready", () => {
 
     if (payload.type === "grantString") {
       const actor = game.actors.get(payload.actorId);
-      if (!actor) return;
-      const strings = foundry.utils.deepClone(actor.system.toObject().strings ?? []);
-      const match = strings.find(s => sameName(s.name, payload.name));
-      if (match) match.count += payload.count ?? 1;
-      else strings.push({ name: payload.name, count: payload.count ?? 1 });
-      return actor.update({ "system.strings": strings });
+      if (!actor || !payload.name) return;
+      return applyString(actor, payload.name, payload.count ?? 1);
     }
 
     if (payload.type === "grantNpcString") {
-      const entries = foundry.utils.deepClone(game.settings.get("monsterhearts2", "npcStrings") ?? []);
-      const match = entries.find(e => sameName(e.holder, payload.holder) && sameName(e.target, payload.target));
-      if (match) match.count = (Number(match.count) || 0) + (payload.count ?? 1);
-      else entries.push({ holder: payload.holder, target: payload.target, count: payload.count ?? 1 });
-      return game.settings.set("monsterhearts2", "npcStrings", entries);
+      return applyNpcString(payload.holder, payload.target, payload.count ?? 1);
+    }
+
+    if (payload.type === "grantCondition") {
+      const actor = game.actors.get(payload.actorId);
+      if (!actor || !payload.name) return;
+      return applyCondition(actor, payload.name, payload.from ?? "");
+    }
+
+    if (payload.type === "dealHarm") {
+      const actor = game.actors.get(payload.actorId);
+      if (!actor) return;
+      return applyHarm(actor, Number(payload.amount) || 1);
     }
 
     if (payload.type === "setBoards") {

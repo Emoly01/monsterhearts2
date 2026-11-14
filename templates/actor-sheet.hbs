@@ -97,8 +97,9 @@
           <a class="mh2-btn" data-action="addCondition" title="Add a Condition">＋</a>
         </header>
         {{#each system.conditions}}
-        <div class="mh2-row">
-          <input type="text" name="system.conditions.{{@index}}" value="{{this}}" placeholder="drained, terrified…">
+        <div class="mh2-row mh2-condition-row">
+          <input type="text" name="system.conditions.{{@index}}.name" value="{{this.name}}" placeholder="drained, terrified…">
+          <input class="mh2-condition-from" type="text" name="system.conditions.{{@index}}.from" value="{{this.from}}" placeholder="from…" title="Who gave you this Condition">
           <a class="mh2-btn mh2-del" data-action="deleteCondition" data-index="{{@index}}" title="Delete"><i class="fa-solid fa-xmark"></i></a>
         </div>
         {{else}}

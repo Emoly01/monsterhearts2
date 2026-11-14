@@ -43,7 +43,8 @@ export class MH2StringsWeb extends HandlebarsApplicationMixin(ApplicationV2) {
     };
 
     for (const a of chars) {
-      ensureNode(a.name, { img: a.img, darkest: a.system.darkestSelfActive, isActor: true });
+      const node = ensureNode(a.name, { img: a.img, darkest: a.system.darkestSelfActive, isActor: true });
+      if (node) node.conditions = (a.system.conditions ?? []).map(c => c.name.trim()).filter(Boolean).join(" · ");
     }
     for (const a of chars) {
       for (const s of (a.system.strings ?? [])) {

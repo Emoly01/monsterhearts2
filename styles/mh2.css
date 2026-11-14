@@ -874,18 +874,78 @@
   color: var(--mh2-bone);
   padding: 0.6rem 0.75rem;
 }
-.mh2-web-window { display: flex; flex-direction: column; height: 100%; }
-.mh2-web-head {
-  display: flex; align-items: center; justify-content: space-between;
-  gap: 0.5rem; padding-bottom: 0.4rem; margin-bottom: 0.5rem;
-  border-bottom: 1px solid var(--mh2-line);
-}
-.mh2-web-canvas { flex: 1; overflow: auto; min-height: 0; }
+.monsterhearts2 .mh2-web-window { display: flex; flex-direction: row; gap: 0.75rem; height: 100%; --mh2-web-in: #d8a93f; }
+.mh2-web-canvas { flex: 1; min-width: 0; min-height: 0; }
 .mh2-web-svg { width: 100%; height: 100%; display: block; }
+
+.mh2-web-edge path {
+  fill: none;
+  stroke: var(--mh2-thread);
+  stroke-linecap: round;
+  opacity: 0.55;
+  marker-end: url(#mh2arrow);
+}
+.mh2-web-arrow { fill: var(--mh2-thread); }
+.mh2-web-arrow.in { fill: var(--mh2-web-in); }
+.mh2-web-edge circle { fill: var(--mh2-ink); stroke: var(--mh2-thread); stroke-width: 1.2; }
+.mh2-web-edge text { font-size: 11px; font-weight: bold; fill: var(--mh2-thread); pointer-events: none; }
+
+.mh2-web-node { cursor: pointer; }
+.mh2-web-node .mh2-web-disc { fill: var(--mh2-ink-soft); stroke: var(--mh2-bone-dim); stroke-width: 2; }
+.mh2-web-node.npc .mh2-web-disc { stroke-dasharray: 4 3; }
+.mh2-web-node .mh2-web-ring { fill: none; stroke: var(--mh2-bone-dim); stroke-width: 2; }
+.mh2-web-node.darkest .mh2-web-ring { stroke: var(--mh2-thread); stroke-width: 4; }
 .mh2-web-node text { paint-order: stroke; stroke: var(--mh2-ink); stroke-width: 3px; }
-.mh2-web-unresolved { margin-top: 0.5rem; font-size: 0.82rem; color: var(--mh2-bone-dim); }
-.mh2-web-unresolved summary { cursor: pointer; text-transform: uppercase; letter-spacing: 0.06em; font-size: 0.72rem; }
-.mh2-web-unresolved ul { margin: 0.3rem 0 0 1.1rem; }
+.mh2-web-node .mh2-web-label { font-family: Georgia, serif; font-size: 14px; fill: var(--mh2-bone); }
+.mh2-web-node.npc .mh2-web-label { font-size: 12px; fill: var(--mh2-bone-dim); }
+.mh2-web-node .mh2-web-conditions { font-size: 11px; font-style: italic; fill: var(--mh2-thread); }
+.mh2-web-node.pinned .mh2-web-disc,
+.mh2-web-node.pinned .mh2-web-ring { stroke: var(--mh2-bone); stroke-width: 3.5; }
+
+/* focus: everything unrelated fades; held-on-them Strings turn gold */
+.mh2-web-window.focused .mh2-web-edge { opacity: 0.07; }
+.mh2-web-window.focused .mh2-web-edge.out,
+.mh2-web-window.focused .mh2-web-edge.in { opacity: 1; }
+.mh2-web-window.focused .mh2-web-edge.out path,
+.mh2-web-window.focused .mh2-web-edge.in path { opacity: 1; }
+.mh2-web-window.focused .mh2-web-edge.in path { stroke: var(--mh2-web-in); marker-end: url(#mh2arrow-in); }
+.mh2-web-window.focused .mh2-web-edge.in circle { stroke: var(--mh2-web-in); }
+.mh2-web-window.focused .mh2-web-edge.in text { fill: var(--mh2-web-in); }
+.mh2-web-window.focused .mh2-web-node:not(.lit) { opacity: 0.22; }
+.mh2-web-window.focused .mh2-web-node.focus .mh2-web-label { font-weight: bold; }
+
+.mh2-web-side {
+  flex: 0 0 15rem;
+  overflow-y: auto;
+  border-left: 1px solid var(--mh2-line);
+  padding-left: 0.75rem;
+  font-size: 0.85rem;
+}
+.mh2-web-side h3 { font-family: Georgia, serif; font-size: 1.05rem; margin: 0 0 0.3rem 0; border: none; }
+.mh2-web-side h3 em { font-size: 0.7rem; opacity: 0.6; font-weight: normal; }
+.mh2-web-side h4 {
+  font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.1em;
+  margin: 0.7rem 0 0.2rem 0; padding-bottom: 0.15rem;
+  color: var(--mh2-thread); border-bottom: 1px solid var(--mh2-thread);
+}
+.mh2-web-side h4.in { color: var(--mh2-web-in); border-bottom-color: var(--mh2-web-in); }
+.mh2-web-side ul { list-style: none; margin: 0; padding: 0; }
+.mh2-web-side li {
+  display: flex; align-items: center; gap: 0.4rem;
+  padding: 0.18rem 0.2rem; border-bottom: 1px dotted var(--mh2-line);
+}
+.mh2-web-side li span:first-child { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mh2-web-side .mh2-web-conds { font-style: italic; color: var(--mh2-thread); margin: 0; }
+.mh2-web-side .mh2-btn { display: inline-block; margin-top: 0.7rem; }
+.mh2-web-roster { margin-bottom: 0.8rem !important; }
+.mh2-web-roster li { cursor: pointer; }
+.mh2-web-roster li.focus .mh2-web-who { font-weight: bold; }
+.mh2-web-panel h3 { margin-top: 0.2rem; }
+.mh2-web-roster li:hover, .mh2-web-roster li.pinned { background: var(--mh2-ink-soft); }
+.mh2-web-roster li.npc .mh2-web-who { font-style: italic; color: var(--mh2-bone-dim); }
+.mh2-web-tally { flex: none; min-width: 2.3rem; text-align: right; color: var(--mh2-thread); font-variant-numeric: tabular-nums; }
+.mh2-web-tally.in { color: var(--mh2-web-in); }
+.mh2-web-tally i { font-size: 0.65rem; opacity: 0.8; }
 .mh2-web-btn { margin-top: 0.25rem; }
 
 /* v0.15: darkest flare, flavor lines, backstory rows */
@@ -956,146 +1016,6 @@
 .mh2-skin-dialog .mh2-gu legend { color: #d8b35d; }
 .mh2-roll-card.mh2-sex-card { border-left: 3px solid #e83f6f; }
 .mh2-roll-card.mh2-sex-card .mh2-card-header h3 i { color: #e83f6f; }
-
-/* v0.21: pinboard / map editor */
-.mh2-map-btn { margin-top: 0.25rem; }
-
-.monsterhearts2.mh2-pinboard .window-content { padding: 0; }
-.mh2-board-window {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-.mh2-board-head {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.45rem 0.6rem;
-  border-bottom: 1px solid var(--mh2-line);
-  flex-wrap: wrap;
-}
-.mh2-board-head .mh2-board-select { flex: 0 1 14rem; }
-.mh2-board-tools { display: inline-flex; gap: 0.3rem; }
-.mh2-hint-inline {
-  font-size: 0.72rem;
-  color: var(--mh2-bone-dim);
-  margin-left: auto;
-}
-
-.mh2-board-canvas {
-  flex: 1;
-  overflow: auto;
-}
-.mh2-board-surface {
-  position: relative;
-  width: 1600px;
-  height: 1200px;
-  touch-action: none;
-}
-.mh2-board-surface.bg-paper { background: #efe6d2; }
-.mh2-board-surface.bg-grid {
-  background:
-    linear-gradient(rgba(90, 80, 110, 0.14) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(90, 80, 110, 0.14) 1px, transparent 1px),
-    #efe9dc;
-  background-size: 40px 40px, 40px 40px, auto;
-}
-.mh2-board-surface.bg-night { background: #191423; }
-.mh2-board-surface.bg-sea {
-  background: linear-gradient(180deg, #cfe9e4 0%, #a8d5cf 100%);
-}
-
-.mh2-board-surface .mh2-el { position: absolute; }
-.mh2-board-surface .mh2-el.active { z-index: 30; }
-
-/* Connector lines: the container spans the surface but only the stroke
-   and the endpoint handles catch the pointer. */
-.mh2-line-el {
-  left: 0; top: 0;
-  width: 100%; height: 100%;
-  pointer-events: none;
-}
-.mh2-line-svg { pointer-events: none; }
-.mh2-line-svg line {
-  pointer-events: visibleStroke;
-  stroke-width: 3;
-  stroke-linecap: round;
-  cursor: move;
-}
-.mh2-line-svg .mh2-lineend {
-  pointer-events: all;
-  cursor: crosshair;
-  fill: rgba(120, 110, 140, 0.25);
-  stroke: rgba(120, 110, 140, 0.6);
-  stroke-width: 1;
-}
-.mh2-el.active .mh2-lineend { fill: rgba(210, 59, 99, 0.4); }
-.line-red { stroke: #c8102e; }
-.line-gold { stroke: #d8a01d; }
-.line-green { stroke: #2f8a57; }
-.line-sea { stroke: #0f9b8e; }
-.line-pink { stroke: #e2648f; }
-.line-bone { stroke: #b8ad97; }
-.line-grey { stroke: #7c7c86; }
-
-.mh2-box {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 4px;
-  border: 1.5px solid rgba(20, 16, 26, 0.45);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
-  cursor: move;
-  user-select: none;
-  padding: 0.2rem;
-}
-.mh2-box .mh2-box-label {
-  font-size: 0.8rem;
-  font-weight: 600;
-  text-align: center;
-  color: #1c1620;
-  overflow: hidden;
-  pointer-events: none;
-}
-.mh2-box .mh2-resize {
-  position: absolute;
-  right: -2px; bottom: -2px;
-  width: 14px; height: 14px;
-  cursor: nwse-resize;
-  border-right: 3px solid rgba(20, 16, 26, 0.5);
-  border-bottom: 3px solid rgba(20, 16, 26, 0.5);
-  border-radius: 0 0 4px 0;
-}
-.box-red { background: #e6a3ad; }
-.box-gold { background: #ecd39a; }
-.box-green { background: #abd4ba; }
-.box-sea { background: #9fd6d0; }
-.box-pink { background: #f0bccd; }
-.box-bone { background: #e5ddc9; }
-.box-grey { background: #c4c4cc; }
-
-.mh2-text {
-  cursor: move;
-  user-select: none;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.35);
-  white-space: nowrap;
-}
-.bg-night .mh2-text { text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6); }
-.mh2-text.size-sm { font-size: 0.7rem; }
-.mh2-text.size-md { font-size: 0.95rem; }
-.mh2-text.size-lg { font-size: 1.35rem; }
-.mh2-text.size-xl { font-size: 1.9rem; }
-.text-red { color: #a51228; }
-.text-gold { color: #9a7118; }
-.text-green { color: #24693f; }
-.text-sea { color: #0b756c; }
-.text-pink { color: #b8446e; }
-.text-bone { color: #6e6350; }
-.text-grey { color: #55555e; }
-.bg-night .text-bone { color: #d9d0bb; }
-.bg-night .text-grey { color: #a9a9b4; }
 
 /* v0.22: roll targets, Condition sources, chat-card follow-ups */
 .mh2-tgt-set {

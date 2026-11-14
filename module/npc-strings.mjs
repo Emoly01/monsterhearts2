@@ -22,6 +22,7 @@ export class MH2NpcStrings extends HandlebarsApplicationMixin(ApplicationV2) {
         for (const app of foundry.applications.instances.values()) {
           if (app instanceof MH2NpcStrings) app.render();
         }
+        Hooks.callAll("mh2.npcStringsChanged");
       }
     });
   }

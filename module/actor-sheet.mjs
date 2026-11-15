@@ -1,5 +1,6 @@
 import { MH2 } from "./config.mjs";
 import { escapeHTML as esc, sameName } from "./utils.mjs";
+import { cardActions, moveActionKeys } from "./chat.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
@@ -18,7 +19,10 @@ function worldMove(name) {
 function effectiveMove(move) {
   const own = move.system;
   const live = worldMove(move.name)?.system;
+  const buttons = own.actionsMode ? own : (live?.actionsMode ? live : null);
   return {
+    actionsMode: buttons?.actionsMode ?? "",
+    actions: buttons?.actions ?? {},
     stat: own.stat || live?.stat || "",
     bonus: own.bonus || live?.bonus || 0,
     basedOn: own.basedOn || live?.basedOn || "",
@@ -41,6 +45,8 @@ function resolveSkinMove(m) {
     stat: live.system.stat || m.stat,
     bonus: live.system.bonus || m.bonus || 0,
     basedOn: live.system.basedOn || m.basedOn || "",
+    actionsMode: live.system.actionsMode ?? "",
+    actions: live.system.toObject().actions,
     description: live.system.description || m.description
   };
 }
@@ -54,7 +60,8 @@ function skinMoveItem(snapshot) {
     img: m.img || undefined,
     system: {
       stat: m.stat, category: "skin", bonus: m.bonus ?? 0, group: m.group ?? "",
-      basedOn: m.basedOn ?? "", description: m.description
+      basedOn: m.basedOn ?? "", description: m.description,
+      ...(m.actionsMode ? { actionsMode: m.actionsMode, actions: m.actions } : {})
     }
   };
 }
@@ -523,6 +530,7 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
       relativeTo: move, secrets: false
     });
     const basis = await this.#basisFor(move, eff);
+    const actions = moveActionKeys(eff, [eff.description, basis?.description]);
 
     if (eff.stat) {
       return this.actor.rollMH({
@@ -530,7 +538,8 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
         label: move.name,
         description,
         bonus: eff.bonus,
-        basis
+        basis,
+        actions
       });
     }
 
@@ -542,7 +551,9 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
           <header class="mh2-card-header"><h3>${esc(move.name)}</h3></header>
           <div class="mh2-move-text">${description}</div>
           ${basis ? `<div class="mh2-base-move"><h4>${esc(basis.name)}</h4>${basis.description}</div>` : ""}
-        </div>`
+          ${cardActions(actions)}
+        </div>`,
+      flags: { monsterhearts2: { card: { actorId: this.actor.id, targetName: "" } } }
     });
   }
 

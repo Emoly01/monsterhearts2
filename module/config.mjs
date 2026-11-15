@@ -57,6 +57,23 @@ MH2.categoryOptions = [
   { value: "skin", label: "Skin move" }
 ];
 
+/**
+ * Follow-up buttons a move can put on its chat card. `match` is how "auto"
+ * decides a move wants the button: its text mentions the thing.
+ */
+MH2.moveActions = [
+  { key: "gainString", label: "Gain a String", match: /\bstrings?\b/i },
+  { key: "giveString", label: "Give a String", match: /\bstrings?\b/i },
+  { key: "giveCondition", label: "Give Condition", match: /\bconditions?\b/i },
+  { key: "takeCondition", label: "Take Condition", match: /\bconditions?\b/i },
+  { key: "harm", label: "Deal harm", match: /\bharm(s|ed|ing)?\b/i },
+  { key: "forward", label: "Take 1 Forward", match: /\bforward\b/i }
+];
+MH2.actionsModeOptions = [
+  { value: "", label: "Auto — from the text" },
+  { value: "custom", label: "Chosen here" }
+];
+
 /** Options posted to chat when a String is spent. */
 MH2.pullingStrings = [
   "Tempt them to do what you want",

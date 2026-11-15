@@ -301,26 +301,7 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
   static async #onToggleDarkest(event, target) {
     const nowActive = !this.actor.system.darkestSelfActive;
     await this.actor.update({ "system.darkestSelfActive": nowActive });
-    if (nowActive) return this.#announceDarkest();
-  }
-
-  /** Post the character's Darkest Self text to chat as a dramatic beat. */
-  async #announceDarkest() {
-    // Table-wide flare: everyone sees the descent.
-    game.socket.emit("system.monsterhearts2", { type: "darkestFlare", name: this.actor.name });
-    game.system.mh2?.darkestFlare?.(this.actor.name);
-    const TE = foundry.applications.ux?.TextEditor?.implementation ?? TextEditor;
-    const text = await TE.enrichHTML(this.actor.system.darkestSelf || "", {
-      relativeTo: this.actor, secrets: false
-    });
-    return ChatMessage.implementation.create({
-      speaker: ChatMessage.implementation.getSpeaker({ actor: this.actor }),
-      content: `
-        <div class="mh2-roll-card mh2-darkest-card">
-          <header class="mh2-card-header"><h3><i class="fa-solid fa-moon"></i> ${esc(this.actor.name)} — Darkest Self</h3></header>
-          ${text || "<p><em>They descend into their Darkest Self.</em></p>"}
-        </div>`
-    });
+    if (nowActive) return this.actor.announceDarkestSelf();
   }
 
   static async #onSetXp(event, target) {

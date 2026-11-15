@@ -72,8 +72,11 @@ https://raw.githubusercontent.com/Emoly01/monsterhearts2/main/system.json
 - **Moves as Items**: create with ＋, or hit **basics** to seed the six basic
   moves. Clicking a move's name rolls it (or posts it to chat if it has no stat).
   New characters get the basic moves automatically.
-- **Darkest Self**: toggle it on the sheet — a table-wide flare announces the
-  descent and the character's Darkest Self text goes to chat.
+- **Darkest Self**: toggle it on the sheet (or choose it when Skirting Death) —
+  the screen cracks and the character's name is stamped across it for the whole
+  table, and the Darkest Self text goes to chat. While it lasts, the sheet's
+  header floods with the theme's Strings colour and bleeds down into the sheet,
+  and the Darkest Self text is pinned to the top.
 - **Token bars**: Harm and Experience are available as token resource bars.
 
 ## House notes

@@ -311,12 +311,36 @@ export class MH2Actor extends Actor {
     }
     await this.update(update);
 
-    return ChatMessage.implementation.create({
+    await ChatMessage.implementation.create({
       speaker: ChatMessage.implementation.getSpeaker({ actor: this }),
       content: `
         <div class="mh2-roll-card mh2-string-card">
           <header class="mh2-card-header"><h3>Skirting Death</h3></header>
           <p><strong>${escapeHTML(this.name)}</strong> ${line}.</p>
+        </div>`
+    });
+    // Skirting Death into the Darkest Self gets the same descent as the toggle.
+    if (choice === "darkest") return this.announceDarkestSelf();
+  }
+
+  /**
+   * Announce the descent into the Darkest Self: a table-wide flare, and the
+   * character's Darkest Self text in chat.
+   */
+  async announceDarkestSelf() {
+    game.socket.emit("system.monsterhearts2", { type: "darkestFlare", name: this.name });
+    game.system.mh2?.darkestFlare?.(this.name);
+    const TE = foundry.applications.ux?.TextEditor?.implementation ?? TextEditor;
+    const text = await TE.enrichHTML(this.system.darkestSelf || "", {
+      relativeTo: this, secrets: false
+    });
+    return ChatMessage.implementation.create({
+      speaker: ChatMessage.implementation.getSpeaker({ actor: this }),
+      content: `
+        <div class="mh2-roll-card mh2-darkest-card">
+          <header class="mh2-card-header"><h3><i class="fa-solid fa-moon"></i> ${escapeHTML(this.name)}</h3></header>
+          <p class="mh2-darkest-tag">Darkest Self</p>
+          ${text || "<p><em>They descend into their Darkest Self.</em></p>"}
         </div>`
     });
   }

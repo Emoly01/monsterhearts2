@@ -29,6 +29,9 @@
       </div>
     </div>
   </header>
+  {{#if darkestSelfActive}}
+  <div class="mh2-bleed" aria-hidden="true"><i class="mh2-vein"></i></div>
+  {{/if}}
 
   <section class="mh2-stats">
     {{#each statList}}
@@ -67,6 +70,13 @@
   </section>
 
   <div class="mh2-body">
+
+    {{#if darkestSelfActive}}
+    <section class="mh2-panel mh2-darkest-banner">
+      <header class="mh2-panel-header"><h2>Darkest Self</h2></header>
+      <div class="mh2-darkest-text">{{#if enriched.darkestSelf}}{{{enriched.darkestSelf}}}{{else}}<p><em>No Darkest Self written yet — add it further down this sheet.</em></p>{{/if}}</div>
+    </section>
+    {{/if}}
 
     <div class="mh2-columns">
 

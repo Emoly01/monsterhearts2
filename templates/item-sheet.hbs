@@ -39,7 +39,24 @@
           </select>
         </label>
         {{/if}}
+        <label class="mh2-stat-select">
+          <span>Chat buttons</span>
+          <select name="system.actionsMode" title="Which follow-up buttons this move puts on its chat card">
+            {{#each actionsModeOptions}}
+            <option value="{{this.value}}"{{#if this.selected}} selected{{/if}}>{{this.label}}</option>
+            {{/each}}
+          </select>
+        </label>
       </div>
+      {{#if customActions}}
+      <div class="mh2-action-picks">
+        {{#each actionOptions}}
+        <label><input type="checkbox" name="system.actions.{{this.key}}"{{#if this.checked}} checked{{/if}}> {{this.label}}</label>
+        {{/each}}
+      </div>
+      {{else}}
+      <p class="mh2-action-hint">{{#if autoActions}}This text offers: {{autoActions}}.{{else}}Nothing in this text asks for a button.{{/if}}{{#if isSkinMove}} The move it counts as adds its own.{{/if}}</p>
+      {{/if}}
     </div>
   </header>
 

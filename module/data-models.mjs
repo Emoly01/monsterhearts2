@@ -122,6 +122,20 @@ export class MoveData extends foundry.abstract.TypeDataModel {
        * otherwise the basic move's name.
        */
       basedOn: new StringField({ required: true, blank: true }),
+      /**
+       * Which follow-up buttons the chat card carries. "" = work them out
+       * from the move's text, "custom" = exactly the ones ticked in `actions`.
+       */
+      actionsMode: new StringField({ required: true, blank: true }),
+      actions: new SchemaField({
+        gainString: new BooleanField(),
+        giveString: new BooleanField(),
+        loseString: new BooleanField(),
+        giveCondition: new BooleanField(),
+        takeCondition: new BooleanField(),
+        harm: new BooleanField(),
+        forward: new BooleanField()
+      }),
       description: new HTMLField()
     };
   }

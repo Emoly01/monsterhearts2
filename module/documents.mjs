@@ -1,6 +1,6 @@
 import { MH2 } from "./config.mjs";
 import { escapeHTML, sameName } from "./utils.mjs";
-import { cardActions, rollActions } from "./chat.mjs";
+import { cardActions } from "./chat.mjs";
 
 export class MH2Actor extends Actor {
 
@@ -67,8 +67,10 @@ export class MH2Actor extends Actor {
    * @param {number} options.bonus        Flat bonus baked into the move itself.
    * @param {{name: string, description: string}|null} options.basis
    *   The basic move this roll counts as; its (pre-enriched) text is shown small.
+   * @param {string[]|null} options.actions
+   *   Follow-up buttons to offer on a hit. Null (a bare stat roll) offers them all.
    */
-  async rollMH({ stat = null, label = null, description = "", bonus = 0, basis = null } = {}) {
+  async rollMH({ stat = null, label = null, description = "", bonus = 0, basis = null, actions = null } = {}) {
     const sys = this.system;
     const statLabel = stat ? (MH2.stats[stat] ?? stat) : null;
     const statValue = stat ? (sys.stats?.[stat] ?? 0) : 0;
@@ -229,7 +231,7 @@ export class MH2Actor extends Actor {
         ${bits.length ? `<div class="mh2-roll-breakdown">${bits.join(" · ")}</div>` : ""}
         ${xpNote}
         ${flavor ? `<p class="mh2-flavor">${flavor}</p>` : ""}
-        ${tier === "miss" ? "" : rollActions(target?.name ?? "")}
+        ${tier === "miss" ? "" : cardActions(actions ?? MH2.moveActions.map(a => a.key), target?.name ?? "")}
       </div>`;
 
     const messageData = {

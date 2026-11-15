@@ -1377,3 +1377,25 @@
   top: 230px;
   transform: rotate(-55deg) scaleX(-1);
 }
+
+/* Move sheet: which follow-up buttons the chat card carries */
+.monsterhearts2 .mh2-action-picks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 0.9rem;
+  margin-top: 0.4rem;
+  font-size: 0.78rem;
+}
+.monsterhearts2 .mh2-action-picks label {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  cursor: pointer;
+}
+.monsterhearts2 .mh2-action-picks input[type="checkbox"] { margin: 0; }
+.monsterhearts2 .mh2-action-hint {
+  margin: 0.4rem 0 0;
+  font-size: 0.72rem;
+  font-style: italic;
+  color: var(--mh2-bone-dim);
+}

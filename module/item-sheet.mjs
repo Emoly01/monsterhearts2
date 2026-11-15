@@ -1,4 +1,5 @@
 import { MH2 } from "./config.mjs";
+import { moveActionKeys } from "./chat.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ItemSheetV2 } = foundry.applications.sheets;
@@ -45,6 +46,16 @@ export class MH2ItemSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
       { value: "none", label: "Nothing" },
       ...MH2.basicMoves.map(m => ({ value: m.name, label: m.name }))
     ].map(o => ({ ...o, selected: o.value === basedOn }));
+    const custom = item.system.actionsMode === "custom";
+    context.customActions = custom;
+    context.actionsModeOptions = MH2.actionsModeOptions.map(o => ({
+      ...o, selected: o.value === (item.system.actionsMode ?? "")
+    }));
+    context.actionOptions = MH2.moveActions.map(a => ({
+      ...a, checked: !!item.system.actions?.[a.key]
+    }));
+    const found = moveActionKeys({}, [item.system.description]);
+    context.autoActions = MH2.moveActions.filter(a => found.includes(a.key)).map(a => a.label).join(", ");
     context.enrichedDescription = await TE.enrichHTML(item.system.description, {
       relativeTo: item, secrets: item.isOwner
     });

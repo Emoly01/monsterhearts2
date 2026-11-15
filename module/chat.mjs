@@ -1,6 +1,6 @@
 import { MH2 } from "./config.mjs";
 import { escapeHTML as esc, sameName } from "./utils.mjs";
-import { dealHarm, findCharacter, gainString, giveCondition, giveString, takeForward } from "./effects.mjs";
+import { dealHarm, findCharacter, gainString, giveCondition, giveString, stringsHeld, takeForward } from "./effects.mjs";
 
 /**
  * Clickable follow-ups on chat cards. A card opts in by carrying
@@ -12,6 +12,7 @@ import { dealHarm, findCharacter, gainString, giveCondition, giveString, takeFor
 const BUTTONS = {
   gainString: { icon: "fa-link", label: "Gain a String", tip: t => `You gain a String on ${t}` },
   giveString: { icon: "fa-hand-holding-heart", label: "Give a String", tip: t => `${t} gains a String on you` },
+  loseString: { icon: "fa-link-slash", label: "They lose a String", tip: t => `${t} loses a String on you` },
   giveCondition: { icon: "fa-tag", label: "Give Condition", tip: t => `Put a Condition on ${t}` },
   takeCondition: { icon: "fa-user-tag", label: "Take Condition", tip: t => `${t} puts a Condition on you` },
   harm: { icon: "fa-droplet", label: "Deal harm", tip: t => `${t} takes 1 harm` },
@@ -30,7 +31,7 @@ export function cardActions(actions, targetName = "") {
 }
 
 /** Buttons that act on someone else, and so need a name. */
-const NEEDS_TARGET = new Set(["gainString", "giveString", "giveCondition", "takeCondition", "harm"]);
+const NEEDS_TARGET = new Set(["gainString", "giveString", "loseString", "giveCondition", "takeCondition", "harm"]);
 
 /**
  * The button keys a move puts on its card. A move set to "custom" gets exactly
@@ -116,6 +117,16 @@ const HANDLERS = {
     if (!await giveString(targetName, actor.name, 1)) return;
     return post(actor, "String Given",
       `<strong>${esc(targetName)}</strong> gains a String on <strong>${esc(actor.name)}</strong>.`);
+  },
+
+  async loseString(actor, targetName) {
+    const held = stringsHeld(targetName, actor.name);
+    if (held < 1) {
+      return ui.notifications.warn(`${targetName} has no Strings on ${actor.name} to lose.`);
+    }
+    if (!await giveString(targetName, actor.name, -1)) return;
+    return post(actor, "String Lost",
+      `<strong>${esc(targetName)}</strong> loses a String on <strong>${esc(actor.name)}</strong> (${held - 1} left).`);
   },
 
   async giveCondition(actor, targetName) {

@@ -130,6 +130,7 @@ export class MoveData extends foundry.abstract.TypeDataModel {
       actions: new SchemaField({
         gainString: new BooleanField(),
         giveString: new BooleanField(),
+        loseString: new BooleanField(),
         giveCondition: new BooleanField(),
         takeCondition: new BooleanField(),
         harm: new BooleanField(),

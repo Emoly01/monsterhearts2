@@ -64,6 +64,7 @@ MH2.categoryOptions = [
 MH2.moveActions = [
   { key: "gainString", label: "Gain a String", match: /\bstrings?\b/i },
   { key: "giveString", label: "Give a String", match: /\bstrings?\b/i },
+  { key: "loseString", label: "They lose a String", match: /\blos(e|es|ing)\b[^.,;]{0,20}\bstrings?\b/i },
   { key: "giveCondition", label: "Give Condition", match: /\bconditions?\b/i },
   { key: "takeCondition", label: "Take Condition", match: /\bconditions?\b/i },
   { key: "harm", label: "Deal harm", match: /\bharm(s|ed|ing)?\b/i },

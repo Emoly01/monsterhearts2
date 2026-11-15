@@ -36,7 +36,7 @@ https://raw.githubusercontent.com/Emoly01/monsterhearts2/main/system.json
   you hold on them (+1 each, spent on the roll) and their Conditions to exploit
   (+1 each, not consumed — the table decides how many may stack).
 - **Follow-up buttons**: a hit's chat card carries buttons — gain a String, give
-  a String, give or take a Condition, deal harm, take 1 Forward — that write to
+  a String, make them lose one on you, give or take a Condition, deal harm, take 1 Forward — that write to
   both sheets (through the GM when you don't own the other one). Only the
   roller and the MC see them. Harm that fills the track offers Skirting Death.
   Each move decides which buttons it shows: **Chat buttons** on the move sheet

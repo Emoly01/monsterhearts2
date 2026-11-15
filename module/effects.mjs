@@ -29,16 +29,18 @@ export function findCharacter(name) {
 export async function applyString(actor, name, count = 1) {
   const strings = foundry.utils.deepClone(actor.system.toObject().strings ?? []);
   const match = strings.find(s => sameName(s.name, name));
-  if (match) match.count += count;
-  else strings.push({ name, count });
+  if (match) match.count = Math.max(0, match.count + count);
+  else if (count > 0) strings.push({ name, count });
+  else return actor;
   return actor.update({ "system.strings": strings });
 }
 
 export async function applyNpcString(holder, target, count = 1) {
   const entries = foundry.utils.deepClone(game.settings.get("monsterhearts2", "npcStrings") ?? []);
   const match = entries.find(e => sameName(e.holder, holder) && sameName(e.target, target));
-  if (match) match.count = (Number(match.count) || 0) + count;
-  else entries.push({ holder, target, count });
+  if (match) match.count = Math.max(0, (Number(match.count) || 0) + count);
+  else if (count > 0) entries.push({ holder, target, count });
+  else return entries;
   return game.settings.set("monsterhearts2", "npcStrings", entries);
 }
 
@@ -78,7 +80,7 @@ export function gainString(actor, name, count = 1) {
 }
 
 /**
- * `holderName` gains `count` Strings on `targetName`. A holder with a sheet
+ * `holderName` gains `count` Strings on `targetName` (negative: loses them). A holder with a sheet
  * gets a row on it; anyone else is recorded in the shared NPC tracker.
  */
 export function giveString(holderName, targetName, count = 1) {
@@ -91,6 +93,17 @@ export function giveString(holderName, targetName, count = 1) {
     () => applyNpcString(holder, target, count),
     { type: "grantNpcString", holder, target, count },
     `No GM online to record ${holder}'s String in the tracker.`);
+}
+
+/** How many Strings `holderName` holds on `targetName`, sheet or tracker. */
+export function stringsHeld(holderName, targetName) {
+  const actor = findCharacter(holderName);
+  if (actor) {
+    return (actor.system.strings ?? []).find(s => sameName(s.name, targetName))?.count ?? 0;
+  }
+  const entry = (game.settings.get("monsterhearts2", "npcStrings") ?? [])
+    .find(e => sameName(e.holder, holderName) && sameName(e.target, targetName));
+  return Number(entry?.count) || 0;
 }
 
 /** Put a Condition on `actor`, remembering who it came from. */

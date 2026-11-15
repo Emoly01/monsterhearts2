@@ -72,15 +72,28 @@ Hooks.once("init", () => {
     scope: "client",
     config: true,
     type: String,
-    choices: { dark: "Dark (ink & thread)", light: "Light (bone & thread)", karibik: "Karibik (sand & sea)", trinidad: "Trinidad (Carnival warmth)", island: "Island (sea & hibiscus)" },
+    choices: {
+      dark: "Dark — ink & thread",
+      light: "Light — bone & thread",
+      karibik: "Karibik — sand & sea",
+      trinidad: "Trinidad — Carnival warmth",
+      island: "Island — sea & sky",
+      soucouyant: "Soucouyant — ash & ember",
+      lagoon: "Bioluminescence — the lagoon at night",
+      diablesse: "La Diablesse — muslin & black lace",
+      burnbook: "Burn Book — gel pen & gossip",
+      lateshow: "Late Show — VHS horror marathon",
+      prom: "Prom Night — satin, silver & blood"
+    },
     default: "dark",
     onChange: value => applyMH2Theme(value)
   });
 
-  // Optional hibiscus corner decorations (per-user).
+  // Optional chaconia sprays behind character sheets (per-user, any theme).
+  // The key stays "flowers" so existing choices carry over.
   game.settings.register("monsterhearts2", "flowers", {
-    name: "Corner Flowers",
-    hint: "Show watercolor hibiscus blooms in the corners of character sheets.",
+    name: "Chaconia",
+    hint: "Show sprays of chaconia — Trinidad & Tobago's national flower — behind character sheets. Works with every theme.",
     scope: "client",
     config: true,
     type: Boolean,

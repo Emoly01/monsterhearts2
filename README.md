@@ -23,8 +23,11 @@ https://raw.githubusercontent.com/Emoly01/monsterhearts2/main/system.json
 
 ## What works
 
-- **Character sheet**: name, skin/look/eyes/origin, the four stats, five themes
-  (per-user), optional watercolor hibiscus corners.
+- **Character sheet**: name, skin/look/eyes/origin, the four stats, eleven
+  themes (per-user — Dark, Light, Karibik, Trinidad, Island, Soucouyant,
+  Bioluminescence, La Diablesse, Burn Book, Late Show, Prom Night). Themes
+  follow you into chat cards, the Strings Web and the NPC tracker. Optional
+  chaconia sprays behind the sheet, on any theme.
 - **Rolling**: click a stat name (or a move) → modifier prompt with your recorded
   Forwards as checkboxes → 2d6 + stat + bonuses. Chat card shows 10+ / 7–9 / miss,
   marks Experience on a miss, and consumes the Forwards you ticked.

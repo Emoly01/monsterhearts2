@@ -1,91 +1,389 @@
 /* =====================================================
    Monsterhearts 2 (Hausgemacht)
    Ink, bone, and a single red thread.
+
+   Themes are sets of tokens on the document root, so sheets, chat cards,
+   the Strings Web and the NPC tracker all follow the reader's choice.
+   The setting writes data-mh2-theme on <html>; no attribute = dark.
    ===================================================== */
 
-.monsterhearts2 {
-  --mh2-ink: #14101a;          /* near-black violet ink */
-  --mh2-ink-soft: #201a2b;     /* raised panels */
-  --mh2-bone: #e9e2d3;         /* primary text */
-  --mh2-bone-dim: #9c93a8;     /* secondary text */
-  --mh2-thread: #d23b63;       /* the red thread — Strings, accents */
-  --mh2-thread-dim: #7e2a44;
-  --mh2-line: #3a3147;         /* hairlines */
-  --mh2-miss: #8c3b3b;
-  --mh2-weak: #b08a3e;
-  --mh2-strong: #4e8a6a;
-  --mh2-input-bg: rgba(0, 0, 0, 0.35);
-  --mh2-header-grad-a: #1b1524;
+/* Dark — ink & thread: violet ink, bone text, the red thread stitched under the header. */
+:root,
+:root[data-mh2-theme="dark"] {
+  --mh2-window: #14101a;
+  --mh2-ink: #14101a;
+  --mh2-ink-soft: #1e1828;
+  --mh2-raised: #272033;
+  --mh2-bone: #ece5d6;
+  --mh2-bone-dim: #a69db3;
+  --mh2-line: #3a3147;
+  --mh2-thread: #e8487a;
+  --mh2-on-thread: #14101a;
+  --mh2-held: #d8b35d;
+  --mh2-strong: #6fbf95;
+  --mh2-weak: #d8b35d;
+  --mh2-miss: #e8797a;
+  --mh2-input-bg: #100c15;
+  --mh2-radius: 3px;
+  --mh2-tag-bg: #352a42;
+  --mh2-tag-fg: #ece5d6;
+  --mh2-xp-fill: #ece5d6;
+  --mh2-header-bg: linear-gradient(180deg, #221a2d 0%, #1a1422 60%, #14101a 100%);
+  --mh2-header-text: #ece5d6;
+  --mh2-header-dim: #a69db3;
+  --mh2-header-input: #100c15;
+  --mh2-header-line: #3a3147;
+  --mh2-header-border: none;
+  --mh2-deco: repeating-linear-gradient(90deg, #e8487a 0px, #e8487a 9px, transparent 9px, transparent 14px);
+  --mh2-deco-h: 2px;
+  --mh2-strings-rule: 1px solid #e8487a;
+  --mh2-serif: Georgia, 'Palatino Linotype', serif;
+  --mh2-flower-opacity: 0.32;
 }
 
-/* Light theme: bone paper, ink text, the same red thread. */
-[data-mh2-theme="light"] .monsterhearts2 {
-  --mh2-ink: #f3ede1;          /* warm bone paper */
-  --mh2-ink-soft: #e7decb;     /* raised panels */
-  --mh2-bone: #241a20;         /* primary text (dark ink) */
-  --mh2-bone-dim: #6c5f68;     /* secondary text */
-  --mh2-thread: #c02454;       /* the red thread, a touch deeper for contrast */
-  --mh2-thread-dim: #d68ba2;
-  --mh2-line: #c8bba9;         /* hairlines */
-  --mh2-miss: #a83e3e;
-  --mh2-weak: #9a7420;
-  --mh2-strong: #3d7a5a;
-  --mh2-input-bg: rgba(255, 255, 255, 0.55);
-  --mh2-header-grad-a: #ece2d0;
+/* Light — bone & thread: warm bone paper, dark ink, a deep red stitched thread. */
+:root[data-mh2-theme="light"] {
+  --mh2-window: #f2ece0;
+  --mh2-ink: #f2ece0;
+  --mh2-ink-soft: #faf6ee;
+  --mh2-raised: #e9e0cf;
+  --mh2-bone: #231920;
+  --mh2-bone-dim: #64575f;
+  --mh2-line: #cfc2ae;
+  --mh2-thread: #b51f4c;
+  --mh2-on-thread: #ffffff;
+  --mh2-held: #845700;
+  --mh2-strong: #2f6f50;
+  --mh2-weak: #845700;
+  --mh2-miss: #a3302f;
+  --mh2-input-bg: #fffcf6;
+  --mh2-radius: 3px;
+  --mh2-tag-bg: #231920;
+  --mh2-tag-fg: #f2ece0;
+  --mh2-xp-fill: #231920;
+  --mh2-header-bg: linear-gradient(180deg, #e6d9c2 0%, #ede4d3 55%, #f2ece0 100%);
+  --mh2-header-text: #231920;
+  --mh2-header-dim: #5d5058;
+  --mh2-header-input: #fffcf6;
+  --mh2-header-line: #cfc2ae;
+  --mh2-header-border: none;
+  --mh2-deco: repeating-linear-gradient(90deg, #b51f4c 0px, #b51f4c 9px, transparent 9px, transparent 14px);
+  --mh2-deco-h: 2px;
+  --mh2-strings-rule: 1px solid #b51f4c;
+  --mh2-serif: Georgia, 'Palatino Linotype', serif;
+  --mh2-flower-opacity: 0.45;
 }
 
-/* Karibik theme: warm sand paper, turquoise sea accent, coral & gold pops.
-   Colourful in the accents, calm in the base. */
-[data-mh2-theme="karibik"] .monsterhearts2 {
-  --mh2-ink: #fbf4e4;          /* pale sand paper */
-  --mh2-ink-soft: #f1e7d0;     /* raised panels, warmer sand */
-  --mh2-bone: #1f3d3a;         /* primary text: deep sea-teal ink */
-  --mh2-bone-dim: #5f8079;     /* secondary text: muted seafoam */
-  --mh2-thread: #0f9b8e;       /* the "thread" becomes turquoise sea */
-  --mh2-thread-dim: #7fc9c0;
-  --mh2-line: #d8c6a4;         /* hairlines: soft sand */
-  --mh2-miss: #e0654a;         /* coral for a miss */
-  --mh2-weak: #e6a935;         /* sunset gold for partial */
-  --mh2-strong: #159e7f;       /* sea-green for a hit */
-  --mh2-input-bg: rgba(255, 255, 255, 0.6);
-  --mh2-header-grad-a: #ffe9c2; /* a warm sunrise wash at the top */
+/* Karibik — sand & sea: a deep-sea header that foams into sand, readable turquoise, coral. */
+:root[data-mh2-theme="karibik"] {
+  --mh2-window: #fbf4e4;
+  --mh2-ink: #fbf4e4;
+  --mh2-ink-soft: #fffaf0;
+  --mh2-raised: #f6ebd0;
+  --mh2-bone: #1f3d3a;
+  --mh2-bone-dim: #526f69;
+  --mh2-line: #dcc9a6;
+  --mh2-thread: #0b7d72;
+  --mh2-on-thread: #ffffff;
+  --mh2-held: #b4432a;
+  --mh2-strong: #0b7a5e;
+  --mh2-weak: #865700;
+  --mh2-miss: #a8281f;
+  --mh2-input-bg: #fffdf7;
+  --mh2-radius: 8px;
+  --mh2-tag-bg: #0b7d72;
+  --mh2-tag-fg: #ffffff;
+  --mh2-xp-fill: #e6a935;
+  --mh2-header-bg: linear-gradient(180deg, #0b524f 0%, #0d5e5a 60%, #0f6863 100%);
+  --mh2-header-text: #fbf4e4;
+  --mh2-header-dim: #bfe3dc;
+  --mh2-header-input: rgba(251,244,228,0.08);
+  --mh2-header-line: #2f7a74;
+  --mh2-header-border: none;
+  --mh2-deco: linear-gradient(180deg, #0f6863 0%, #4fb3a6 35%, #bfe6dc 60%, #fbf4e4 100%);
+  --mh2-deco-h: 14px;
+  --mh2-strings-rule: 2px solid #0b7d72;
+  --mh2-serif: Georgia, 'Palatino Linotype', serif;
+  --mh2-flower-opacity: 0.45;
 }
 
-/* Trinidad: warm cream paper, black ink, flag-red thread, Carnival gold &
-   green accents. Subtle base, colourful in the details. */
-[data-mh2-theme="trinidad"] .monsterhearts2 {
-  --mh2-ink: #fdf6e9;          /* warm cream paper */
-  --mh2-ink-soft: #f6ead2;     /* raised panels, soft sand-gold */
-  --mh2-bone: #1a1613;         /* primary text: near-black (the flag's black) */
-  --mh2-bone-dim: #7a6c57;     /* secondary text: warm taupe */
-  --mh2-thread: #da1a32;       /* the thread becomes Trinidad flag red */
-  --mh2-thread-dim: #e88a97;
-  --mh2-line: #e2cfa8;         /* hairlines: light gold-sand */
-  --mh2-miss: #c8102e;         /* deep red for a miss */
-  --mh2-weak: #e0a419;         /* steelpan gold for partial */
-  --mh2-strong: #159b5c;       /* island green for a hit */
-  --mh2-input-bg: rgba(255, 255, 255, 0.6);
-  --mh2-header-grad-a: #ffe6a8; /* warm gold wash at the top */
+/* Trinidad — Carnival warmth: sunrise gold, the flag stripe, red harm, gold XP, green hits. */
+:root[data-mh2-theme="trinidad"] {
+  --mh2-window: #fdf6e9;
+  --mh2-ink: #fdf6e9;
+  --mh2-ink-soft: #fffaf0;
+  --mh2-raised: #f6e6c4;
+  --mh2-bone: #1a1613;
+  --mh2-bone-dim: #6b5c48;
+  --mh2-line: #e2cfa8;
+  --mh2-thread: #c8102e;
+  --mh2-on-thread: #ffffff;
+  --mh2-held: #845700;
+  --mh2-strong: #0b6b3d;
+  --mh2-weak: #845700;
+  --mh2-miss: #b00d28;
+  --mh2-input-bg: #fffdf8;
+  --mh2-radius: 3px;
+  --mh2-tag-bg: #e0a419;
+  --mh2-tag-fg: #1a1613;
+  --mh2-xp-fill: #e0a419;
+  --mh2-header-bg: linear-gradient(180deg, #ffdf94 0%, #fde9bd 55%, #fdf6e9 100%);
+  --mh2-header-text: #1a1613;
+  --mh2-header-dim: #5e4f3c;
+  --mh2-header-input: #fffdf8;
+  --mh2-header-line: #dcc390;
+  --mh2-header-border: none;
+  --mh2-deco: linear-gradient(180deg, #c8102e 0px, #c8102e 3px, #ffffff 3px, #ffffff 4px, #1a1613 4px, #1a1613 7px, #ffffff 7px, #ffffff 8px, #c8102e 8px, #c8102e 11px);
+  --mh2-deco-h: 11px;
+  --mh2-strings-rule: 2px solid #c8102e;
+  --mh2-serif: Georgia, 'Palatino Linotype', serif;
+  --mh2-flower-opacity: 0.45;
 }
-/* Carnival touches: rotate accent colours across the trackers so it reads
-   colourful without overwhelming the cream base. */
-[data-mh2-theme="trinidad"] .monsterhearts2 .mh2-stat-roll:hover {
-  color: #e0a419;             /* gold on hover */
-  text-shadow: 0 0 6px rgba(224, 164, 25, 0.4);
+
+/* Island — sea & sky: sky-to-sea wash, white panels, soft corners, hibiscus-pink thread. */
+:root[data-mh2-theme="island"] {
+  --mh2-window: #effaf9;
+  --mh2-ink: #effaf9;
+  --mh2-ink-soft: #ffffff;
+  --mh2-raised: #dcf2f1;
+  --mh2-bone: #0f3a44;
+  --mh2-bone-dim: #3d6b6e;
+  --mh2-line: #a9dbe0;
+  --mh2-thread: #c8285e;
+  --mh2-on-thread: #ffffff;
+  --mh2-held: #087489;
+  --mh2-strong: #087469;
+  --mh2-weak: #865700;
+  --mh2-miss: #b23a22;
+  --mh2-input-bg: #ffffff;
+  --mh2-radius: 12px;
+  --mh2-tag-bg: #087489;
+  --mh2-tag-fg: #ffffff;
+  --mh2-xp-fill: #087489;
+  --mh2-header-bg: linear-gradient(180deg, #a9e0e8 0%, #cdeef0 55%, #effaf9 100%);
+  --mh2-header-text: #0f3a44;
+  --mh2-header-dim: #2f5e62;
+  --mh2-header-input: #ffffff;
+  --mh2-header-line: #9fd3da;
+  --mh2-header-border: none;
+  --mh2-deco: none;
+  --mh2-deco-h: 0px;
+  --mh2-strings-rule: 2px solid #c8285e;
+  --mh2-serif: Georgia, 'Palatino Linotype', serif;
+  --mh2-flower-opacity: 0.45;
 }
-[data-mh2-theme="trinidad"] .monsterhearts2 .mh2-pips-harm .mh2-pip.filled {
-  background: #da1a32; border-color: #da1a32;   /* red harm diamonds */
+
+/* Soucouyant — ash & ember: charcoal, a fireball glow rising in the header, ember thread. */
+:root[data-mh2-theme="soucouyant"] {
+  --mh2-window: #17100c;
+  --mh2-ink: #17100c;
+  --mh2-ink-soft: #22170f;
+  --mh2-raised: #2e1f14;
+  --mh2-bone: #f3e6d6;
+  --mh2-bone-dim: #b9a08a;
+  --mh2-line: #45311f;
+  --mh2-thread: #ff7a2f;
+  --mh2-on-thread: #17100c;
+  --mh2-held: #ffc94a;
+  --mh2-strong: #7fd18b;
+  --mh2-weak: #ffc94a;
+  --mh2-miss: #ff7f6e;
+  --mh2-input-bg: #120c09;
+  --mh2-radius: 4px;
+  --mh2-tag-bg: #3b2616;
+  --mh2-tag-fg: #f3e6d6;
+  --mh2-xp-fill: #ffc94a;
+  --mh2-header-bg: radial-gradient(90% 150% at 88% 130%, #8a300c 0%, #4a1f0e 35%, #23150d 65%, #17100c 100%);
+  --mh2-header-text: #f6e9d8;
+  --mh2-header-dim: #c9ae96;
+  --mh2-header-input: rgba(18,12,9,0.6);
+  --mh2-header-line: #5a3b22;
+  --mh2-header-border: 1px solid #ff7a2f;
+  --mh2-deco: linear-gradient(90deg, transparent 0%, #ff7a2f 30%, #ffc94a 50%, #ff7a2f 70%, transparent 100%);
+  --mh2-deco-h: 2px;
+  --mh2-strings-rule: 1px solid #ff7a2f;
+  --mh2-serif: Georgia, 'Palatino Linotype', serif;
+  --mh2-flower-opacity: 0.32;
 }
-[data-mh2-theme="trinidad"] .monsterhearts2 .mh2-pips-xp .mh2-pip.filled {
-  background: #e0a419; border-color: #e0a419;   /* gold xp circles */
+
+/* Bioluminescence — Bon Accord lagoon at night: deep navy, glowing cyan, coral. */
+:root[data-mh2-theme="lagoon"] {
+  --mh2-window: radial-gradient(60% 40% at 100% 100%, #0b2433 0%, #07131f 100%);
+  --mh2-ink: #07131f;
+  --mh2-ink-soft: #0c1d2d;
+  --mh2-raised: #11273b;
+  --mh2-bone: #e3f1f5;
+  --mh2-bone-dim: #8fb0bf;
+  --mh2-line: #1d3a52;
+  --mh2-thread: #3fe0d0;
+  --mh2-on-thread: #07131f;
+  --mh2-held: #ff8a6b;
+  --mh2-strong: #5be3a0;
+  --mh2-weak: #f5c860;
+  --mh2-miss: #ff8a7a;
+  --mh2-input-bg: #06101a;
+  --mh2-radius: 8px;
+  --mh2-tag-bg: #12324a;
+  --mh2-tag-fg: #e3f1f5;
+  --mh2-xp-fill: #3fe0d0;
+  --mh2-header-bg: radial-gradient(70% 130% at 8% 130%, #0f5560 0%, #0b2a3a 45%, #07131f 90%);
+  --mh2-header-text: #e3f1f5;
+  --mh2-header-dim: #9cc0cc;
+  --mh2-header-input: rgba(6,16,26,0.6);
+  --mh2-header-line: #1f4660;
+  --mh2-header-border: 1px solid #1d3a52;
+  --mh2-deco: none;
+  --mh2-deco-h: 0px;
+  --mh2-strings-rule: 1px solid #3fe0d0;
+  --mh2-serif: Georgia, 'Palatino Linotype', serif;
+  --mh2-flower-opacity: 0.32;
 }
-[data-mh2-theme="trinidad"] .monsterhearts2 .mh2-statline-tag { color: #159b5c; }
-[data-mh2-theme="trinidad"] .monsterhearts2 .mh2-move-stat {
-  background: #e0a419; color: #1a1613;          /* gold move-stat tags */
+
+/* La Diablesse — white muslin, black lace header, a rose-red thread, bush-green. */
+:root[data-mh2-theme="diablesse"] {
+  --mh2-window: #f4f0ea;
+  --mh2-ink: #f4f0ea;
+  --mh2-ink-soft: #fbf8f3;
+  --mh2-raised: #ebe4da;
+  --mh2-bone: #18121a;
+  --mh2-bone-dim: #5e5560;
+  --mh2-line: #d6ccc0;
+  --mh2-thread: #9e1b3c;
+  --mh2-on-thread: #ffffff;
+  --mh2-held: #2f5d50;
+  --mh2-strong: #1d6b45;
+  --mh2-weak: #7d5200;
+  --mh2-miss: #a8172f;
+  --mh2-input-bg: #fffdf9;
+  --mh2-radius: 6px;
+  --mh2-tag-bg: #18121a;
+  --mh2-tag-fg: #f4f0ea;
+  --mh2-xp-fill: #2f5d50;
+  --mh2-header-bg: radial-gradient(circle at 50% 50%, rgba(244,240,234,0.10) 0px, rgba(244,240,234,0.10) 2.5px, transparent 3px) 0 0 / 9px 9px, radial-gradient(120% 120% at 100% 0%, #3a1622 0%, #18121a 60%);
+  --mh2-header-text: #f4f0ea;
+  --mh2-header-dim: #cbbfb8;
+  --mh2-header-input: rgba(244,240,234,0.07);
+  --mh2-header-line: #4a3a40;
+  --mh2-header-border: none;
+  --mh2-deco: radial-gradient(circle at 7px 0px, #18121a 4px, transparent 4.5px) 0 0 / 14px 10px repeat-x, radial-gradient(circle at 7px 0px, transparent 6px, #18121a 6.5px, #18121a 7px, transparent 7.5px) 0 0 / 14px 10px repeat-x, #f4f0ea;
+  --mh2-deco-h: 10px;
+  --mh2-strings-rule: 1px solid #9e1b3c;
+  --mh2-serif: Georgia, 'Palatino Linotype', serif;
+  --mh2-flower-opacity: 0.45;
+}
+
+/* Burn Book — hot pink header, black marker, polka dots, gel-pen blue. Petty. */
+:root[data-mh2-theme="burnbook"] {
+  --mh2-window: #ffe3ef;
+  --mh2-ink: #ffe3ef;
+  --mh2-ink-soft: #fff2f8;
+  --mh2-raised: #ffd0e4;
+  --mh2-bone: #1a0f14;
+  --mh2-bone-dim: #6b3a52;
+  --mh2-line: #f2a9c9;
+  --mh2-thread: #b0005f;
+  --mh2-on-thread: #ffffff;
+  --mh2-held: #2a4fc4;
+  --mh2-strong: #0b6b3d;
+  --mh2-weak: #7d4800;
+  --mh2-miss: #b8002c;
+  --mh2-input-bg: #fff9fc;
+  --mh2-radius: 14px;
+  --mh2-tag-bg: #1a0f14;
+  --mh2-tag-fg: #ffe3ef;
+  --mh2-xp-fill: #2a4fc4;
+  --mh2-header-bg: #ff4fa3;
+  --mh2-header-text: #1a0f14;
+  --mh2-header-dim: #4a1430;
+  --mh2-header-input: rgba(255,255,255,0.35);
+  --mh2-header-line: #1a0f14;
+  --mh2-header-border: 3px solid #1a0f14;
+  --mh2-deco: radial-gradient(circle, #ff4fa3 3px, transparent 3.5px) 0 0 / 14px 12px, #ffe3ef;
+  --mh2-deco-h: 12px;
+  --mh2-strings-rule: 2px dashed #b0005f;
+  --mh2-serif: Georgia, 'Palatino Linotype', serif;
+  --mh2-flower-opacity: 0.45;
+}
+
+/* Late Show — VHS horror marathon: scanlines, magenta & cyan, hard corners. */
+:root[data-mh2-theme="lateshow"] {
+  --mh2-window: #0d0b12;
+  --mh2-ink: #0d0b12;
+  --mh2-ink-soft: #16131d;
+  --mh2-raised: #1e1a27;
+  --mh2-bone: #ecebf2;
+  --mh2-bone-dim: #a4a0b4;
+  --mh2-line: #2f2a3d;
+  --mh2-thread: #ff3d9a;
+  --mh2-on-thread: #0d0b12;
+  --mh2-held: #35e0ff;
+  --mh2-strong: #6ee7a0;
+  --mh2-weak: #ffd75e;
+  --mh2-miss: #ff6b7a;
+  --mh2-input-bg: #0a0910;
+  --mh2-radius: 0px;
+  --mh2-tag-bg: #2a2238;
+  --mh2-tag-fg: #ecebf2;
+  --mh2-xp-fill: #35e0ff;
+  --mh2-header-bg: repeating-linear-gradient(0deg, rgba(255,255,255,0.04) 0px, rgba(255,255,255,0.04) 1px, transparent 1px, transparent 3px), linear-gradient(90deg, #2c0f2a 0%, #0d0b12 55%, #0a2230 100%);
+  --mh2-header-text: #ecebf2;
+  --mh2-header-dim: #b3afc4;
+  --mh2-header-input: rgba(10,9,16,0.7);
+  --mh2-header-line: #3a3350;
+  --mh2-header-border: none;
+  --mh2-deco: linear-gradient(90deg, #ff3d9a 0%, #ff3d9a 50%, #35e0ff 50%, #35e0ff 100%);
+  --mh2-deco-h: 3px;
+  --mh2-strings-rule: 1px solid #ff3d9a;
+  --mh2-serif: Georgia, 'Palatino Linotype', serif;
+  --mh2-flower-opacity: 0.32;
+}
+
+/* Prom Night — black satin, champagne-silver trim, a red that ruins the dance. */
+:root[data-mh2-theme="prom"] {
+  --mh2-window: #121214;
+  --mh2-ink: #121214;
+  --mh2-ink-soft: #1b1b1f;
+  --mh2-raised: #24242a;
+  --mh2-bone: #eeeae4;
+  --mh2-bone-dim: #a9a6a0;
+  --mh2-line: #34343b;
+  --mh2-thread: #f0606f;
+  --mh2-on-thread: #121214;
+  --mh2-held: #d9c9a3;
+  --mh2-strong: #7fcfa0;
+  --mh2-weak: #e3c06a;
+  --mh2-miss: #ff7f85;
+  --mh2-input-bg: #0e0e10;
+  --mh2-radius: 2px;
+  --mh2-tag-bg: #2e2e35;
+  --mh2-tag-fg: #eeeae4;
+  --mh2-xp-fill: #d9c9a3;
+  --mh2-header-bg: linear-gradient(180deg, #2b2b31 0%, #18181b 70%, #121214 100%);
+  --mh2-header-text: #eeeae4;
+  --mh2-header-dim: #b5b1aa;
+  --mh2-header-input: rgba(14,14,16,0.6);
+  --mh2-header-line: #44444c;
+  --mh2-header-border: none;
+  --mh2-deco: linear-gradient(180deg, #d9c9a3 0px, #d9c9a3 1px, transparent 1px, transparent 3px, #d9c9a3 3px, #d9c9a3 4px);
+  --mh2-deco-h: 4px;
+  --mh2-strings-rule: 1px solid #f0606f;
+  --mh2-serif: 'Didot', 'Bodoni 72', Georgia, serif;
+  --mh2-flower-opacity: 0.32;
+}
+
+/* Derived tokens, computed from whichever theme is active. */
+:root {
+  --mh2-thread-dim: color-mix(in srgb, var(--mh2-thread) 45%, var(--mh2-ink));
+  --mh2-thread-wash: color-mix(in srgb, var(--mh2-thread) 16%, transparent);
+  --mh2-radius-sm: min(var(--mh2-radius), 8px);
+  /* How opaque surfaces are. The chaconia setting lowers this so the
+     flowers glow through panels instead of being hidden by them. */
+  --mh2-veil: 100%;
+  --mh2-veil-o: 1;
 }
 
 .monsterhearts2 .window-content {
-  background: var(--mh2-ink);
+  background: var(--mh2-window);
   color: var(--mh2-bone);
   padding: 0;
 }
@@ -98,7 +396,7 @@
 }
 
 .monsterhearts2 h2 {
-  font-family: Georgia, "Palatino Linotype", serif;
+  font-family: var(--mh2-serif);
   font-size: 0.95rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -112,16 +410,16 @@
 .monsterhearts2 input[type="text"],
 .monsterhearts2 input[type="number"],
 .monsterhearts2 select {
-  background: var(--mh2-input-bg);
+  background: color-mix(in srgb, var(--mh2-input-bg) calc(var(--mh2-veil) + 6%), transparent);
   border: 1px solid var(--mh2-line);
-  border-radius: 2px;
+  border-radius: var(--mh2-radius-sm);
   color: var(--mh2-bone);
   height: 1.7rem;
 }
 .monsterhearts2 input:focus,
 .monsterhearts2 select:focus {
   border-color: var(--mh2-thread);
-  box-shadow: 0 0 4px var(--mh2-thread-dim);
+  box-shadow: 0 0 0 1px var(--mh2-thread);
   outline: none;
 }
 .monsterhearts2 input::placeholder { color: var(--mh2-bone-dim); opacity: 0.6; }
@@ -129,18 +427,51 @@
 /* ---------- header ---------- */
 
 .monsterhearts2 .mh2-header {
+  position: relative;
+  isolation: isolate;
   display: flex;
   gap: 0.75rem;
   padding: 0.75rem;
-  border-bottom: 1px solid var(--mh2-line);
-  background: linear-gradient(180deg, var(--mh2-header-grad-a), var(--mh2-ink));
+  margin-bottom: var(--mh2-deco-h);
+  border-bottom: var(--mh2-header-border);
+  color: var(--mh2-header-text);
 }
+/* the header's painted backdrop, on its own layer so it can be veiled */
+.monsterhearts2 .mh2-header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--mh2-header-bg);
+  opacity: var(--mh2-veil-o);
+}
+/* each theme's signature strip under the header: a stitched thread,
+   the flag, sea foam, lace, polka dots… */
+.monsterhearts2 .mh2-header::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  height: var(--mh2-deco-h);
+  background: var(--mh2-deco);
+  pointer-events: none;
+}
+.monsterhearts2 .mh2-header input[type="text"],
+.monsterhearts2 .mh2-header input[type="number"],
+.monsterhearts2 .mh2-header select {
+  background: var(--mh2-header-input);
+  border-color: var(--mh2-header-line);
+  color: var(--mh2-header-text);
+}
+.monsterhearts2 .mh2-header select option { color: initial; background: initial; }
+.monsterhearts2 .mh2-header h2 { color: var(--mh2-header-text); }
 .monsterhearts2 .mh2-portrait {
   width: 72px;
   height: 72px;
   object-fit: cover;
-  border: 1px solid var(--mh2-line);
-  border-radius: 2px;
+  border: 1px solid var(--mh2-header-line);
+  border-radius: var(--mh2-radius-sm);
   cursor: pointer;
   flex: 0 0 auto;
 }
@@ -148,13 +479,13 @@
 .monsterhearts2 .mh2-portrait-sm { width: 48px; height: 48px; }
 
 .monsterhearts2 .mh2-identity { flex: 1; display: flex; flex-direction: column; gap: 0.4rem; }
-.monsterhearts2 .mh2-name {
-  font-family: Georgia, "Palatino Linotype", serif;
+.monsterhearts2 .mh2-header input.mh2-name {
+  font-family: var(--mh2-serif);
   font-size: 1.5rem;
   height: 2.2rem;
   background: transparent;
   border: none;
-  border-bottom: 1px solid var(--mh2-line);
+  border-bottom: 1px solid var(--mh2-header-line);
   border-radius: 0;
 }
 .monsterhearts2 .mh2-identity-grid {
@@ -162,6 +493,7 @@
   grid-template-columns: 1fr 1fr;
   gap: 0.25rem 0.5rem;
 }
+.monsterhearts2 .mh2-header .mh2-identity-grid label { color: var(--mh2-header-dim); }
 .monsterhearts2 .mh2-identity-grid label,
 .monsterhearts2 .mh2-bonuses label,
 .monsterhearts2 .mh2-stat-select {
@@ -191,7 +523,7 @@
   gap: 0.2rem;
 }
 .monsterhearts2 .mh2-stat-roll {
-  font-family: Georgia, serif;
+  font-family: var(--mh2-serif);
   font-size: 1rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -200,7 +532,7 @@
 }
 .monsterhearts2 .mh2-stat-roll:hover {
   color: var(--mh2-thread);
-  text-shadow: 0 0 6px var(--mh2-thread-dim);
+  text-shadow: 0 0 6px color-mix(in srgb, var(--mh2-thread) 45%, transparent);
 }
 .monsterhearts2 .mh2-stat input {
   width: 3.2rem;
@@ -218,7 +550,7 @@
   gap: 0.5rem 1rem;
   padding: 0.55rem 0.75rem;
   border-bottom: 1px solid var(--mh2-line);
-  background: var(--mh2-ink-soft);
+  background: color-mix(in srgb, var(--mh2-raised) var(--mh2-veil), transparent);
 }
 .monsterhearts2 .mh2-track { display: flex; align-items: center; gap: 0.5rem; }
 .monsterhearts2 .mh2-track-label {
@@ -240,7 +572,7 @@
 .monsterhearts2 .mh2-pips-xp .mh2-pip { border-radius: 50%; }           /* circles */
 .monsterhearts2 .mh2-pip:hover { border-color: var(--mh2-thread); }
 .monsterhearts2 .mh2-pips-harm .mh2-pip.filled { background: var(--mh2-thread); border-color: var(--mh2-thread); }
-.monsterhearts2 .mh2-pips-xp .mh2-pip.filled { background: var(--mh2-bone); border-color: var(--mh2-bone); }
+.monsterhearts2 .mh2-pips-xp .mh2-pip.filled { background: var(--mh2-xp-fill); border-color: var(--mh2-bone); }
 .monsterhearts2 .mh2-bonuses { gap: 0.75rem; }
 .monsterhearts2 .mh2-bonuses input { width: 2.6rem; text-align: center; }
 
@@ -264,9 +596,9 @@
 }
 
 .monsterhearts2 .mh2-panel {
-  background: var(--mh2-ink-soft);
+  background: color-mix(in srgb, var(--mh2-ink-soft) var(--mh2-veil), transparent);
   border: 1px solid var(--mh2-line);
-  border-radius: 3px;
+  border-radius: var(--mh2-radius);
   padding: 0.5rem 0.6rem 0.6rem;
 }
 .monsterhearts2 .mh2-panel-header {
@@ -280,7 +612,7 @@
 .monsterhearts2 .mh2-panel-actions { display: flex; gap: 0.3rem; }
 
 /* the red thread: Strings panel signature */
-.monsterhearts2 .mh2-strings .mh2-panel-header { border-bottom-color: var(--mh2-thread-dim); }
+.monsterhearts2 .mh2-strings .mh2-panel-header { border-bottom: var(--mh2-strings-rule); }
 .monsterhearts2 .mh2-strings h2 { color: var(--mh2-thread); }
 
 .monsterhearts2 .mh2-row {
@@ -299,7 +631,7 @@
   min-width: 1.4rem;
   height: 1.4rem;
   border: 1px solid var(--mh2-line);
-  border-radius: 2px;
+  border-radius: var(--mh2-radius-sm);
   color: var(--mh2-bone-dim);
   font-size: 0.8rem;
   cursor: pointer;
@@ -308,7 +640,7 @@
 .monsterhearts2 .mh2-btn:hover { color: var(--mh2-bone); border-color: var(--mh2-bone-dim); }
 .monsterhearts2 .mh2-btn.mh2-del:hover { color: var(--mh2-thread); border-color: var(--mh2-thread); }
 .monsterhearts2 .mh2-btn.mh2-spend { color: var(--mh2-thread); }
-.monsterhearts2 .mh2-btn.mh2-spend:hover { border-color: var(--mh2-thread); text-shadow: 0 0 5px var(--mh2-thread-dim); }
+.monsterhearts2 .mh2-btn.mh2-spend:hover { color: var(--mh2-on-thread); background: var(--mh2-thread); border-color: var(--mh2-thread); }
 .monsterhearts2 .mh2-btn-text { padding: 0 0.4rem; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; }
 
 .monsterhearts2 .mh2-empty {
@@ -331,7 +663,7 @@
 .monsterhearts2 .mh2-move-name {
   flex: 1;
   cursor: pointer;
-  font-family: Georgia, serif;
+  font-family: var(--mh2-serif);
   font-size: 0.95rem;
 }
 .monsterhearts2 .mh2-move-name:hover { color: var(--mh2-thread); }
@@ -339,10 +671,10 @@
   font-size: 0.68rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--mh2-ink);
-  background: var(--mh2-bone-dim);
-  border-radius: 2px;
-  padding: 0.05rem 0.35rem;
+  color: var(--mh2-tag-fg);
+  background: var(--mh2-tag-bg);
+  border-radius: var(--mh2-radius-sm);
+  padding: 0.05rem 0.4rem;
 }
 .monsterhearts2 .mh2-move-stat-none { background: transparent; color: var(--mh2-bone-dim); }
 
@@ -399,20 +731,20 @@
    ===================================================== */
 
 .mh2-roll-card {
-  background: #17121f;
-  border: 1px solid #3a3147;
-  border-radius: 3px;
+  background: var(--mh2-ink-soft);
+  border: 1px solid var(--mh2-line);
+  border-radius: var(--mh2-radius-sm);
   padding: 0.5rem 0.6rem;
-  color: #e9e2d3;
+  color: var(--mh2-bone);
 }
 .mh2-roll-card .mh2-card-header h3 {
-  font-family: Georgia, serif;
+  font-family: var(--mh2-serif);
   font-size: 1rem;
   letter-spacing: 0.06em;
   margin: 0 0 0.35rem 0;
-  border-bottom: 1px solid #3a3147;
+  border-bottom: 1px solid var(--mh2-line);
   padding-bottom: 0.25rem;
-  color: #e9e2d3;
+  color: var(--mh2-bone);
 }
 .mh2-roll-card .mh2-move-text { font-size: 0.85rem; margin-bottom: 0.4rem; }
 .mh2-roll-card .mh2-roll-result {
@@ -422,7 +754,7 @@
   margin: 0.2rem 0;
 }
 .mh2-roll-card .mh2-roll-total {
-  font-family: Georgia, serif;
+  font-family: var(--mh2-serif);
   font-size: 1.8rem;
   line-height: 1;
 }
@@ -431,20 +763,20 @@
   text-transform: uppercase;
   letter-spacing: 0.12em;
 }
-.mh2-roll-card.tier-strong .mh2-roll-tier { color: #6fbf95; }
-.mh2-roll-card.tier-weak .mh2-roll-tier { color: #d8b35d; }
-.mh2-roll-card.tier-miss .mh2-roll-tier { color: #d96b6b; }
-.mh2-roll-card.tier-strong { border-left: 3px solid #4e8a6a; }
-.mh2-roll-card.tier-weak { border-left: 3px solid #b08a3e; }
-.mh2-roll-card.tier-miss { border-left: 3px solid #8c3b3b; }
-.mh2-roll-card .mh2-roll-breakdown { font-size: 0.72rem; color: #9c93a8; }
+.mh2-roll-card.tier-strong .mh2-roll-tier { color: var(--mh2-strong); }
+.mh2-roll-card.tier-weak .mh2-roll-tier { color: var(--mh2-weak); }
+.mh2-roll-card.tier-miss .mh2-roll-tier { color: var(--mh2-miss); }
+.mh2-roll-card.tier-strong { border-left: 4px solid var(--mh2-strong); }
+.mh2-roll-card.tier-weak { border-left: 4px solid var(--mh2-weak); }
+.mh2-roll-card.tier-miss { border-left: 4px solid var(--mh2-miss); }
+.mh2-roll-card .mh2-roll-breakdown { font-size: 0.72rem; color: var(--mh2-bone-dim); }
 .mh2-roll-card .mh2-xp-note {
   font-size: 0.78rem;
-  color: #d8b35d;
+  color: var(--mh2-weak);
   margin: 0.3rem 0 0 0;
   font-style: italic;
 }
-.mh2-roll-card.mh2-string-card { border-left: 3px solid #d23b63; }
+.mh2-roll-card.mh2-string-card { border-left: 4px solid var(--mh2-thread); }
 .mh2-roll-card ul { margin: 0.2rem 0 0 1.1rem; padding: 0; font-size: 0.85rem; }
 
 /* =====================================================
@@ -482,7 +814,7 @@
   margin-bottom: 0.4rem;
 }
 .monsterhearts2 .mh2-statline-tag {
-  font-family: Georgia, serif;
+  font-family: var(--mh2-serif);
   font-size: 1rem;
   color: var(--mh2-thread);
   width: 1rem;
@@ -521,8 +853,8 @@
   animation: mh2-pulse 1.6s ease-in-out infinite;
 }
 @keyframes mh2-pulse {
-  0%, 100% { box-shadow: 0 0 0 rgba(210, 59, 99, 0); }
-  50% { box-shadow: 0 0 8px rgba(210, 59, 99, 0.55); }
+  0%, 100% { box-shadow: 0 0 0 transparent; }
+  50% { box-shadow: 0 0 8px color-mix(in srgb, var(--mh2-thread) 55%, transparent); }
 }
 @media (prefers-reduced-motion: reduce) {
   .monsterhearts2 .mh2-advance { animation: none; }
@@ -530,7 +862,7 @@
 
 /* dialogs live outside the sheet scope */
 .mh2-skin-dialog fieldset {
-  border: 1px solid #3a3147;
+  border: 1px solid color-mix(in srgb, currentColor 25%, transparent);
   border-radius: 3px;
   margin: 0 0 0.6rem 0;
   padding: 0.4rem 0.6rem;
@@ -565,7 +897,7 @@
 
 /* v0.5: move groups + custom tracker */
 .monsterhearts2 .mh2-subhead {
-  font-family: Georgia, serif;
+  font-family: var(--mh2-serif);
   font-size: 0.78rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -575,7 +907,7 @@
   padding-bottom: 0.15rem;
 }
 .monsterhearts2 .mh2-custom-label {
-  font-family: Georgia, serif;
+  font-family: var(--mh2-serif);
   font-size: 0.9rem;
   letter-spacing: 0.08em;
   background: transparent;
@@ -606,7 +938,7 @@
 .mh2-skin-dialog .mh2-move-desc {
   font-size: 0.82rem;
   line-height: 1.4;
-  border-left: 2px solid #7e2a44;
+  border-left: 2px solid var(--mh2-thread);
   padding: 0.25rem 0.5rem;
   margin-top: 0.2rem;
   max-height: 12rem;
@@ -629,7 +961,7 @@
 .monsterhearts2 .mh2-forward-row input[type="text"] { flex: 1; }
 
 .mh2-fwd-set {
-  border: 1px solid #3a3147;
+  border: 1px solid color-mix(in srgb, currentColor 25%, transparent);
   border-radius: 3px;
   margin-top: 0.6rem;
   padding: 0.4rem 0.6rem;
@@ -649,13 +981,13 @@
 }
 .mh2-fwd-choice .mh2-fwd-val {
   font-weight: bold;
-  color: #d23b63;
+  color: inherit;
   min-width: 1.6rem;
 }
 
 /* v0.8: MC NPC-strings tracker */
 .monsterhearts2.mh2-npc-tracker .window-content {
-  background: var(--mh2-ink);
+  background: var(--mh2-window);
   color: var(--mh2-bone);
   padding: 0.6rem 0.75rem;
 }
@@ -694,14 +1026,14 @@
 .mh2-npc-strings-btn {
   width: 100%;
   margin-top: 0.25rem;
-  background: rgba(210, 59, 99, 0.12);
-  border: 1px solid var(--mh2-thread-dim);
-  color: var(--mh2-bone);
+  background: color-mix(in srgb, var(--mh2-thread) 12%, transparent);
+  border: 1px solid var(--mh2-thread);
+  color: inherit;
   border-radius: 3px;
   cursor: pointer;
   padding: 0.3rem;
 }
-.mh2-npc-strings-btn:hover { background: rgba(210, 59, 99, 0.25); }
+.mh2-npc-strings-btn:hover { background: color-mix(in srgb, var(--mh2-thread) 25%, transparent); }
 
 /* v0.9: Darkest Self toggle + active state */
 .monsterhearts2 .mh2-name-row {
@@ -718,163 +1050,43 @@
   font-size: 0.7rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--mh2-bone-dim);
-  border: 1px solid var(--mh2-line);
-  border-radius: 2px;
+  color: var(--mh2-header-dim);
+  border: 1px solid var(--mh2-header-line);
+  border-radius: var(--mh2-radius-sm);
   padding: 0.2rem 0.45rem;
   cursor: pointer;
   white-space: nowrap;
 }
-.monsterhearts2 .mh2-darkest-toggle:hover { color: var(--mh2-bone); border-color: var(--mh2-bone-dim); }
+.monsterhearts2 .mh2-darkest-toggle:hover { color: var(--mh2-header-text); border-color: var(--mh2-header-dim); }
 .monsterhearts2 .mh2-darkest-toggle.active {
-  color: var(--mh2-bone);
+  color: var(--mh2-header-text);
   border-color: var(--mh2-thread);
-  background: rgba(210, 59, 99, 0.18);
-  box-shadow: 0 0 8px rgba(210, 59, 99, 0.4);
+  background: color-mix(in srgb, var(--mh2-thread) 18%, transparent);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--mh2-thread) 40%, transparent);
 }
-/* whole-sheet tint when in Darkest Self */
-.monsterhearts2 .mh2-is-darkest .mh2-header {
-  background: linear-gradient(180deg, #2a1320, var(--mh2-ink));
-  border-bottom-color: var(--mh2-thread-dim);
-}
-
-
-/* v0.10: chat cards follow the reader's theme */
-[data-mh2-theme="light"] .mh2-roll-card {
-  background: #efe7d8;
-  border-color: #c8bba9;
-  color: #241a20;
-}
-[data-mh2-theme="light"] .mh2-roll-card .mh2-card-header h3 {
-  color: #241a20;
-  border-bottom-color: #c8bba9;
-}
-[data-mh2-theme="light"] .mh2-roll-card .mh2-roll-breakdown { color: #6c5f68; }
-[data-mh2-theme="light"] .mh2-roll-card.mh2-string-card { border-left-color: #c02454; }
-
-/* Karibik chat cards follow the reader's theme */
-[data-mh2-theme="karibik"] .mh2-roll-card {
-  background: #f6ecd6;
-  border-color: #d8c6a4;
-  color: #1f3d3a;
-}
-[data-mh2-theme="karibik"] .mh2-roll-card .mh2-card-header h3 {
-  color: #1f3d3a;
-  border-bottom-color: #d8c6a4;
-}
-[data-mh2-theme="karibik"] .mh2-roll-card .mh2-roll-breakdown { color: #5f8079; }
-[data-mh2-theme="karibik"] .mh2-roll-card.tier-strong .mh2-roll-tier { color: #159e7f; }
-[data-mh2-theme="karibik"] .mh2-roll-card.tier-weak .mh2-roll-tier { color: #cf9420; }
-[data-mh2-theme="karibik"] .mh2-roll-card.tier-miss .mh2-roll-tier { color: #e0654a; }
-[data-mh2-theme="karibik"] .mh2-roll-card.tier-strong { border-left-color: #159e7f; }
-[data-mh2-theme="karibik"] .mh2-roll-card.tier-weak { border-left-color: #e6a935; }
-[data-mh2-theme="karibik"] .mh2-roll-card.tier-miss { border-left-color: #e0654a; }
-[data-mh2-theme="karibik"] .mh2-roll-card.mh2-string-card { border-left-color: #0f9b8e; }
-
-/* Trinidad chat cards */
-[data-mh2-theme="trinidad"] .mh2-roll-card {
-  background: #fdf6e9;
-  border-color: #e2cfa8;
-  color: #1a1613;
-}
-[data-mh2-theme="trinidad"] .mh2-roll-card .mh2-card-header h3 {
-  color: #1a1613;
-  border-bottom-color: #e2cfa8;
-}
-[data-mh2-theme="trinidad"] .mh2-roll-card .mh2-roll-breakdown { color: #7a6c57; }
-[data-mh2-theme="trinidad"] .mh2-roll-card.tier-strong .mh2-roll-tier { color: #159b5c; }
-[data-mh2-theme="trinidad"] .mh2-roll-card.tier-weak .mh2-roll-tier { color: #e0a419; }
-[data-mh2-theme="trinidad"] .mh2-roll-card.tier-miss .mh2-roll-tier { color: #c8102e; }
-[data-mh2-theme="trinidad"] .mh2-roll-card.tier-strong { border-left-color: #159b5c; }
-[data-mh2-theme="trinidad"] .mh2-roll-card.tier-weak { border-left-color: #e0a419; }
-[data-mh2-theme="trinidad"] .mh2-roll-card.tier-miss { border-left-color: #c8102e; }
-[data-mh2-theme="trinidad"] .mh2-roll-card.mh2-string-card { border-left-color: #da1a32; }
-
-
-/* =====================================================
-   v0.13: Island theme + hibiscus corner decorations
-   ===================================================== */
-
-[data-mh2-theme="island"] .monsterhearts2 {
-  --mh2-ink: #eefaf9;          /* pale sea-glass */
-  --mh2-ink-soft: #dff4f2;     /* raised panels */
-  --mh2-bone: #0f3a44;         /* deep teal ink text */
-  --mh2-bone-dim: #4c8a86;     /* muted seafoam */
-  --mh2-thread: #e83f6f;       /* hibiscus pink thread */
-  --mh2-thread-dim: #f2a7bd;
-  --mh2-line: #a9dce0;         /* soft sky hairlines */
-  --mh2-miss: #e0654a;
-  --mh2-weak: #e6a935;
-  --mh2-strong: #12a3b8;
-  --mh2-input-bg: rgba(255, 255, 255, 0.6);
-  --mh2-header-grad-a: #bfeaf0; /* sky wash at the top */
-}
-[data-mh2-theme="island"] .monsterhearts2 .mh2-pips-xp .mh2-pip.filled {
-  background: #12a3b8; border-color: #12a3b8;   /* turquoise xp */
-}
-[data-mh2-theme="island"] .monsterhearts2 .mh2-move-stat {
-  background: #12a3b8; color: #ffffff;          /* turquoise move tags */
+/* Darkest Self: the thread bleeds down into whichever header the theme has */
+.monsterhearts2 .mh2-is-darkest .mh2-header::before {
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--mh2-thread) 28%, transparent), transparent 90%),
+    var(--mh2-header-bg);
 }
 
-/* Hibiscus corner decorations — off by default, toggled per-user.
-   High z-index so they paint over the opaque header/body backgrounds, but
-   pointer-events:none so they never block clicks on the sheet beneath. */
-[data-mh2-flowers] .monsterhearts2 .mh2-sheet { position: relative; }
-[data-mh2-flowers] .monsterhearts2 .mh2-sheet::before,
-[data-mh2-flowers] .monsterhearts2 .mh2-sheet::after {
-  content: "";
-  position: absolute;
-  width: 100px; height: 100px;
-  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-140 -150 280 300'><defs><radialGradient id='w' cx='50%' cy='92%' r='105%'><stop offset='0%' stop-color='#7d1245'/><stop offset='22%' stop-color='#d6296a'/><stop offset='55%' stop-color='#f0578a'/><stop offset='80%' stop-color='#f98a6e'/><stop offset='100%' stop-color='#ffb27a'/></radialGradient><radialGradient id='t' cx='50%' cy='50%' r='60%'><stop offset='0%' stop-color='#6a0f3e'/><stop offset='70%' stop-color='#a01a55'/><stop offset='100%' stop-color='#a01a55' stop-opacity='0'/></radialGradient><g id='p'><path d='M0,0 C-40,-8 -74,-30 -86,-70 C-95,-100 -84,-126 -60,-134 C-52,-120 -44,-124 -36,-132 C-30,-120 -20,-124 -12,-132 C-4,-122 6,-126 12,-132 C18,-120 8,-40 0,0 Z' fill='url(#w)' stroke='#c02460' stroke-width='1' stroke-opacity='0.35'/><g stroke='#fff' stroke-opacity='0.18' stroke-width='3' fill='none' stroke-linecap='round'><path d='M-20,-20 C-34,-50 -44,-80 -50,-116'/><path d='M-8,-24 C-12,-56 -14,-90 -20,-122'/></g></g></defs><use href='#p' transform='rotate(0)'/><use href='#p' transform='rotate(72)'/><use href='#p' transform='rotate(144)'/><use href='#p' transform='rotate(216)'/><use href='#p' transform='rotate(288)'/><ellipse cx='0' cy='0' rx='30' ry='26' fill='url(#t)'/><path d='M2,2 C-14,-20 -30,-40 -44,-58' stroke='#f7cdb0' stroke-width='5' fill='none' stroke-linecap='round'/><g fill='#f2c33d'><circle cx='-40' cy='-56' r='3.5'/><circle cx='-34' cy='-50' r='3'/><circle cx='-44' cy='-50' r='2.6'/><circle cx='-30' cy='-44' r='3'/><circle cx='-38' cy='-44' r='2.4'/></g></svg>");
-  background-size: contain;
-  background-repeat: no-repeat;
-  pointer-events: none;
-  opacity: 0.8;
-  z-index: 50;
-}
-[data-mh2-flowers] .monsterhearts2 .mh2-sheet::before {
-  top: 2px; right: 4px;
-  transform: rotate(12deg);
-}
-[data-mh2-flowers] .monsterhearts2 .mh2-sheet::after {
-  bottom: 4px; left: 4px;
-  transform: rotate(-18deg) scale(0.85);
-}
-
-/* island chat cards */
-[data-mh2-theme="island"] .mh2-roll-card {
-  background: #eefaf9; border-color: #a9dce0; color: #0f3a44;
-}
-[data-mh2-theme="island"] .mh2-roll-card .mh2-card-header h3 {
-  color: #0f3a44; border-bottom-color: #a9dce0;
-}
-[data-mh2-theme="island"] .mh2-roll-card .mh2-roll-breakdown { color: #4c8a86; }
-[data-mh2-theme="island"] .mh2-roll-card.tier-strong .mh2-roll-tier { color: #12a3b8; }
-[data-mh2-theme="island"] .mh2-roll-card.tier-strong { border-left-color: #12a3b8; }
-[data-mh2-theme="island"] .mh2-roll-card.mh2-string-card { border-left-color: #e83f6f; }
 
 /* v0.13: pass-string button, darkest chat card, strings web */
 .monsterhearts2 .mh2-btn.mh2-pass { color: var(--mh2-thread); }
 .monsterhearts2 .mh2-btn.mh2-pass:hover { border-color: var(--mh2-thread); }
 
 .mh2-roll-card.mh2-darkest-card {
-  border-left: 3px solid #8f1226;
-  background: linear-gradient(180deg, #2a1320, #17121f);
+  border-left: 4px solid var(--mh2-thread);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--mh2-thread) 18%, var(--mh2-ink-soft)), var(--mh2-ink-soft));
 }
-[data-mh2-theme="light"] .mh2-roll-card.mh2-darkest-card,
-[data-mh2-theme="karibik"] .mh2-roll-card.mh2-darkest-card,
-[data-mh2-theme="trinidad"] .mh2-roll-card.mh2-darkest-card,
-[data-mh2-theme="island"] .mh2-roll-card.mh2-darkest-card {
-  background: linear-gradient(180deg, #f3d9e0, #efe7d8);
-}
-
 /* strings web window */
 .monsterhearts2.mh2-strings-web .window-content {
-  background: var(--mh2-ink);
+  background: var(--mh2-window);
   color: var(--mh2-bone);
   padding: 0.6rem 0.75rem;
 }
-.monsterhearts2 .mh2-web-window { display: flex; flex-direction: row; gap: 0.75rem; height: 100%; --mh2-web-in: #d8a93f; }
+.monsterhearts2 .mh2-web-window { display: flex; flex-direction: row; gap: 0.75rem; height: 100%; --mh2-web-in: var(--mh2-held); }
 .mh2-web-canvas { flex: 1; min-width: 0; min-height: 0; }
 .mh2-web-svg { width: 100%; height: 100%; display: block; }
 
@@ -896,7 +1108,7 @@
 .mh2-web-node .mh2-web-ring { fill: none; stroke: var(--mh2-bone-dim); stroke-width: 2; }
 .mh2-web-node.darkest .mh2-web-ring { stroke: var(--mh2-thread); stroke-width: 4; }
 .mh2-web-node text { paint-order: stroke; stroke: var(--mh2-ink); stroke-width: 3px; }
-.mh2-web-node .mh2-web-label { font-family: Georgia, serif; font-size: 14px; fill: var(--mh2-bone); }
+.mh2-web-node .mh2-web-label { font-family: var(--mh2-serif); font-size: 14px; fill: var(--mh2-bone); }
 .mh2-web-node.npc .mh2-web-label { font-size: 12px; fill: var(--mh2-bone-dim); }
 .mh2-web-node .mh2-web-conditions { font-size: 11px; font-style: italic; fill: var(--mh2-thread); }
 .mh2-web-node.pinned .mh2-web-disc,
@@ -921,7 +1133,7 @@
   padding-left: 0.75rem;
   font-size: 0.85rem;
 }
-.mh2-web-side h3 { font-family: Georgia, serif; font-size: 1.05rem; margin: 0 0 0.3rem 0; border: none; }
+.mh2-web-side h3 { font-family: var(--mh2-serif); font-size: 1.05rem; margin: 0 0 0.3rem 0; border: none; }
 .mh2-web-side h3 em { font-size: 0.7rem; opacity: 0.6; font-weight: normal; }
 .mh2-web-side h4 {
   font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.1em;
@@ -969,7 +1181,7 @@
 .mh2-flare-inner i { font-size: 3.2rem; display: block; margin-bottom: 0.4rem; }
 .mh2-flare-inner span {
   display: block;
-  font-family: Georgia, serif;
+  font-family: var(--mh2-serif);
   font-size: 2.6rem;
   letter-spacing: 0.12em;
 }
@@ -996,7 +1208,7 @@
   font-size: 0.78rem;
   opacity: 0.75;
   margin: 0.35rem 0 0 0;
-  border-top: 1px dotted #3a3147;
+  border-top: 1px dotted var(--mh2-line);
   padding-top: 0.3rem;
 }
 
@@ -1013,9 +1225,9 @@
 .mh2-skin-dialog .mh2-divide-row input[type="number"] { width: 3.4rem; text-align: center; }
 
 /* v0.20: growing up + sex move card */
-.mh2-skin-dialog .mh2-gu legend { color: #d8b35d; }
-.mh2-roll-card.mh2-sex-card { border-left: 3px solid #e83f6f; }
-.mh2-roll-card.mh2-sex-card .mh2-card-header h3 i { color: #e83f6f; }
+.mh2-skin-dialog .mh2-gu legend { font-weight: bold; }
+.mh2-roll-card.mh2-sex-card { border-left: 4px solid var(--mh2-thread); }
+.mh2-roll-card.mh2-sex-card .mh2-card-header h3 i { color: var(--mh2-thread); }
 
 /* v0.22: roll targets, Condition sources, chat-card follow-ups */
 .mh2-tgt-set {
@@ -1031,18 +1243,18 @@
   align-items: center;
   gap: 0.3rem;
   padding: 0.1rem 0.5rem 0.1rem 0.3rem;
-  border: 1px solid #3a3147;
+  border: 1px solid color-mix(in srgb, currentColor 30%, transparent);
   border-radius: 999px;
   cursor: pointer;
   white-space: nowrap;
 }
-.mh2-tgt-chip:has(input:checked) { border-color: #d23b63; color: #d23b63; }
+.mh2-tgt-chip:has(input:checked) { border-color: var(--mh2-thread); background: color-mix(in srgb, var(--mh2-thread) 14%, transparent); }
 .mh2-tgt-chip input { margin: 0; }
 .mh2-tgt-opts {
   display: none;
   order: 99;
   flex-basis: 100%;
-  border-top: 1px dashed #3a3147;
+  border-top: 1px dashed color-mix(in srgb, currentColor 30%, transparent);
   margin-top: 0.2rem;
   padding-top: 0.3rem;
 }
@@ -1065,7 +1277,7 @@
   gap: 0.25rem;
   margin-top: 0.45rem;
   padding-top: 0.4rem;
-  border-top: 1px solid #3a3147;
+  border-top: 1px solid var(--mh2-line);
 }
 .mh2-roll-card .mh2-card-actions button {
   flex: 1 1 45%;
@@ -1076,12 +1288,12 @@
   padding: 0.25rem 0.4rem;
   font-size: 0.75rem;
   background: transparent;
-  border: 1px solid #d23b63;
-  border-radius: 3px;
+  border: 1px solid var(--mh2-thread);
+  border-radius: var(--mh2-radius-sm);
   color: inherit;
   cursor: pointer;
 }
-.mh2-roll-card .mh2-card-actions button:hover:not(:disabled) { background: #d23b63; color: #fff; }
+.mh2-roll-card .mh2-card-actions button:hover:not(:disabled) { background: var(--mh2-thread); color: var(--mh2-on-thread); }
 .mh2-roll-card .mh2-card-actions button:disabled { opacity: 0.5; cursor: default; }
 
 .mh2-web-node .mh2-web-conditions { font-style: italic; }
@@ -1113,7 +1325,7 @@
   font-size: 0.72rem;
   line-height: 1.3;
   opacity: 0.85;
-  border-left: 2px solid #3a3147;
+  border-left: 2px solid var(--mh2-line);
   padding-left: 0.45rem;
   margin: 0 0 0.4rem 0;
 }
@@ -1126,3 +1338,42 @@
 }
 .mh2-roll-card .mh2-base-move p { margin: 0 0 0.2rem 0; }
 .mh2-roll-card .mh2-base-move ul { font-size: inherit; }
+
+/* =====================================================
+   v0.24: Chaconia — Trinidad & Tobago's national flower.
+   Per-user toggle, works with every theme. The sprays sit BEHIND the
+   sheet; surfaces go slightly see-through so the flowers glow through
+   the panels instead of covering anything.
+   ===================================================== */
+[data-mh2-flowers] .monsterhearts2 .mh2-sheet:not(.mh2-item-sheet):not(.mh2-skin-sheet) {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  --mh2-veil: 86%;
+  --mh2-veil-o: 0.88;
+}
+[data-mh2-flowers] .monsterhearts2 .mh2-sheet:not(.mh2-item-sheet):not(.mh2-skin-sheet)::before,
+[data-mh2-flowers] .monsterhearts2 .mh2-sheet:not(.mh2-item-sheet):not(.mh2-skin-sheet)::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  aspect-ratio: 1000 / 688;
+  background: url("chaconia.webp") center / contain no-repeat;
+  opacity: var(--mh2-flower-opacity);
+  pointer-events: none;
+}
+/* the big spray, sweeping along the bottom */
+[data-mh2-flowers] .monsterhearts2 .mh2-sheet:not(.mh2-item-sheet):not(.mh2-skin-sheet)::before {
+  width: min(100%, 560px);
+  left: -27%;
+  bottom: -4%;
+  transform: rotate(-22deg);
+}
+/* a smaller one, hanging down the right edge behind the panels
+   (kept below the stats row so it never sits under a stat name) */
+[data-mh2-flowers] .monsterhearts2 .mh2-sheet:not(.mh2-item-sheet):not(.mh2-skin-sheet)::after {
+  width: min(72%, 400px);
+  right: -31%;
+  top: 230px;
+  transform: rotate(-55deg) scaleX(-1);
+}

@@ -19,7 +19,6 @@
   --mh2-line: #3a3147;
   --mh2-thread: #e8487a;
   --mh2-on-thread: #14101a;
-  --mh2-flare: #e8487a;
   --mh2-held: #d8b35d;
   --mh2-strong: #6fbf95;
   --mh2-weak: #d8b35d;
@@ -40,6 +39,11 @@
   --mh2-strings-rule: 1px solid #e8487a;
   --mh2-serif: Georgia, 'Palatino Linotype', serif;
   --mh2-flower-opacity: 0.32;
+  /* Darkest Self — Bruise: the pink thread goes violet, like a bruise coming up */
+  --mh2-darkest: #7b3ff2;
+  --mh2-on-darkest: #ffffff;
+  --mh2-darkest-ink: #9b6df5;
+  --mh2-flare: #9565f5;
 }
 
 /* Light — bone & thread: warm bone paper, dark ink, a deep red stitched thread. */
@@ -53,7 +57,6 @@
   --mh2-line: #cfc2ae;
   --mh2-thread: #b51f4c;
   --mh2-on-thread: #ffffff;
-  --mh2-flare: #cb6282;
   --mh2-held: #845700;
   --mh2-strong: #2f6f50;
   --mh2-weak: #845700;
@@ -74,6 +77,11 @@
   --mh2-strings-rule: 1px solid #b51f4c;
   --mh2-serif: Georgia, 'Palatino Linotype', serif;
   --mh2-flower-opacity: 0.45;
+  /* Darkest Self — Oxblood: the red thread dries to oxblood on bone */
+  --mh2-darkest: #6e0f24;
+  --mh2-on-darkest: #f2ece0;
+  --mh2-darkest-ink: #6e0f24;
+  --mh2-flare: #e0566f;
 }
 
 /* Karibik — sand & sea: a deep-sea header that foams into sand, readable turquoise, coral. */
@@ -87,7 +95,6 @@
   --mh2-line: #dcc9a6;
   --mh2-thread: #0b7d72;
   --mh2-on-thread: #ffffff;
-  --mh2-flare: #309087;
   --mh2-held: #b4432a;
   --mh2-strong: #0b7a5e;
   --mh2-weak: #865700;
@@ -108,6 +115,11 @@
   --mh2-strings-rule: 2px solid #0b7d72;
   --mh2-serif: Georgia, 'Palatino Linotype', serif;
   --mh2-flower-opacity: 0.45;
+  /* Darkest Self — Red tide: the turquoise sea turns rust-red */
+  --mh2-darkest: #b23a1c;
+  --mh2-on-darkest: #ffffff;
+  --mh2-darkest-ink: #b23a1c;
+  --mh2-flare: #e8673f;
 }
 
 /* Trinidad — Carnival warmth: sunrise gold, the flag stripe, red harm, gold XP, green hits. */
@@ -121,7 +133,6 @@
   --mh2-line: #e2cfa8;
   --mh2-thread: #c8102e;
   --mh2-on-thread: #ffffff;
-  --mh2-flare: #d8586d;
   --mh2-held: #845700;
   --mh2-strong: #0b6b3d;
   --mh2-weak: #845700;
@@ -142,6 +153,11 @@
   --mh2-strings-rule: 2px solid #c8102e;
   --mh2-serif: Georgia, 'Palatino Linotype', serif;
   --mh2-flower-opacity: 0.45;
+  /* Darkest Self — Molasses: J’ouvert: jab molassie black, with gold */
+  --mh2-darkest: #2a1608;
+  --mh2-on-darkest: #f2b632;
+  --mh2-darkest-ink: #2a1608;
+  --mh2-flare: #f2b632;
 }
 
 /* Island — sea & sky: sky-to-sea wash, white panels, soft corners, hibiscus-pink thread. */
@@ -155,7 +171,6 @@
   --mh2-line: #a9dbe0;
   --mh2-thread: #c8285e;
   --mh2-on-thread: #ffffff;
-  --mh2-flare: #d3537e;
   --mh2-held: #087489;
   --mh2-strong: #087469;
   --mh2-weak: #865700;
@@ -176,6 +191,11 @@
   --mh2-strings-rule: 2px solid #c8285e;
   --mh2-serif: Georgia, 'Palatino Linotype', serif;
   --mh2-flower-opacity: 0.45;
+  /* Darkest Self — Undertow: shallow water drops into deep blue */
+  --mh2-darkest: #0d3b73;
+  --mh2-on-darkest: #ffffff;
+  --mh2-darkest-ink: #0d3b73;
+  --mh2-flare: #5a9be8;
 }
 
 /* Soucouyant — ash & ember: charcoal, a fireball glow rising in the header, ember thread. */
@@ -189,7 +209,6 @@
   --mh2-line: #45311f;
   --mh2-thread: #ff7a2f;
   --mh2-on-thread: #17100c;
-  --mh2-flare: #ff7a2f;
   --mh2-held: #ffc94a;
   --mh2-strong: #7fd18b;
   --mh2-weak: #ffc94a;
@@ -210,6 +229,11 @@
   --mh2-strings-rule: 1px solid #ff7a2f;
   --mh2-serif: Georgia, 'Palatino Linotype', serif;
   --mh2-flower-opacity: 0.32;
+  /* Darkest Self — Blood: the ember stops being fire and starts being blood */
+  --mh2-darkest: #b3121b;
+  --mh2-on-darkest: #ffffff;
+  --mh2-darkest-ink: #ce676d;
+  --mh2-flare: #ee4048;
 }
 
 /* Bioluminescence — Bon Accord lagoon at night: deep navy, glowing cyan, coral. */
@@ -223,7 +247,6 @@
   --mh2-line: #1d3a52;
   --mh2-thread: #3fe0d0;
   --mh2-on-thread: #07131f;
-  --mh2-flare: #3fe0d0;
   --mh2-held: #ff8a6b;
   --mh2-strong: #5be3a0;
   --mh2-weak: #f5c860;
@@ -244,6 +267,11 @@
   --mh2-strings-rule: 1px solid #3fe0d0;
   --mh2-serif: Georgia, 'Palatino Linotype', serif;
   --mh2-flower-opacity: 0.32;
+  /* Darkest Self — Deep glow: the cyan glow turns anglerfish violet */
+  --mh2-darkest: #a06bff;
+  --mh2-on-darkest: #07131f;
+  --mh2-darkest-ink: #a06bff;
+  --mh2-flare: #a06bff;
 }
 
 /* La Diablesse — white muslin, black lace header, a rose-red thread, bush-green. */
@@ -257,7 +285,6 @@
   --mh2-line: #d6ccc0;
   --mh2-thread: #9e1b3c;
   --mh2-on-thread: #ffffff;
-  --mh2-flare: #c06b80;
   --mh2-held: #2f5d50;
   --mh2-strong: #1d6b45;
   --mh2-weak: #7d5200;
@@ -278,6 +305,11 @@
   --mh2-strings-rule: 1px solid #9e1b3c;
   --mh2-serif: Georgia, 'Palatino Linotype', serif;
   --mh2-flower-opacity: 0.45;
+  /* Darkest Self — The bush: she leads you into the green dark */
+  --mh2-darkest: #23452c;
+  --mh2-on-darkest: #f4f0ea;
+  --mh2-darkest-ink: #23452c;
+  --mh2-flare: #62a874;
 }
 
 /* Burn Book — hot pink header, black marker, polka dots, gel-pen blue. Petty. */
@@ -291,7 +323,6 @@
   --mh2-line: #f2a9c9;
   --mh2-thread: #b0005f;
   --mh2-on-thread: #ffffff;
-  --mh2-flare: #cc5997;
   --mh2-held: #2a4fc4;
   --mh2-strong: #0b6b3d;
   --mh2-weak: #7d4800;
@@ -312,6 +343,11 @@
   --mh2-strings-rule: 2px dashed #b0005f;
   --mh2-serif: Georgia, 'Palatino Linotype', serif;
   --mh2-flower-opacity: 0.45;
+  /* Darkest Self — Sharpie: everything gets blacked out in marker */
+  --mh2-darkest: #141014;
+  --mh2-on-darkest: #ff4fa3;
+  --mh2-darkest-ink: #141014;
+  --mh2-flare: #ff4fa3;
 }
 
 /* Late Show — VHS horror marathon: scanlines, magenta & cyan, hard corners. */
@@ -325,7 +361,6 @@
   --mh2-line: #2f2a3d;
   --mh2-thread: #ff3d9a;
   --mh2-on-thread: #0d0b12;
-  --mh2-flare: #ff3d9a;
   --mh2-held: #35e0ff;
   --mh2-strong: #6ee7a0;
   --mh2-weak: #ffd75e;
@@ -346,6 +381,11 @@
   --mh2-strings-rule: 1px solid #ff3d9a;
   --mh2-serif: Georgia, 'Palatino Linotype', serif;
   --mh2-flower-opacity: 0.32;
+  /* Darkest Self — REC: the red recording light comes on */
+  --mh2-darkest: #ff3b30;
+  --mh2-on-darkest: #0d0b12;
+  --mh2-darkest-ink: #ff3b30;
+  --mh2-flare: #ff3b30;
 }
 
 /* Prom Night — black satin, champagne-silver trim, a red that ruins the dance. */
@@ -359,7 +399,6 @@
   --mh2-line: #34343b;
   --mh2-thread: #f0606f;
   --mh2-on-thread: #121214;
-  --mh2-flare: #f0606f;
   --mh2-held: #d9c9a3;
   --mh2-strong: #7fcfa0;
   --mh2-weak: #e3c06a;
@@ -380,6 +419,11 @@
   --mh2-strings-rule: 1px solid #f0606f;
   --mh2-serif: 'Didot', 'Bodoni 72', Georgia, serif;
   --mh2-flower-opacity: 0.32;
+  /* Darkest Self — Pig’s blood: bucket over the stage, silver underneath */
+  --mh2-darkest: #7a0010;
+  --mh2-on-darkest: #d9c9a3;
+  --mh2-darkest-ink: #ba7a83;
+  --mh2-flare: #ef4b60;
 }
 
 /* Derived tokens, computed from whichever theme is active. */
@@ -1070,9 +1114,9 @@
 }
 .monsterhearts2 .mh2-darkest-toggle:hover { color: var(--mh2-header-text); border-color: var(--mh2-header-dim); }
 .monsterhearts2 .mh2-darkest-toggle.active {
-  color: var(--mh2-thread);
-  border-color: var(--mh2-on-thread);
-  background: var(--mh2-on-thread);
+  color: var(--mh2-darkest);
+  border-color: var(--mh2-on-darkest);
+  background: var(--mh2-on-darkest);
   font-weight: 600;
 }
 
@@ -1081,12 +1125,12 @@
 .monsterhearts2 .mh2-btn.mh2-pass:hover { border-color: var(--mh2-thread); }
 
 .mh2-roll-card.mh2-darkest-card {
-  background: var(--mh2-thread);
-  border: 1px solid var(--mh2-thread);
-  color: var(--mh2-on-thread);
+  background: var(--mh2-darkest);
+  border: 1px solid var(--mh2-darkest);
+  color: var(--mh2-on-darkest);
 }
 .mh2-roll-card.mh2-darkest-card .mh2-card-header h3 {
-  color: var(--mh2-on-thread);
+  color: var(--mh2-on-darkest);
   border-bottom: none;
   margin-bottom: 0;
   padding-bottom: 0;
@@ -1126,7 +1170,7 @@
 .mh2-web-node .mh2-web-disc { fill: var(--mh2-ink-soft); stroke: var(--mh2-bone-dim); stroke-width: 2; }
 .mh2-web-node.npc .mh2-web-disc { stroke-dasharray: 4 3; }
 .mh2-web-node .mh2-web-ring { fill: none; stroke: var(--mh2-bone-dim); stroke-width: 2; }
-.mh2-web-node.darkest .mh2-web-ring { stroke: var(--mh2-thread); stroke-width: 7; }
+.mh2-web-node.darkest .mh2-web-ring { stroke: var(--mh2-darkest-ink); stroke-width: 7; }
 .mh2-web-node text { paint-order: stroke; stroke: var(--mh2-ink); stroke-width: 3px; }
 .mh2-web-node .mh2-web-label { font-family: var(--mh2-serif); font-size: 14px; fill: var(--mh2-bone); }
 .mh2-web-node.npc .mh2-web-label { font-size: 12px; fill: var(--mh2-bone-dim); }
@@ -1473,31 +1517,31 @@
 .monsterhearts2 .mh2-is-darkest .mh2-header {
   margin-bottom: 0;
   border-bottom: none;
-  color: var(--mh2-on-thread);
+  color: var(--mh2-on-darkest);
 }
-.monsterhearts2 .mh2-is-darkest .mh2-header::before { background: var(--mh2-thread); opacity: 1; }
+.monsterhearts2 .mh2-is-darkest .mh2-header::before { background: var(--mh2-darkest); opacity: 1; }
 .monsterhearts2 .mh2-is-darkest .mh2-header::after { display: none; }
 .monsterhearts2 .mh2-is-darkest .mh2-header input[type="text"],
 .monsterhearts2 .mh2-is-darkest .mh2-header input[type="number"],
 .monsterhearts2 .mh2-is-darkest .mh2-header select {
-  background: color-mix(in srgb, var(--mh2-on-thread) 12%, transparent);
-  border-color: color-mix(in srgb, var(--mh2-on-thread) 55%, transparent);
-  color: var(--mh2-on-thread);
+  background: color-mix(in srgb, var(--mh2-on-darkest) 12%, transparent);
+  border-color: color-mix(in srgb, var(--mh2-on-darkest) 55%, transparent);
+  color: var(--mh2-on-darkest);
 }
 .monsterhearts2 .mh2-is-darkest .mh2-header input.mh2-name { background: transparent; }
 .monsterhearts2 .mh2-is-darkest .mh2-header input:focus,
 .monsterhearts2 .mh2-is-darkest .mh2-header select:focus {
-  border-color: var(--mh2-on-thread);
-  box-shadow: 0 0 0 1px var(--mh2-on-thread);
+  border-color: var(--mh2-on-darkest);
+  box-shadow: 0 0 0 1px var(--mh2-on-darkest);
 }
-.monsterhearts2 .mh2-is-darkest .mh2-header input::placeholder { color: var(--mh2-on-thread); opacity: 0.6; }
-.monsterhearts2 .mh2-is-darkest .mh2-header .mh2-identity-grid label { color: var(--mh2-on-thread); }
-.monsterhearts2 .mh2-is-darkest .mh2-header .mh2-portrait { border-color: var(--mh2-on-thread); }
+.monsterhearts2 .mh2-is-darkest .mh2-header input::placeholder { color: var(--mh2-on-darkest); opacity: 0.6; }
+.monsterhearts2 .mh2-is-darkest .mh2-header .mh2-identity-grid label { color: var(--mh2-on-darkest); }
+.monsterhearts2 .mh2-is-darkest .mh2-header .mh2-portrait { border-color: var(--mh2-on-darkest); }
 .monsterhearts2 .mh2-is-darkest .mh2-header .mh2-btn {
-  color: var(--mh2-on-thread);
-  border-color: color-mix(in srgb, var(--mh2-on-thread) 55%, transparent);
+  color: var(--mh2-on-darkest);
+  border-color: color-mix(in srgb, var(--mh2-on-darkest) 55%, transparent);
 }
-.monsterhearts2 .mh2-is-darkest .mh2-darkest-toggle:hover { color: var(--mh2-thread); border-color: var(--mh2-on-thread); }
+.monsterhearts2 .mh2-is-darkest .mh2-darkest-toggle:hover { color: var(--mh2-darkest); border-color: var(--mh2-on-darkest); }
 
 /* the bleed: a painted drip silhouette, coloured by the theme, with a wet
    shine laid over it. It tiles sideways at a fixed size, so every drip keeps
@@ -1516,7 +1560,7 @@
   inset: 0;
 }
 .monsterhearts2 .mh2-bleed::before {
-  background: var(--mh2-thread);
+  background: var(--mh2-darkest);
   -webkit-mask: url("bleed-mask.webp") top left / 56rem 7.1rem repeat-x;
   mask: url("bleed-mask.webp") top left / 56rem 7.1rem repeat-x;
 }
@@ -1530,32 +1574,32 @@
   top: 100%;
   width: 26px;
   height: 200vh;
-  background: var(--mh2-thread);
+  background: var(--mh2-darkest-ink);
   -webkit-mask: url("vein.svg") top left / 26px 330px repeat-y;
   mask: url("vein.svg") top left / 26px 330px repeat-y;
 }
 
-.monsterhearts2 .mh2-is-darkest .mh2-stats { border-bottom-color: var(--mh2-thread-dim); }
-.monsterhearts2 .mh2-is-darkest .mh2-stat input { border-color: var(--mh2-thread-dim); }
+.monsterhearts2 .mh2-is-darkest .mh2-stats { border-bottom-color: color-mix(in srgb, var(--mh2-darkest-ink) 45%, var(--mh2-ink)); }
+.monsterhearts2 .mh2-is-darkest .mh2-stat input { border-color: color-mix(in srgb, var(--mh2-darkest-ink) 45%, var(--mh2-ink)); }
 .monsterhearts2 .mh2-is-darkest .mh2-trackers {
   position: relative;
-  background: color-mix(in srgb, var(--mh2-thread) 6%, var(--mh2-ink));
-  border-bottom-color: var(--mh2-thread-dim);
+  background: color-mix(in srgb, var(--mh2-darkest) 6%, var(--mh2-ink));
+  border-bottom-color: color-mix(in srgb, var(--mh2-darkest-ink) 45%, var(--mh2-ink));
 }
 .monsterhearts2 .mh2-is-darkest .mh2-body { padding-left: 2.1rem; }
 /* the narrower body must not push the second column out of the window */
 .monsterhearts2 .mh2-is-darkest .mh2-columns { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
 .monsterhearts2 .mh2-is-darkest .mh2-row input[type="text"] { min-width: 0; }
-.monsterhearts2 .mh2-is-darkest .mh2-panel { border-color: var(--mh2-thread); }
-.monsterhearts2 .mh2-is-darkest .mh2-panel h2 { color: var(--mh2-thread); }
+.monsterhearts2 .mh2-is-darkest .mh2-panel { border-color: var(--mh2-darkest-ink); }
+.monsterhearts2 .mh2-is-darkest .mh2-panel h2 { color: var(--mh2-darkest-ink); }
 
 /* the Darkest Self text, pinned to the top while it's active */
 .monsterhearts2 .mh2-darkest-banner {
-  background: color-mix(in srgb, var(--mh2-thread) 20%, var(--mh2-ink));
-  border: 2px solid var(--mh2-thread);
+  background: color-mix(in srgb, var(--mh2-darkest) 20%, var(--mh2-ink));
+  border: 2px solid var(--mh2-darkest-ink);
 }
 .monsterhearts2 .mh2-is-darkest .mh2-darkest-banner h2 { color: var(--mh2-bone); }
-.monsterhearts2 .mh2-darkest-banner .mh2-panel-header { border-bottom-color: var(--mh2-thread); }
+.monsterhearts2 .mh2-darkest-banner .mh2-panel-header { border-bottom-color: var(--mh2-darkest-ink); }
 .monsterhearts2 .mh2-darkest-text { line-height: 1.45; }
 .monsterhearts2 .mh2-darkest-text p { margin: 0 0 0.5em 0; }
 .monsterhearts2 .mh2-darkest-text p:last-child { margin-bottom: 0; }

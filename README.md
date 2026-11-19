@@ -75,8 +75,8 @@ https://raw.githubusercontent.com/Emoly01/monsterhearts2/main/system.json
 - **Darkest Self**: toggle it on the sheet (or choose it when Skirting Death) —
   the screen cracks and the character's name is stamped across it for the whole
   table, and the Darkest Self text goes to chat. While it lasts, the sheet's
-  header floods with the theme's Strings colour and bleeds down into the sheet,
-  and the Darkest Self text is pinned to the top. Each theme has its own
+  header floods with the theme's Darkest Self colour and bleeds down into the
+  sheet, and the Darkest Self text is pinned to the top. Each theme has its own
   Darkest Self colour that answers its everyday one, and no two are alike
   (Karibik turns lionfish orange, Trinidad goes molasses-black and gold, Late
   Show dissolves into static, and so on).

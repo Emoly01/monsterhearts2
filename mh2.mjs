@@ -59,13 +59,8 @@ Hooks.once("init", () => {
     darkestFlare: (name) => {
       const el = document.createElement("div");
       el.className = "mh2-flare";
-      // Jagged shards close in from the corners; the name is stamped across the middle.
-      el.innerHTML = `<svg class="mh2-flare-shards" viewBox="0 0 600 338" preserveAspectRatio="none" aria-hidden="true">
-        <polygon points="0,0 190,0 120,44 150,70 60,96 84,140 0,170"/><polygon points="600,0 420,0 470,36 440,72 520,84 508,128 600,150"/>
-        <polygon points="0,338 0,214 66,236 52,270 132,286 110,312 200,338"/><polygon points="600,338 600,206 548,238 560,268 474,290 500,314 404,338"/>
-        <polyline points="190,0 120,44 150,70 60,96 84,140 0,170"/><polyline points="420,0 470,36 440,72 520,84 508,128 600,150"/>
-        <polyline points="0,214 66,236 52,270 132,286 110,312 200,338"/><polyline points="600,206 548,238 560,268 474,290 500,314 404,338"/>
-      </svg><div class="mh2-flare-inner"><span>${escapeHTML(name)}</span><em>Darkest Self</em></div>`;
+      // The screen cracks from the corners; the name is stamped across the middle.
+      el.innerHTML = `<div class="mh2-flare-cracks" aria-hidden="true"></div><div class="mh2-flare-inner"><span>${escapeHTML(name)}</span><em>Darkest Self</em></div>`;
       document.body.appendChild(el);
       setTimeout(() => el.remove(), 3200);
     }

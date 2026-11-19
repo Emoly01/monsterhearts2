@@ -39,7 +39,7 @@
   --mh2-strings-rule: 1px solid #e8487a;
   --mh2-serif: Georgia, 'Palatino Linotype', serif;
   --mh2-flower-opacity: 0.32;
-  /* Darkest Self — Bruise: the pink thread goes violet, like a bruise coming up */
+  /* Darkest Self — Bruise: the pink thread comes up violet, like a bruise */
   --mh2-darkest: #7b3ff2;
   --mh2-on-darkest: #ffffff;
   --mh2-darkest-ink: #9b6df5;
@@ -77,11 +77,11 @@
   --mh2-strings-rule: 1px solid #b51f4c;
   --mh2-serif: Georgia, 'Palatino Linotype', serif;
   --mh2-flower-opacity: 0.45;
-  /* Darkest Self — Oxblood: the red thread dries to oxblood on bone */
-  --mh2-darkest: #6e0f24;
+  /* Darkest Self — Formaldehyde: bone paper in a specimen jar */
+  --mh2-darkest: #0e6b67;
   --mh2-on-darkest: #f2ece0;
-  --mh2-darkest-ink: #6e0f24;
-  --mh2-flare: #e0566f;
+  --mh2-darkest-ink: #0e6b67;
+  --mh2-flare: #2fb3aa;
 }
 
 /* Karibik — sand & sea: a deep-sea header that foams into sand, readable turquoise, coral. */
@@ -115,11 +115,11 @@
   --mh2-strings-rule: 2px solid #0b7d72;
   --mh2-serif: Georgia, 'Palatino Linotype', serif;
   --mh2-flower-opacity: 0.45;
-  /* Darkest Self — Red tide: the turquoise sea turns rust-red */
-  --mh2-darkest: #b23a1c;
-  --mh2-on-darkest: #ffffff;
-  --mh2-darkest-ink: #b23a1c;
-  --mh2-flare: #e8673f;
+  /* Darkest Self — Lionfish: the reef’s venomous orange invader */
+  --mh2-darkest: #e8651a;
+  --mh2-on-darkest: #1a0f08;
+  --mh2-darkest-ink: #b04d14;
+  --mh2-flare: #e8651a;
 }
 
 /* Trinidad — Carnival warmth: sunrise gold, the flag stripe, red harm, gold XP, green hits. */
@@ -229,11 +229,11 @@
   --mh2-strings-rule: 1px solid #ff7a2f;
   --mh2-serif: Georgia, 'Palatino Linotype', serif;
   --mh2-flower-opacity: 0.32;
-  /* Darkest Self — Blood: the ember stops being fire and starts being blood */
-  --mh2-darkest: #b3121b;
-  --mh2-on-darkest: #ffffff;
-  --mh2-darkest-ink: #ce676d;
-  --mh2-flare: #ee4048;
+  /* Darkest Self — Skin: the skin she sheds and leaves by the door */
+  --mh2-darkest: #ece0c8;
+  --mh2-on-darkest: #2a1a10;
+  --mh2-darkest-ink: #ece0c8;
+  --mh2-flare: #ece0c8;
 }
 
 /* Bioluminescence — Bon Accord lagoon at night: deep navy, glowing cyan, coral. */
@@ -267,11 +267,11 @@
   --mh2-strings-rule: 1px solid #3fe0d0;
   --mh2-serif: Georgia, 'Palatino Linotype', serif;
   --mh2-flower-opacity: 0.32;
-  /* Darkest Self — Deep glow: the cyan glow turns anglerfish violet */
-  --mh2-darkest: #a06bff;
+  /* Darkest Self — Man o’ war: the glow that stings */
+  --mh2-darkest: #e8338f;
   --mh2-on-darkest: #07131f;
-  --mh2-darkest-ink: #a06bff;
-  --mh2-flare: #a06bff;
+  --mh2-darkest-ink: #ea4398;
+  --mh2-flare: #ef4a9c;
 }
 
 /* La Diablesse — white muslin, black lace header, a rose-red thread, bush-green. */
@@ -343,10 +343,10 @@
   --mh2-strings-rule: 2px dashed #b0005f;
   --mh2-serif: Georgia, 'Palatino Linotype', serif;
   --mh2-flower-opacity: 0.45;
-  /* Darkest Self — Sharpie: everything gets blacked out in marker */
-  --mh2-darkest: #141014;
+  /* Darkest Self — Mascara: black, with the pink running through */
+  --mh2-darkest: #120d10;
   --mh2-on-darkest: #ff4fa3;
-  --mh2-darkest-ink: #141014;
+  --mh2-darkest-ink: #120d10;
   --mh2-flare: #ff4fa3;
 }
 
@@ -381,11 +381,11 @@
   --mh2-strings-rule: 1px solid #ff3d9a;
   --mh2-serif: Georgia, 'Palatino Linotype', serif;
   --mh2-flower-opacity: 0.32;
-  /* Darkest Self — REC: the red recording light comes on */
-  --mh2-darkest: #ff3b30;
+  /* Darkest Self — Static: the tape gives out to snow */
+  --mh2-darkest: #8f8d96;
   --mh2-on-darkest: #0d0b12;
-  --mh2-darkest-ink: #ff3b30;
-  --mh2-flare: #ff3b30;
+  --mh2-darkest-ink: #8f8d96;
+  --mh2-flare: #b4b2bb;
 }
 
 /* Prom Night — black satin, champagne-silver trim, a red that ruins the dance. */
@@ -419,7 +419,7 @@
   --mh2-strings-rule: 1px solid #f0606f;
   --mh2-serif: 'Didot', 'Bodoni 72', Georgia, serif;
   --mh2-flower-opacity: 0.32;
-  /* Darkest Self — Pig’s blood: bucket over the stage, silver underneath */
+  /* Darkest Self — Pig’s blood: the bucket tips over the stage */
   --mh2-darkest: #7a0010;
   --mh2-on-darkest: #d9c9a3;
   --mh2-darkest-ink: #ba7a83;
@@ -1250,22 +1250,26 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(4, 2, 6, 0.72);
-  animation: mh2FlareFade 3.2s ease-in-out forwards;
+  background: radial-gradient(ellipse at center, rgba(4, 2, 6, 0.55) 25%, rgba(4, 2, 6, 0.92) 100%);
+  animation: mh2FlareFade 3.2s ease-in-out forwards, mh2FlareShake 3.2s linear forwards;
 }
-.mh2-flare-shards {
+/* the screen cracks the moment the stamp lands: a painted fracture, coloured
+   by the reader's theme, with light catching the broken edges */
+.mh2-flare-cracks,
+.mh2-flare-cracks::after {
   position: absolute;
   inset: 0;
-  width: 100%;
-  height: 100%;
-  animation: mh2FlareShards 3.2s cubic-bezier(0.2, 0.9, 0.2, 1) forwards;
 }
-.mh2-flare-shards polygon { fill: #020103; }
-.mh2-flare-shards polyline {
-  fill: none;
-  stroke: var(--mh2-flare);
-  stroke-width: 3;
-  vector-effect: non-scaling-stroke;
+.mh2-flare-cracks {
+  background: var(--mh2-flare);
+  -webkit-mask: url("flare-cracks.webp") center / cover no-repeat;
+  mask: url("flare-cracks.webp") center / cover no-repeat;
+  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--mh2-flare) 55%, transparent));
+  animation: mh2FlareCrack 3.2s cubic-bezier(0.2, 0.9, 0.2, 1) forwards;
+}
+.mh2-flare-cracks::after {
+  content: "";
+  background: url("flare-glint.webp") center / cover no-repeat;
 }
 .mh2-flare-inner {
   position: relative;
@@ -1302,12 +1306,22 @@
   13% { transform: rotate(-5deg) scale(1.03); }
   17%, 100% { transform: rotate(-5deg) scale(1); opacity: 1; }
 }
-@keyframes mh2FlareShards {
-  0% { transform: scale(1.5); } 10%, 100% { transform: scale(1); }
+@keyframes mh2FlareCrack {
+  0%, 8% { opacity: 0; transform: scale(1.04); }
+  10% { opacity: 1; transform: scale(1); }
+  100% { opacity: 1; transform: scale(1); }
+}
+@keyframes mh2FlareShake {
+  0%, 9% { transform: translate(0, 0); }
+  10% { transform: translate(-6px, 3px); }
+  11.5% { transform: translate(5px, -4px); }
+  13% { transform: translate(-3px, 2px); }
+  14.5% { transform: translate(2px, -1px); }
+  16%, 100% { transform: translate(0, 0); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .mh2-flare { animation-duration: 1.6s; }
-  .mh2-flare-inner, .mh2-flare-shards { animation: none; }
+  .mh2-flare { animation: mh2FlareFade 1.6s ease-in-out forwards; }
+  .mh2-flare-inner, .mh2-flare-cracks { animation: none; }
 }
 
 .mh2-roll-card .mh2-flavor {

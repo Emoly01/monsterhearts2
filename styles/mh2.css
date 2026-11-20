@@ -1147,85 +1147,7 @@
   margin: 0.1rem 0 0.45rem 0;
 }
 .mh2-roll-card.mh2-darkest-card a { color: inherit; text-decoration: underline; }
-/* strings web window */
-.monsterhearts2.mh2-strings-web .window-content {
-  background: var(--mh2-window);
-  color: var(--mh2-bone);
-  padding: 0.6rem 0.75rem;
-}
-.monsterhearts2 .mh2-web-window { display: flex; flex-direction: row; gap: 0.75rem; height: 100%; --mh2-web-in: var(--mh2-held); }
-.mh2-web-canvas { flex: 1; min-width: 0; min-height: 0; }
-.mh2-web-svg { width: 100%; height: 100%; display: block; }
-
-.mh2-web-edge path {
-  fill: none;
-  stroke: var(--mh2-thread);
-  stroke-linecap: round;
-  opacity: 0.55;
-  marker-end: url(#mh2arrow);
-}
-.mh2-web-arrow { fill: var(--mh2-thread); }
-.mh2-web-arrow.in { fill: var(--mh2-web-in); }
-.mh2-web-edge circle { fill: var(--mh2-ink); stroke: var(--mh2-thread); stroke-width: 1.2; }
-.mh2-web-edge text { font-size: 11px; font-weight: bold; fill: var(--mh2-thread); pointer-events: none; }
-
-.mh2-web-node { cursor: pointer; }
-.mh2-web-node .mh2-web-disc { fill: var(--mh2-ink-soft); stroke: var(--mh2-bone-dim); stroke-width: 2; }
-.mh2-web-node.npc .mh2-web-disc { stroke-dasharray: 4 3; }
-.mh2-web-node .mh2-web-ring { fill: none; stroke: var(--mh2-bone-dim); stroke-width: 2; }
-.mh2-web-node.darkest .mh2-web-ring { stroke: var(--mh2-darkest-ink); stroke-width: 7; }
-.mh2-web-node text { paint-order: stroke; stroke: var(--mh2-ink); stroke-width: 3px; }
-.mh2-web-node .mh2-web-label { font-family: var(--mh2-serif); font-size: 14px; fill: var(--mh2-bone); }
-.mh2-web-node.npc .mh2-web-label { font-size: 12px; fill: var(--mh2-bone-dim); }
-.mh2-web-node .mh2-web-conditions { font-size: 11px; font-style: italic; fill: var(--mh2-thread); }
-.mh2-web-node.pinned .mh2-web-disc,
-.mh2-web-node.pinned .mh2-web-ring { stroke: var(--mh2-bone); stroke-width: 3.5; }
-
-/* focus: everything unrelated fades; held-on-them Strings turn gold */
-.mh2-web-window.focused .mh2-web-edge { opacity: 0.07; }
-.mh2-web-window.focused .mh2-web-edge.out,
-.mh2-web-window.focused .mh2-web-edge.in { opacity: 1; }
-.mh2-web-window.focused .mh2-web-edge.out path,
-.mh2-web-window.focused .mh2-web-edge.in path { opacity: 1; }
-.mh2-web-window.focused .mh2-web-edge.in path { stroke: var(--mh2-web-in); marker-end: url(#mh2arrow-in); }
-.mh2-web-window.focused .mh2-web-edge.in circle { stroke: var(--mh2-web-in); }
-.mh2-web-window.focused .mh2-web-edge.in text { fill: var(--mh2-web-in); }
-.mh2-web-window.focused .mh2-web-node:not(.lit) { opacity: 0.22; }
-.mh2-web-window.focused .mh2-web-node.focus .mh2-web-label { font-weight: bold; }
-
-.mh2-web-side {
-  flex: 0 0 15rem;
-  overflow-y: auto;
-  border-left: 1px solid var(--mh2-line);
-  padding-left: 0.75rem;
-  font-size: 0.85rem;
-}
-.mh2-web-side h3 { font-family: var(--mh2-serif); font-size: 1.05rem; margin: 0 0 0.3rem 0; border: none; }
-.mh2-web-side h3 em { font-size: 0.7rem; opacity: 0.6; font-weight: normal; }
-.mh2-web-side h4 {
-  font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.1em;
-  margin: 0.7rem 0 0.2rem 0; padding-bottom: 0.15rem;
-  color: var(--mh2-thread); border-bottom: 1px solid var(--mh2-thread);
-}
-.mh2-web-side h4.in { color: var(--mh2-web-in); border-bottom-color: var(--mh2-web-in); }
-.mh2-web-side ul { list-style: none; margin: 0; padding: 0; }
-.mh2-web-side li {
-  display: flex; align-items: center; gap: 0.4rem;
-  padding: 0.18rem 0.2rem; border-bottom: 1px dotted var(--mh2-line);
-}
-.mh2-web-side li span:first-child { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.mh2-web-side .mh2-web-conds { font-style: italic; color: var(--mh2-thread); margin: 0; }
-.mh2-web-side .mh2-btn { display: inline-block; margin-top: 0.7rem; }
-.mh2-web-roster { margin-bottom: 0.8rem !important; }
-.mh2-web-roster li { cursor: pointer; }
-.mh2-web-roster li.focus .mh2-web-who { font-weight: bold; }
-.mh2-web-panel h3 { margin-top: 0.2rem; }
-.mh2-web-roster li:hover, .mh2-web-roster li.pinned { background: var(--mh2-ink-soft); }
-.mh2-web-roster li.npc .mh2-web-who { font-style: italic; color: var(--mh2-bone-dim); }
-.mh2-web-tally { flex: none; min-width: 2.3rem; text-align: right; color: var(--mh2-thread); font-variant-numeric: tabular-nums; }
-.mh2-web-tally.in { color: var(--mh2-web-in); }
-.mh2-web-tally i { font-size: 0.65rem; opacity: 0.8; }
-.mh2-web-btn { margin-top: 0.25rem; }
+.mh2-receipts-btn { margin-top: 0.25rem; }
 
 /* v0.26: the Darkest Self flare — the screen cracks and the name is stamped across it */
 @font-face {
@@ -1420,7 +1342,6 @@
 .mh2-roll-card .mh2-card-actions button:hover:not(:disabled) { background: var(--mh2-thread); color: var(--mh2-on-thread); }
 .mh2-roll-card .mh2-card-actions button:disabled { opacity: 0.5; cursor: default; }
 
-.mh2-web-node .mh2-web-conditions { font-style: italic; }
 
 /* Move text on the character sheet */
 .monsterhearts2 .mh2-move { flex-wrap: wrap; }
@@ -1686,3 +1607,501 @@
 
 /* the receipt prompt */
 .mh2-receipt-dialog .hint { font-size: 0.8rem; opacity: 0.75; margin: 0.3rem 0 0; }
+
+/* -------------------------------------------- */
+/*  Receipts window (v0.29)                     */
+/* -------------------------------------------- */
+
+/* Per-theme palette, derived from each theme's tokens and contrast-checked. */
+:root,
+:root[data-mh2-theme="dark"] {
+  --rc-app: #14101a;
+  --rc-list: #100d15;
+  --rc-row: #1e1828;
+  --rc-row-bd: #3a3147;
+  --rc-sel: #381e33;
+  --rc-sel-sub: #a69db3;
+  --rc-sub: #a69db3;
+  --rc-accent: #e8487a;
+  --rc-on-accent: #14101a;
+  --rc-held: #d8b35d;
+  --rc-on-held: #14101a;
+  --rc-hdr: #2d1726;
+  --rc-hdr-sub: #a69db3;
+  --rc-thread: #120e17;
+  --rc-inc1: #342d3f;
+  --rc-inc2: #272033;
+  --rc-out1: #eb5e8a;
+  --rc-out2: #e8487a;
+  --rc-out-sub: #14101a;
+  --rc-pill-bg: #14101a;
+  --rc-pill-bd: #d8b35d;
+  --rc-pill-tx: #ece5d6;
+  --rc-chip-bg: #14101a;
+  --rc-chip-tx: #ece5d6;
+  --rc-text: #ece5d6;
+  --rc-wall-filter: hue-rotate(9deg) saturate(0.9);
+  --rc-wall-opacity: 0.8;
+  --rc-wall-blend: normal;
+}
+:root[data-mh2-theme="light"] {
+  --rc-app: #f2ece0;
+  --rc-list: #ede5d6;
+  --rc-row: #faf6ee;
+  --rc-row-bd: #cfc2ae;
+  --rc-sel: #f1dad9;
+  --rc-sel-sub: #64575f;
+  --rc-sub: #64575f;
+  --rc-accent: #b51f4c;
+  --rc-on-accent: #ffffff;
+  --rc-held: #845700;
+  --rc-on-held: #f2ece0;
+  --rc-hdr: #ebd3ce;
+  --rc-hdr-sub: #64575f;
+  --rc-thread: #f2ece0;
+  --rc-inc1: #f4f0e7;
+  --rc-inc2: #e9e0cf;
+  --rc-out1: #b51f4c;
+  --rc-out2: #8d183b;
+  --rc-out-sub: #ffffff;
+  --rc-pill-bg: #f2ece0;
+  --rc-pill-bd: #845700;
+  --rc-pill-tx: #231920;
+  --rc-chip-bg: #f2ece0;
+  --rc-chip-tx: #231920;
+  --rc-text: #231920;
+  --rc-wall-filter: invert(1) grayscale(1) contrast(1.4);
+  --rc-wall-opacity: 0.22;
+  --rc-wall-blend: multiply;
+}
+:root[data-mh2-theme="karibik"] {
+  --rc-app: #fbf4e4;
+  --rc-list: #f8efd8;
+  --rc-row: #fffaf0;
+  --rc-row-bd: #dcc9a6;
+  --rc-sel: #dfeae0;
+  --rc-sel-sub: #1f3d3a;
+  --rc-sub: #526f69;
+  --rc-accent: #0b7d72;
+  --rc-on-accent: #ffffff;
+  --rc-held: #b4432a;
+  --rc-on-held: #fbf4e4;
+  --rc-hdr: #dee6d6;
+  --rc-hdr-sub: #1f3d3a;
+  --rc-thread: #fbf4e4;
+  --rc-inc1: #faf5e8;
+  --rc-inc2: #f6ebd0;
+  --rc-out1: #0b7d72;
+  --rc-out2: #096259;
+  --rc-out-sub: #ffffff;
+  --rc-pill-bg: #fbf4e4;
+  --rc-pill-bd: #b4432a;
+  --rc-pill-tx: #1f3d3a;
+  --rc-chip-bg: #fbf4e4;
+  --rc-chip-tx: #1f3d3a;
+  --rc-text: #1f3d3a;
+  --rc-wall-filter: invert(1) grayscale(1) contrast(1.4);
+  --rc-wall-opacity: 0.22;
+  --rc-wall-blend: multiply;
+}
+:root[data-mh2-theme="trinidad"] {
+  --rc-app: #fdf6e9;
+  --rc-list: #f9ecd3;
+  --rc-row: #fffaf0;
+  --rc-row-bd: #e2cfa8;
+  --rc-sel: #f8dcd7;
+  --rc-sel-sub: #6b5c48;
+  --rc-sub: #6b5c48;
+  --rc-accent: #c8102e;
+  --rc-on-accent: #ffffff;
+  --rc-held: #845700;
+  --rc-on-held: #fdf6e9;
+  --rc-hdr: #f7dad3;
+  --rc-hdr-sub: #6b5c48;
+  --rc-thread: #fdf6e9;
+  --rc-inc1: #faf2e2;
+  --rc-inc2: #f6e6c4;
+  --rc-out1: #c8102e;
+  --rc-out2: #9c0c24;
+  --rc-out-sub: #ffffff;
+  --rc-pill-bg: #fdf6e9;
+  --rc-pill-bd: #845700;
+  --rc-pill-tx: #1a1613;
+  --rc-chip-bg: #fdf6e9;
+  --rc-chip-tx: #1a1613;
+  --rc-text: #1a1613;
+  --rc-wall-filter: invert(1) grayscale(1) contrast(1.4);
+  --rc-wall-opacity: 0.22;
+  --rc-wall-blend: multiply;
+}
+:root[data-mh2-theme="island"] {
+  --rc-app: #effaf9;
+  --rc-list: #e4f5f4;
+  --rc-row: #ffffff;
+  --rc-row-bd: #a9dbe0;
+  --rc-sel: #f8e3ea;
+  --rc-sel-sub: #3d6b6e;
+  --rc-sub: #3d6b6e;
+  --rc-accent: #c8285e;
+  --rc-on-accent: #ffffff;
+  --rc-held: #087489;
+  --rc-on-held: #effaf9;
+  --rc-hdr: #eae1e6;
+  --rc-hdr-sub: #3d6b6e;
+  --rc-thread: #effaf9;
+  --rc-inc1: #eef8f8;
+  --rc-inc2: #dcf2f1;
+  --rc-out1: #c8285e;
+  --rc-out2: #9c1f49;
+  --rc-out-sub: #ffffff;
+  --rc-pill-bg: #effaf9;
+  --rc-pill-bd: #087489;
+  --rc-pill-tx: #0f3a44;
+  --rc-chip-bg: #effaf9;
+  --rc-chip-tx: #0f3a44;
+  --rc-text: #0f3a44;
+  --rc-wall-filter: invert(1) grayscale(1) contrast(1.4);
+  --rc-wall-opacity: 0.22;
+  --rc-wall-blend: multiply;
+}
+:root[data-mh2-theme="soucouyant"] {
+  --rc-app: #17100c;
+  --rc-list: #130d0a;
+  --rc-row: #22170f;
+  --rc-row-bd: #45311f;
+  --rc-sel: #3f2413;
+  --rc-sel-sub: #b9a08a;
+  --rc-sub: #b9a08a;
+  --rc-accent: #ff7a2f;
+  --rc-on-accent: #17100c;
+  --rc-held: #ffc94a;
+  --rc-on-held: #17100c;
+  --rc-hdr: #331d10;
+  --rc-hdr-sub: #b9a08a;
+  --rc-thread: #150e0b;
+  --rc-inc1: #3b2c22;
+  --rc-inc2: #2e1f14;
+  --rc-out1: #ff8a48;
+  --rc-out2: #ff7a2f;
+  --rc-out-sub: #17100c;
+  --rc-pill-bg: #17100c;
+  --rc-pill-bd: #ffc94a;
+  --rc-pill-tx: #f3e6d6;
+  --rc-chip-bg: #17100c;
+  --rc-chip-tx: #f3e6d6;
+  --rc-text: #f3e6d6;
+  --rc-wall-filter: hue-rotate(-310deg) saturate(0.9);
+  --rc-wall-opacity: 0.8;
+  --rc-wall-blend: normal;
+}
+:root[data-mh2-theme="lagoon"] {
+  --rc-app: #07131f;
+  --rc-list: #061019;
+  --rc-row: #0c1d2d;
+  --rc-row-bd: #1d3a52;
+  --rc-sel: #133642;
+  --rc-sel-sub: #8fb0bf;
+  --rc-sub: #8fb0bf;
+  --rc-accent: #3fe0d0;
+  --rc-on-accent: #07131f;
+  --rc-held: #ff8a6b;
+  --rc-on-held: #07131f;
+  --rc-hdr: #0e2c34;
+  --rc-hdr-sub: #8fb0bf;
+  --rc-thread: #06111c;
+  --rc-inc1: #1f3447;
+  --rc-inc2: #11273b;
+  --rc-out1: #56e4d6;
+  --rc-out2: #3fe0d0;
+  --rc-out-sub: #07131f;
+  --rc-pill-bg: #07131f;
+  --rc-pill-bd: #ff8a6b;
+  --rc-pill-tx: #e3f1f5;
+  --rc-chip-bg: #07131f;
+  --rc-chip-tx: #e3f1f5;
+  --rc-text: #e3f1f5;
+  --rc-wall-filter: hue-rotate(-158deg) saturate(0.9);
+  --rc-wall-opacity: 0.8;
+  --rc-wall-blend: normal;
+}
+:root[data-mh2-theme="diablesse"] {
+  --rc-app: #f4f0ea;
+  --rc-list: #efe9e0;
+  --rc-row: #fbf8f3;
+  --rc-row-bd: #d6ccc0;
+  --rc-sel: #efdbdb;
+  --rc-sel-sub: #5e5560;
+  --rc-sub: #5e5560;
+  --rc-accent: #9e1b3c;
+  --rc-on-accent: #ffffff;
+  --rc-held: #2f5d50;
+  --rc-on-held: #f4f0ea;
+  --rc-hdr: #ead6d5;
+  --rc-hdr-sub: #5e5560;
+  --rc-thread: #f4f0ea;
+  --rc-inc1: #f5f2ec;
+  --rc-inc2: #ebe4da;
+  --rc-out1: #9e1b3c;
+  --rc-out2: #7b152f;
+  --rc-out-sub: #ffffff;
+  --rc-pill-bg: #f4f0ea;
+  --rc-pill-bd: #2f5d50;
+  --rc-pill-tx: #18121a;
+  --rc-chip-bg: #f4f0ea;
+  --rc-chip-tx: #18121a;
+  --rc-text: #18121a;
+  --rc-wall-filter: invert(1) grayscale(1) contrast(1.4);
+  --rc-wall-opacity: 0.22;
+  --rc-wall-blend: multiply;
+}
+:root[data-mh2-theme="burnbook"] {
+  --rc-app: #ffe3ef;
+  --rc-list: #ffd8e8;
+  --rc-row: #fff2f8;
+  --rc-row-bd: #f2a9c9;
+  --rc-sel: #f5d3e4;
+  --rc-sel-sub: #6b3a52;
+  --rc-sub: #6b3a52;
+  --rc-accent: #b0005f;
+  --rc-on-accent: #ffffff;
+  --rc-held: #2a4fc4;
+  --rc-on-held: #ffe3ef;
+  --rc-hdr: #f6c8de;
+  --rc-hdr-sub: #6b3a52;
+  --rc-thread: #ffe3ef;
+  --rc-inc1: #ffe8f2;
+  --rc-inc2: #ffd0e4;
+  --rc-out1: #b0005f;
+  --rc-out2: #89004a;
+  --rc-out-sub: #ffffff;
+  --rc-pill-bg: #ffe3ef;
+  --rc-pill-bd: #2a4fc4;
+  --rc-pill-tx: #1a0f14;
+  --rc-chip-bg: #ffe3ef;
+  --rc-chip-tx: #1a0f14;
+  --rc-text: #1a0f14;
+  --rc-wall-filter: invert(1) grayscale(1) contrast(1.4);
+  --rc-wall-opacity: 0.22;
+  --rc-wall-blend: multiply;
+}
+:root[data-mh2-theme="lateshow"] {
+  --rc-app: #0d0b12;
+  --rc-list: #0b090f;
+  --rc-row: #16131d;
+  --rc-row-bd: #2f2a3d;
+  --rc-sel: #34182d;
+  --rc-sel-sub: #a4a0b4;
+  --rc-sub: #a4a0b4;
+  --rc-accent: #ff3d9a;
+  --rc-on-accent: #0d0b12;
+  --rc-held: #35e0ff;
+  --rc-on-held: #0d0b12;
+  --rc-hdr: #2a1122;
+  --rc-hdr-sub: #a4a0b4;
+  --rc-thread: #0c0a10;
+  --rc-inc1: #2c2834;
+  --rc-inc2: #1e1a27;
+  --rc-out1: #ff54a6;
+  --rc-out2: #ff3d9a;
+  --rc-out-sub: #0d0b12;
+  --rc-pill-bg: #0d0b12;
+  --rc-pill-bd: #35e0ff;
+  --rc-pill-tx: #ecebf2;
+  --rc-chip-bg: #0d0b12;
+  --rc-chip-tx: #ecebf2;
+  --rc-text: #ecebf2;
+  --rc-wall-filter: hue-rotate(-1deg) saturate(0.9);
+  --rc-wall-opacity: 0.8;
+  --rc-wall-blend: normal;
+}
+:root[data-mh2-theme="prom"] {
+  --rc-app: #121214;
+  --rc-list: #0f0f10;
+  --rc-row: #1b1b1f;
+  --rc-row-bd: #34343b;
+  --rc-sel: #372429;
+  --rc-sel-sub: #a9a6a0;
+  --rc-sub: #a9a6a0;
+  --rc-accent: #f0606f;
+  --rc-on-accent: #121214;
+  --rc-held: #d9c9a3;
+  --rc-on-held: #121214;
+  --rc-hdr: #2d1b1f;
+  --rc-hdr-sub: #a9a6a0;
+  --rc-thread: #101012;
+  --rc-inc1: #313137;
+  --rc-inc2: #24242a;
+  --rc-out1: #f27380;
+  --rc-out2: #f0606f;
+  --rc-out-sub: #121214;
+  --rc-pill-bg: #121214;
+  --rc-pill-bd: #d9c9a3;
+  --rc-pill-tx: #eeeae4;
+  --rc-chip-bg: #121214;
+  --rc-chip-tx: #eeeae4;
+  --rc-text: #eeeae4;
+  --rc-wall-filter: hue-rotate(22deg) saturate(0.9);
+  --rc-wall-opacity: 0.8;
+  --rc-wall-blend: normal;
+}
+
+/* Layout */
+.monsterhearts2.mh2-receipts .window-content { padding: 0; background: var(--rc-app); overflow: hidden; }
+.monsterhearts2 .mh2-rc {
+  display: flex; height: 100%; min-height: 0;
+  background: var(--rc-app); color: var(--rc-text);
+  font-size: 13px;
+}
+.monsterhearts2 .mh2-rc button { font: inherit; }
+.monsterhearts2 .mh2-rc button:focus-visible,
+.monsterhearts2 .mh2-rc a:focus-visible { outline: 2px solid var(--rc-held); outline-offset: 2px; }
+
+/* the list of people */
+.monsterhearts2 .mh2-rc-list {
+  flex: 0 0 290px; display: flex; flex-direction: column; min-height: 0;
+  background: var(--rc-list); border-right: 1px solid var(--rc-row-bd);
+}
+.monsterhearts2 .mh2-rc-brand { display: flex; align-items: center; gap: 6px; padding: 10px 12px 8px; }
+.monsterhearts2 .mh2-rc-logo { width: 44px; height: 40px; border: none; object-fit: contain; flex: 0 0 auto; }
+.monsterhearts2 .mh2-rc-title {
+  flex: 1; font-family: var(--mh2-serif); font-size: 26px; font-weight: 700; color: var(--rc-text);
+}
+.monsterhearts2 .mh2-rc-legend { display: flex; gap: 8px; font-size: 11px; color: var(--rc-sub); }
+.monsterhearts2 .mh2-rc-legend > span { display: inline-flex; align-items: center; gap: 4px; }
+.monsterhearts2 .mh2-rc-dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+.monsterhearts2 .mh2-rc-dot.holds { background: var(--rc-accent); }
+.monsterhearts2 .mh2-rc-dot.held { background: var(--rc-held); }
+
+.monsterhearts2 .mh2-rc-people {
+  flex: 1; min-height: 0; overflow-y: auto;
+  display: flex; flex-direction: column; gap: 6px; padding: 2px 10px 12px;
+}
+.monsterhearts2 .mh2-rc-person {
+  display: flex; align-items: center; gap: 10px;
+  min-height: 64px; height: auto; flex: 0 0 auto; padding: 6px 10px; margin: 0;
+  border: 1.5px solid var(--rc-row-bd); border-radius: 12px;
+  background: var(--rc-row); color: var(--rc-text);
+  text-align: left; line-height: 1.2; cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.monsterhearts2 .mh2-rc-person:hover { border-color: var(--rc-accent); }
+.monsterhearts2 .mh2-rc-person.selected {
+  background: var(--rc-sel); border-color: var(--rc-accent);
+  box-shadow: 0 0 16px color-mix(in srgb, var(--rc-accent) 35%, transparent);
+}
+.monsterhearts2 .mh2-rc-who { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.monsterhearts2 .mh2-rc-name {
+  font-family: var(--mh2-serif); font-size: 17px; font-weight: 700;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.monsterhearts2 .mh2-rc-sub {
+  font-size: 11.5px; color: var(--rc-sub);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.monsterhearts2 .mh2-rc-person.selected .mh2-rc-sub { color: var(--rc-sel-sub); }
+.monsterhearts2 .mh2-rc-person.npc .mh2-rc-sub { font-style: italic; }
+.monsterhearts2 .mh2-rc-badges { display: flex; gap: 5px; flex: 0 0 auto; }
+.monsterhearts2 .mh2-rc-badge {
+  min-width: 24px; height: 24px; padding: 0 6px; box-sizing: border-box; border-radius: 12px;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 12px; font-variant-numeric: tabular-nums;
+}
+.monsterhearts2 .mh2-rc-badge.holds { background: var(--rc-accent); color: var(--rc-on-accent); }
+.monsterhearts2 .mh2-rc-badge.held { background: var(--rc-held); color: var(--rc-on-held); }
+
+/* avatars */
+.monsterhearts2 .mh2-rc-av {
+  width: 46px; height: 46px; flex: 0 0 auto; border-radius: 50%; border: none;
+  object-fit: cover; object-position: top;
+}
+.monsterhearts2 .mh2-rc-mono {
+  display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box;
+  background: var(--rc-inc2); border: 1.5px dashed var(--rc-row-bd);
+  font-family: var(--mh2-serif); font-weight: 700; font-size: 16px; color: var(--rc-sub);
+}
+.monsterhearts2 .mh2-rc-av.big { width: 72px; height: 72px; box-shadow: 0 0 0 3px var(--rc-accent); }
+.monsterhearts2 .mh2-rc-mono.big { font-size: 26px; border: none; }
+
+/* the thread */
+.monsterhearts2 .mh2-rc-thread { flex: 1; min-width: 0; display: flex; flex-direction: column; min-height: 0; }
+.monsterhearts2 .mh2-rc-head {
+  flex: 0 0 auto; display: flex; align-items: center; gap: 14px; padding: 10px 18px;
+  background: var(--rc-hdr); border-bottom: 2px solid var(--rc-accent);
+  position: relative; z-index: 2;
+}
+.monsterhearts2 .mh2-rc-head-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.monsterhearts2 .mh2-rc-head-name {
+  font-family: var(--mh2-serif); font-size: 30px; font-weight: 700; line-height: 1.05; color: var(--rc-text);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.monsterhearts2 a.mh2-rc-head-name:hover { color: var(--rc-accent); text-shadow: none; }
+.monsterhearts2 .mh2-rc-head-sub { font-family: var(--mh2-serif); font-style: italic; font-size: 15px; color: var(--rc-hdr-sub); }
+.monsterhearts2 .mh2-rc-darkest {
+  flex: 0 0 auto; display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 16px;
+  border: 2px solid var(--mh2-on-darkest); border-radius: 18px;
+  background: var(--mh2-darkest); color: var(--mh2-on-darkest);
+  font-family: var(--mh2-serif); font-style: italic; font-weight: 700; font-size: 17px;
+}
+
+.monsterhearts2 .mh2-rc-body { position: relative; flex: 1; min-height: 0; overflow: hidden; background: var(--rc-thread); }
+.monsterhearts2 .mh2-rc-wall {
+  position: absolute; pointer-events: none; border: none;
+  filter: var(--rc-wall-filter); opacity: var(--rc-wall-opacity); mix-blend-mode: var(--rc-wall-blend);
+}
+.monsterhearts2 .mh2-rc-wall.r { right: 0; top: 0; width: 270px; }
+.monsterhearts2 .mh2-rc-wall.l { left: 0; bottom: 0; width: 200px; }
+.monsterhearts2 .mh2-rc-scroll {
+  position: relative; height: 100%; box-sizing: border-box; overflow-y: auto;
+  display: flex; flex-direction: column; gap: 10px; padding: 12px 20px 18px;
+}
+
+.monsterhearts2 .mh2-rc-pill { display: flex; align-items: center; gap: 10px; margin: 4px 0; }
+.monsterhearts2 .mh2-rc-pill::before,
+.monsterhearts2 .mh2-rc-pill::after { content: ""; flex: 1; height: 1px; background: var(--rc-pill-bd); opacity: 0.6; }
+.monsterhearts2 .mh2-rc-pill > span {
+  padding: 3px 14px; border: 1.5px solid var(--rc-pill-bd); border-radius: 14px;
+  background: var(--rc-pill-bg); color: var(--rc-pill-tx); font-size: 13px;
+}
+.monsterhearts2 .mh2-rc-none { margin: 0; text-align: center; font-style: italic; color: var(--rc-sub); }
+.monsterhearts2 .mh2-rc-empty { margin: auto; padding: 2rem; }
+
+.monsterhearts2 .mh2-rc-msg.in { display: flex; align-items: flex-start; gap: 10px; max-width: 600px; }
+.monsterhearts2 .mh2-rc-avbtn {
+  flex: 0 0 auto; width: auto; height: auto; padding: 0; margin: 0; border: none; background: none;
+  line-height: 0; cursor: pointer; border-radius: 50%;
+}
+.monsterhearts2 .mh2-rc-msg-col { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.monsterhearts2 .mh2-rc-meta { display: flex; align-items: baseline; gap: 8px; }
+.monsterhearts2 .mh2-rc-from { font-family: var(--mh2-serif); font-size: 17px; font-weight: 700; color: var(--rc-text); }
+.monsterhearts2 .mh2-rc-count { font-size: 11.5px; color: var(--rc-sub); }
+
+.monsterhearts2 .mh2-rc-bubble { position: relative; padding: 10px 30px 10px 14px; box-shadow: 0 5px 14px rgba(0, 0, 0, 0.32); }
+.monsterhearts2 .mh2-rc-bubble p { margin: 0; font-size: 14.5px; line-height: 1.4; }
+.monsterhearts2 .mh2-rc-blank { font-style: italic; opacity: 0.75; }
+.monsterhearts2 .mh2-rc-msg.in .mh2-rc-bubble {
+  border-radius: 4px 16px 16px 16px;
+  background: linear-gradient(180deg, var(--rc-inc1), var(--rc-inc2)); color: var(--rc-text);
+}
+.monsterhearts2 .mh2-rc-msg.out { align-self: flex-end; width: 100%; max-width: 620px; display: flex; flex-direction: column; gap: 6px; }
+.monsterhearts2 .mh2-rc-msg.out .mh2-rc-bubble {
+  display: flex; flex-direction: column; gap: 3px;
+  border-radius: 16px 16px 4px 16px;
+  background: linear-gradient(180deg, var(--rc-out1), var(--rc-out2)); color: var(--rc-on-accent);
+  box-shadow: 0 5px 14px rgba(0, 0, 0, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+.monsterhearts2 .mh2-rc-msg.out .mh2-rc-from { color: var(--rc-on-accent); cursor: pointer; }
+.monsterhearts2 .mh2-rc-msg.out .mh2-rc-from:hover { text-decoration: underline; text-shadow: none; }
+.monsterhearts2 .mh2-rc-msg.out .mh2-rc-count { color: var(--rc-out-sub); opacity: 0.85; }
+.monsterhearts2 .mh2-rc-edit {
+  position: absolute; top: 8px; right: 10px; font-size: 11px; opacity: 0.55; color: inherit; cursor: pointer;
+}
+.monsterhearts2 .mh2-rc-edit:hover { opacity: 1; text-shadow: none; }
+
+.monsterhearts2 .mh2-rc-spends { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 5px; }
+.monsterhearts2 .mh2-rc-spends > span { font-size: 11.5px; color: var(--rc-sub); margin-right: 2px; }
+.monsterhearts2 .mh2-rc-spends button {
+  width: auto; height: 28px; line-height: 1; padding: 0 12px; margin: 0; flex: 0 0 auto;
+  border: 1.5px solid var(--rc-accent); border-radius: 14px;
+  background: var(--rc-chip-bg); color: var(--rc-chip-tx); font-size: 12px; cursor: pointer;
+}
+.monsterhearts2 .mh2-rc-spends button:hover { background: var(--rc-accent); color: var(--rc-on-accent); }

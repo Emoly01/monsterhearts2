@@ -5,7 +5,7 @@ import { MH2ActorSheet } from "./module/actor-sheet.mjs";
 import { MH2ItemSheet } from "./module/item-sheet.mjs";
 import { MH2SkinSheet } from "./module/skin-sheet.mjs";
 import { MH2NpcStrings } from "./module/npc-strings.mjs";
-import { MH2StringsWeb } from "./module/strings-web.mjs";
+import { MH2Receipts } from "./module/receipts.mjs";
 import { escapeHTML } from "./module/utils.mjs";
 import { applyCondition, applyHarm, applyNpcString, applyString } from "./module/effects.mjs";
 import { registerChatActions } from "./module/chat.mjs";
@@ -52,10 +52,12 @@ Hooks.once("init", () => {
 
   // Shared world setting: the NPC-Strings tracker.
   MH2NpcStrings.registerSetting();
-  MH2StringsWeb.registerLiveUpdates();
+  MH2Receipts.registerLiveUpdates();
   game.system.mh2 = {
     openNpcStrings: () => new MH2NpcStrings().render(true),
-    openStringsWeb: () => new MH2StringsWeb().render(true),
+    openReceipts: () => new MH2Receipts().render(true),
+    // Old name, kept so existing macros still open something.
+    openStringsWeb: () => new MH2Receipts().render(true),
     darkestFlare: (name) => {
       const el = document.createElement("div");
       el.className = "mh2-flare";
@@ -186,8 +188,8 @@ Hooks.on("renderActorDirectory", (app, html) => {
 
   const webBtn = document.createElement("button");
   webBtn.type = "button";
-  webBtn.className = "mh2-npc-strings-btn mh2-web-btn";
-  webBtn.innerHTML = `<i class="fa-solid fa-diagram-project"></i> Strings Web`;
-  webBtn.addEventListener("click", () => new MH2StringsWeb().render(true));
+  webBtn.className = "mh2-npc-strings-btn mh2-receipts-btn";
+  webBtn.innerHTML = `<i class="fa-solid fa-receipt"></i> Receipts`;
+  webBtn.addEventListener("click", () => new MH2Receipts().render(true));
   header.appendChild(webBtn);
 });

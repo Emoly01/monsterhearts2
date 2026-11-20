@@ -48,7 +48,7 @@ export function moveActionKeys(move, texts = []) {
   return MH2.moveActions.filter(a => a.match.test(text)).map(a => a.key);
 }
 
-async function askText(title, label, placeholder = "", { options = [], value = "" } = {}) {
+export async function askText(title, label, placeholder = "", { options = [], value = "" } = {}) {
   const list = options.length
     ? `<datalist id="mh2-ask-list">${options.map(o => `<option value="${esc(o)}"></option>`).join("")}</datalist>`
     : "";

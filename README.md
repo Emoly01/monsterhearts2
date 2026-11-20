@@ -56,8 +56,16 @@ https://raw.githubusercontent.com/Emoly01/monsterhearts2/main/system.json
   the Pulling Strings options to chat, and a pass button that hands a String to
   another character (routed through the GM via socket when you don't own their
   sheet). Name matching is case-insensitive, so "kayla" and "Kayla" are one row.
+- **Receipts**: every String can carry an optional note — what you actually have
+  on them. It sits under the String on the sheet (click to write). The Gain a
+  String / Give a String chat buttons ask for one when they grant it; skip it and
+  the String still counts. Turn the question off per user under *Ask for a
+  receipt* in the system settings. Receipts show on the chat card when a String
+  is gained, spent or passed, stack with " · " when you gain more on the same
+  person, and travel with a passed String.
 - **NPC Strings tracker**: an open, shared list of every String an NPC holds —
   button in the Actors directory. Live-updates for everyone; only the MC edits.
+  Each row has a receipt line too (players see it, the MC writes it).
 - **Strings Web**: a live relationship map of every String at the table —
   the ones on sheets and the ones in the NPC tracker. Characters sit on an
   inner ring, everyone without a sheet around them; thicker arrows mean more

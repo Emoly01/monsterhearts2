@@ -26,20 +26,39 @@ export function findCharacter(name) {
 /*  Direct writes (owner or GM only)            */
 /* -------------------------------------------- */
 
-export async function applyString(actor, name, count = 1) {
+/**
+ * Add a receipt to the ones a String already has. Receipts stack with " · ",
+ * and a receipt that's already written down isn't written twice.
+ */
+export function mergeNote(existing, addition) {
+  const old = String(existing ?? "").trim();
+  const add = String(addition ?? "").trim();
+  if (!add) return old;
+  if (!old) return add;
+  if (old.split(" · ").some(n => n.trim().toLowerCase() === add.toLowerCase())) return old;
+  return `${old} · ${add}`;
+}
+
+export async function applyString(actor, name, count = 1, note = "") {
   const strings = foundry.utils.deepClone(actor.system.toObject().strings ?? []);
   const match = strings.find(s => sameName(s.name, name));
-  if (match) match.count = Math.max(0, match.count + count);
-  else if (count > 0) strings.push({ name, count });
+  if (match) {
+    match.count = Math.max(0, match.count + count);
+    if (count > 0) match.note = mergeNote(match.note, note);
+  }
+  else if (count > 0) strings.push({ name, count, note: String(note ?? "").trim() });
   else return actor;
   return actor.update({ "system.strings": strings });
 }
 
-export async function applyNpcString(holder, target, count = 1) {
+export async function applyNpcString(holder, target, count = 1, note = "") {
   const entries = foundry.utils.deepClone(game.settings.get("monsterhearts2", "npcStrings") ?? []);
   const match = entries.find(e => sameName(e.holder, holder) && sameName(e.target, target));
-  if (match) match.count = Math.max(0, (Number(match.count) || 0) + count);
-  else if (count > 0) entries.push({ holder, target, count });
+  if (match) {
+    match.count = Math.max(0, (Number(match.count) || 0) + count);
+    if (count > 0) match.note = mergeNote(match.note, note);
+  }
+  else if (count > 0) entries.push({ holder, target, count, note: String(note ?? "").trim() });
   else return entries;
   return game.settings.set("monsterhearts2", "npcStrings", entries);
 }
@@ -69,13 +88,13 @@ function route(canWrite, direct, payload, failMessage) {
   return Promise.resolve(false);
 }
 
-/** `actor` gains `count` Strings on `name`. */
-export function gainString(actor, name, count = 1) {
+/** `actor` gains `count` Strings on `name`, optionally with a receipt `note`. */
+export function gainString(actor, name, count = 1, note = "") {
   const clean = String(name ?? "").trim();
   if (!clean) return Promise.resolve(false);
   return route(actor.isOwner,
-    () => applyString(actor, clean, count),
-    { type: "grantString", actorId: actor.id, name: clean, count },
+    () => applyString(actor, clean, count, note),
+    { type: "grantString", actorId: actor.id, name: clean, count, note },
     `No GM online to update ${actor.name}'s Strings.`);
 }
 
@@ -83,15 +102,15 @@ export function gainString(actor, name, count = 1) {
  * `holderName` gains `count` Strings on `targetName` (negative: loses them). A holder with a sheet
  * gets a row on it; anyone else is recorded in the shared NPC tracker.
  */
-export function giveString(holderName, targetName, count = 1) {
+export function giveString(holderName, targetName, count = 1, note = "") {
   const holder = String(holderName ?? "").trim();
   const target = String(targetName ?? "").trim();
   if (!holder || !target) return Promise.resolve(false);
   const actor = findCharacter(holder);
-  if (actor) return gainString(actor, target, count);
+  if (actor) return gainString(actor, target, count, note);
   return route(game.user.isGM,
-    () => applyNpcString(holder, target, count),
-    { type: "grantNpcString", holder, target, count },
+    () => applyNpcString(holder, target, count, note),
+    { type: "grantNpcString", holder, target, count, note },
     `No GM online to record ${holder}'s String in the tracker.`);
 }
 

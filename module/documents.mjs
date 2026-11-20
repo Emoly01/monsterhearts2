@@ -266,6 +266,7 @@ export class MH2Actor extends Actor {
       <div class="mh2-roll-card mh2-string-card">
         <header class="mh2-card-header"><h3>Pulling Strings</h3></header>
         <p>${escapeHTML(this.name)} spends a String on <strong>${escapeHTML(entry.name || "someone")}</strong> (${entry.count} left). Choose one:</p>
+        ${entry.note?.trim() ? `<p class="mh2-card-receipt"><i class="fa-solid fa-receipt"></i> ${escapeHTML(entry.note.trim())}</p>` : ""}
         <ul>${options}</ul>
         ${entry.name ? cardActions(["giveCondition", "harm"], entry.name) : ""}
       </div>`;

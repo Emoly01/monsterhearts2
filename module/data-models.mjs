@@ -63,7 +63,9 @@ export class CharacterData extends foundry.abstract.TypeDataModel {
 
       strings: new ArrayField(new SchemaField({
         name: new StringField({ required: true, blank: true }),
-        count: new NumberField({ required: true, integer: true, min: 0, initial: 1 })
+        count: new NumberField({ required: true, integer: true, min: 0, initial: 1 }),
+        // The receipt: what you actually have on them. Optional, free text.
+        note: new StringField({ required: true, blank: true, initial: "" })
       })),
 
       advancements: new StringField({ required: true, blank: true }),

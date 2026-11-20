@@ -92,13 +92,45 @@ async function askTarget(actor, messageId, title) {
   return name;
 }
 
-function post(actor, title, body, { actions = "", card = null } = {}) {
+/**
+ * Ask what `holder` has on `target` — the receipt for a new String. Always
+ * skippable; returns "" when skipped, closed, or turned off in settings.
+ */
+export async function askReceipt(holder, target) {
+  if (!game.settings.get("monsterhearts2", "askReceipt")) return "";
+  const answer = await foundry.applications.api.DialogV2.wait({
+    window: { title: `Receipt · ${holder} on ${target}`, icon: "fa-solid fa-receipt" },
+    classes: ["mh2-receipt-dialog"],
+    content: `
+      <div class="form-group stacked">
+        <label>What does ${esc(holder)} have on ${esc(target)}?</label>
+        <input type="text" name="note" placeholder="the text, the rumour, the thing they saw…" autofocus>
+      </div>
+      <p class="hint">Optional. Leave it blank or skip, and the String still counts.</p>`,
+    buttons: [
+      { action: "keep", label: "Keep the receipt", icon: "fa-solid fa-receipt", default: true,
+        callback: (event, button) => ({ note: button.form.elements.note.value.trim() }) },
+      { action: "skip", label: "Skip" }
+    ],
+    rejectClose: false
+  }).catch(() => null);
+  return typeof answer === "object" && answer ? answer.note : "";
+}
+
+/** The receipt line on a chat card, or nothing. */
+export function receiptLine(note) {
+  const clean = String(note ?? "").trim();
+  return clean ? `<p class="mh2-card-receipt"><i class="fa-solid fa-receipt"></i> ${esc(clean)}</p>` : "";
+}
+
+function post(actor, title, body, { actions = "", card = null, receipt = "" } = {}) {
   const data = {
     speaker: ChatMessage.implementation.getSpeaker({ actor }),
     content: `
       <div class="mh2-roll-card mh2-string-card">
         <header class="mh2-card-header"><h3>${esc(title)}</h3></header>
         <p>${body}</p>
+        ${receiptLine(receipt)}
         ${actions}
       </div>`
   };
@@ -108,15 +140,19 @@ function post(actor, title, body, { actions = "", card = null } = {}) {
 
 const HANDLERS = {
   async gainString(actor, targetName) {
-    if (!await gainString(actor, targetName, 1)) return;
+    const note = await askReceipt(actor.name, targetName);
+    if (!await gainString(actor, targetName, 1, note)) return;
     return post(actor, "String Gained",
-      `<strong>${esc(actor.name)}</strong> gains a String on <strong>${esc(targetName)}</strong>.`);
+      `<strong>${esc(actor.name)}</strong> gains a String on <strong>${esc(targetName)}</strong>.`,
+      { receipt: note });
   },
 
   async giveString(actor, targetName) {
-    if (!await giveString(targetName, actor.name, 1)) return;
+    const note = await askReceipt(targetName, actor.name);
+    if (!await giveString(targetName, actor.name, 1, note)) return;
     return post(actor, "String Given",
-      `<strong>${esc(targetName)}</strong> gains a String on <strong>${esc(actor.name)}</strong>.`);
+      `<strong>${esc(targetName)}</strong> gains a String on <strong>${esc(actor.name)}</strong>.`,
+      { receipt: note });
   },
 
   async loseString(actor, targetName) {

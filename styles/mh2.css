@@ -1057,12 +1057,15 @@
   margin-bottom: 0.5rem;
 }
 .mh2-npc-list { flex: 1; overflow-y: auto; }
+.mh2-npc-entry {
+  padding: 0.2rem 0 0.1rem;
+  border-bottom: 1px dotted var(--mh2-line);
+}
 .mh2-npc-row {
   display: flex;
   align-items: center;
   gap: 0.35rem;
-  padding: 0.2rem 0;
-  border-bottom: 1px dotted var(--mh2-line);
+  padding: 0.1rem 0;
 }
 .mh2-npc-row input[type="text"] { flex: 1; min-width: 4rem; }
 .mh2-npc-row .mh2-count { width: 2.6rem; text-align: center; flex: 0 0 auto; }
@@ -1617,3 +1620,69 @@
 .monsterhearts2 .mh2-darkest-text { line-height: 1.45; }
 .monsterhearts2 .mh2-darkest-text p { margin: 0 0 0.5em 0; }
 .monsterhearts2 .mh2-darkest-text p:last-child { margin-bottom: 0; }
+
+
+/* -------------------------------------------- */
+/*  Receipts: the optional note on a String     */
+/* -------------------------------------------- */
+
+.monsterhearts2 .mh2-string { margin-bottom: 0.35rem; }
+.monsterhearts2 .mh2-string .mh2-string-row { margin-bottom: 0.1rem; }
+
+.monsterhearts2 .mh2-receipt {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0 0 0 0.55rem;
+  padding: 0 0 0 0.45rem;
+  border-left: 2px solid var(--mh2-line);
+  color: var(--mh2-bone-dim);
+  font-size: 0.78rem;
+  font-style: italic;
+  cursor: text;
+}
+.monsterhearts2 .mh2-receipt > i {
+  flex: 0 0 auto;
+  font-size: 0.7rem;
+  opacity: 0.55;
+}
+.monsterhearts2 .mh2-receipt.has-note { border-left-color: var(--mh2-thread); }
+.monsterhearts2 .mh2-receipt.has-note > i { color: var(--mh2-thread); opacity: 1; }
+
+.monsterhearts2 .mh2-receipt input[type="text"] {
+  flex: 1;
+  min-width: 0;
+  height: 1.45rem;
+  padding: 0 0.2rem;
+  background: transparent;
+  border: none;
+  border-bottom: 1px dashed transparent;
+  border-radius: 0;
+  box-shadow: none;
+  color: var(--mh2-bone);
+  font: inherit;
+}
+.monsterhearts2 .mh2-receipt input[type="text"]::placeholder { color: var(--mh2-bone-dim); opacity: 0.6; }
+.monsterhearts2 .mh2-receipt:hover input[type="text"],
+.monsterhearts2 .mh2-receipt input[type="text"]:focus {
+  border-bottom-color: var(--mh2-line);
+  outline: none;
+}
+.monsterhearts2 .mh2-receipt input[type="text"]:focus { border-bottom-color: var(--mh2-thread); }
+/* read-only receipts in the NPC tracker */
+.monsterhearts2 p.mh2-receipt { margin: 0.05rem 0 0.15rem 0.55rem; cursor: default; }
+.monsterhearts2 p.mh2-receipt > span { color: var(--mh2-bone); }
+
+/* the receipt on a chat card */
+.mh2-roll-card .mh2-card-receipt {
+  margin: 0.3rem 0 0.2rem;
+  padding: 0.25rem 0.45rem;
+  border-left: 2px solid var(--mh2-thread);
+  background: var(--mh2-thread-wash, transparent);
+  font-style: italic;
+  font-size: 0.85rem;
+}
+.mh2-roll-card .mh2-card-receipt > i { color: var(--mh2-thread); margin-right: 0.25rem; font-style: normal; }
+
+/* the receipt prompt */
+.mh2-receipt-dialog .hint { font-size: 0.8rem; opacity: 0.75; margin: 0.3rem 0 0; }

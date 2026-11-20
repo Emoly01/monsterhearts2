@@ -16,11 +16,20 @@
       <input class="mh2-count" type="number" data-field="count" data-index="{{@index}}" value="{{this.count}}" min="0" step="1">
       <a class="mh2-btn" data-action="plus" data-index="{{@index}}" title="Add one">＋</a>
       <a class="mh2-btn mh2-del" data-action="deleteEntry" data-index="{{@index}}" title="Delete"><i class="fa-solid fa-xmark"></i></a>
+    </div>
+    <label class="mh2-receipt mh2-npc-receipt{{#if this.note}} has-note{{/if}}" title="The receipt: what they have on them (optional)">
+      <i class="fa-solid fa-receipt"></i>
+      <input type="text" data-field="note" data-index="{{@index}}" value="{{this.note}}" placeholder="receipt… what do they have on them?">
+    </label>
+    <div class="mh2-npc-row-end">
       {{else}}
       <span class="mh2-npc-holder">{{this.holder}}</span>
       <span class="mh2-npc-arrow">→</span>
       <span class="mh2-npc-target">{{this.target}}</span>
       <span class="mh2-npc-count">{{this.count}}</span>
+    </div>
+    {{#if this.note}}<p class="mh2-receipt mh2-npc-receipt has-note"><i class="fa-solid fa-receipt"></i> <span>{{this.note}}</span></p>{{/if}}
+    <div class="mh2-npc-row-end">
       {{/if}}
     </div>
     {{else}}

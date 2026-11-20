@@ -1,6 +1,7 @@
 import { MH2 } from "./config.mjs";
 import { escapeHTML as esc, sameName } from "./utils.mjs";
-import { cardActions, moveActionKeys } from "./chat.mjs";
+import { cardActions, moveActionKeys, receiptLine } from "./chat.mjs";
+import { mergeNote } from "./effects.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
@@ -337,7 +338,7 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
 
   static async #onAddString(event, target) {
     const strings = this.#sourceArray("strings");
-    strings.push({ name: "", count: 1 });
+    strings.push({ name: "", count: 1, note: "" });
     return this.actor.update({ "system.strings": strings });
   }
 
@@ -418,15 +419,19 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     if (recipient.isOwner) {
       const recStrings = foundry.utils.deepClone(recipient.system.toObject().strings ?? []);
       const match = recStrings.find(s => sameName(s.name, entry.name));
-      if (match) match.count += 1;
-      else recStrings.push({ name: entry.name, count: 1 });
+      if (match) {
+        match.count += 1;
+        match.note = mergeNote(match.note, entry.note);
+      }
+      else recStrings.push({ name: entry.name, count: 1, note: entry.note ?? "" });
       await recipient.update({ "system.strings": recStrings });
     } else if (game.users.find(u => u.isGM && u.active)) {
       game.socket.emit("system.monsterhearts2", {
         type: "grantString",
         actorId: recipient.id,
         name: entry.name,
-        count: 1
+        count: 1,
+        note: entry.note ?? ""
       });
     } else {
       ui.notifications.warn(`Passed the String, but no GM is online to update ${recipient.name}'s sheet.`);
@@ -438,6 +443,7 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
         <div class="mh2-roll-card mh2-string-card">
           <header class="mh2-card-header"><h3>String Passed</h3></header>
           <p><strong>${esc(this.actor.name)}</strong> passes a String on ${esc(entry.name || "someone")} to <strong>${esc(recipient.name)}</strong>.</p>
+          ${receiptLine(entry.note)}
         </div>`
     });
   }

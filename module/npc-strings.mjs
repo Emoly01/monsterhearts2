@@ -88,7 +88,7 @@ export class MH2NpcStrings extends HandlebarsApplicationMixin(ApplicationV2) {
 
   static async #onAdd() {
     const entries = MH2NpcStrings.entries;
-    entries.push({ holder: "", target: "", count: 1 });
+    entries.push({ holder: "", target: "", count: 1, note: "" });
     return MH2NpcStrings.save(entries);
   }
 

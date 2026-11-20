@@ -86,6 +86,7 @@
           <a class="mh2-btn" data-action="addString" title="Add a String">＋</a>
         </header>
         {{#each system.strings}}
+        <div class="mh2-string">
         <div class="mh2-row mh2-string-row">
           <input type="text" name="system.strings.{{@index}}.name" value="{{this.name}}" placeholder="On whom?">
           <a class="mh2-btn" data-action="stringMinus" data-index="{{@index}}" title="Remove one">−</a>
@@ -94,6 +95,11 @@
           <a class="mh2-btn mh2-spend" data-action="spendString" data-index="{{@index}}" title="Spend a String (posts options to chat)"><i class="fa-solid fa-hand-sparkles"></i></a>
           <a class="mh2-btn mh2-pass" data-action="passString" data-index="{{@index}}" title="Pass this String to another character"><i class="fa-solid fa-hands-holding"></i></a>
           <a class="mh2-btn mh2-del" data-action="deleteString" data-index="{{@index}}" title="Delete"><i class="fa-solid fa-xmark"></i></a>
+        </div>
+        <label class="mh2-receipt{{#if this.note}} has-note{{/if}}" title="The receipt: what you have on them (optional)">
+          <i class="fa-solid fa-receipt"></i>
+          <input type="text" name="system.strings.{{@index}}.note" value="{{this.note}}" placeholder="receipt… what do you have on them?">
+        </label>
         </div>
         {{else}}
         <p class="mh2-empty">No Strings yet. Tragic. Add one.</p>

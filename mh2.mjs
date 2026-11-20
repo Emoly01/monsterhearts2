@@ -101,6 +101,16 @@ Hooks.once("init", () => {
     default: false,
     onChange: value => applyMH2Flowers(value)
   });
+
+  // Ask for a receipt (an optional note) when a chat button grants a String.
+  game.settings.register("monsterhearts2", "askReceipt", {
+    name: "Ask for a receipt",
+    hint: "When a chat-card button gives someone a String, ask what they have on them. You can always skip it. This is per-user.",
+    scope: "client",
+    config: true,
+    type: Boolean,
+    default: true
+  });
 });
 
 /** Reflect the flower toggle onto the document root. */
@@ -137,11 +147,11 @@ Hooks.once("ready", () => {
     if (payload.type === "grantString") {
       const actor = game.actors.get(payload.actorId);
       if (!actor || !payload.name) return;
-      return applyString(actor, payload.name, payload.count ?? 1);
+      return applyString(actor, payload.name, payload.count ?? 1, payload.note ?? "");
     }
 
     if (payload.type === "grantNpcString") {
-      return applyNpcString(payload.holder, payload.target, payload.count ?? 1);
+      return applyNpcString(payload.holder, payload.target, payload.count ?? 1, payload.note ?? "");
     }
 
     if (payload.type === "grantCondition") {

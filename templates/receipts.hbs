@@ -1,0 +1,99 @@
+<div class="mh2-rc">
+
+  <nav class="mh2-rc-list" aria-label="Everyone at the table">
+    <header class="mh2-rc-brand">
+      <img class="mh2-rc-logo" src="systems/monsterhearts2/styles/receipts-logo.webp" alt="">
+      <span class="mh2-rc-title">Receipts</span>
+      <span class="mh2-rc-legend">
+        <span><i class="mh2-rc-dot holds"></i>holds</span>
+        <span><i class="mh2-rc-dot held"></i>held</span>
+      </span>
+    </header>
+    <div class="mh2-rc-people">
+      {{#each people}}
+      <button type="button" class="mh2-rc-person{{#if selected}} selected{{/if}}{{#unless isPC}} npc{{/unless}}"
+              data-action="focus" data-key="{{key}}" aria-pressed="{{#if selected}}true{{else}}false{{/if}}">
+        {{#if img}}<img class="mh2-rc-av" src="{{img}}" alt="">{{else}}<span class="mh2-rc-av mh2-rc-mono">{{initials}}</span>{{/if}}
+        <span class="mh2-rc-who">
+          <span class="mh2-rc-name">{{name}}</span>
+          <span class="mh2-rc-sub">{{sub}}</span>
+        </span>
+        <span class="mh2-rc-badges">
+          <span class="mh2-rc-badge holds" title="Strings {{name}} holds">{{holds}}</span>
+          <span class="mh2-rc-badge held" title="Strings held on {{name}}">{{held}}</span>
+        </span>
+      </button>
+      {{/each}}
+    </div>
+  </nav>
+
+  <section class="mh2-rc-thread" aria-label="Receipts thread">
+    {{#if me}}
+    <header class="mh2-rc-head">
+      {{#if me.img}}<img class="mh2-rc-av big" src="{{me.img}}" alt="">{{else}}<span class="mh2-rc-av big mh2-rc-mono">{{me.initials}}</span>{{/if}}
+      <div class="mh2-rc-head-text">
+        {{#if me.actorId}}
+        <a class="mh2-rc-head-name" data-action="openSheet" data-actor-id="{{me.actorId}}" title="Open the sheet">{{me.name}}</a>
+        {{else}}
+        <span class="mh2-rc-head-name">{{me.name}}</span>
+        {{/if}}
+        {{#if meSub}}<span class="mh2-rc-head-sub">{{meSub}}</span>{{/if}}
+      </div>
+      {{#if me.darkest}}<span class="mh2-rc-darkest"><i class="fa-solid fa-moon"></i> Darkest Self</span>{{/if}}
+    </header>
+
+    <div class="mh2-rc-body">
+      <img class="mh2-rc-wall r" src="systems/monsterhearts2/styles/receipts-wall-r.webp" alt="" aria-hidden="true">
+      <img class="mh2-rc-wall l" src="systems/monsterhearts2/styles/receipts-wall-l.webp" alt="" aria-hidden="true">
+      <div class="mh2-rc-scroll">
+
+        <div class="mh2-rc-pill"><span>Receipts on {{me.short}}</span></div>
+        {{#each incoming}}
+        <div class="mh2-rc-msg in">
+          <button type="button" class="mh2-rc-avbtn" data-action="focus" data-key="{{otherKey}}" title="Open {{name}}">
+            {{#if img}}<img class="mh2-rc-av" src="{{img}}" alt="">{{else}}<span class="mh2-rc-av mh2-rc-mono">{{initials}}</span>{{/if}}
+          </button>
+          <div class="mh2-rc-msg-col">
+            <span class="mh2-rc-meta"><span class="mh2-rc-from">{{short}}</span><span class="mh2-rc-count">{{count}}</span></span>
+            <div class="mh2-rc-bubble">
+              {{#if note}}<p>{{note}}</p>{{else}}<p class="mh2-rc-blank">No receipt written down.</p>{{/if}}
+              {{#if canEdit}}<a class="mh2-rc-edit" data-action="editNote" data-kind="{{kind}}" data-actor-id="{{actorId}}" data-index="{{index}}" data-target-name="{{targetName}}" title="Edit the receipt"><i class="fa-solid fa-pen"></i></a>{{/if}}
+            </div>
+          </div>
+        </div>
+        {{else}}
+        <p class="mh2-rc-none">Nobody has anything on {{me.short}}. Yet.</p>
+        {{/each}}
+
+        <div class="mh2-rc-pill"><span>Receipts {{me.short}} is keeping</span></div>
+        {{#each outgoing}}
+        <div class="mh2-rc-msg out">
+          <div class="mh2-rc-bubble">
+            <span class="mh2-rc-meta">
+              <a class="mh2-rc-from" data-action="focus" data-key="{{otherKey}}" title="Open {{name}}">{{short}}</a>
+              <span class="mh2-rc-count">{{count}}</span>
+            </span>
+            {{#if note}}<p>{{note}}</p>{{else}}<p class="mh2-rc-blank">No receipt written down.</p>{{/if}}
+            {{#if canEdit}}<a class="mh2-rc-edit" data-action="editNote" data-kind="{{kind}}" data-actor-id="{{actorId}}" data-index="{{index}}" data-target-name="{{targetName}}" title="Edit the receipt"><i class="fa-solid fa-pen"></i></a>{{/if}}
+          </div>
+          {{#if canEdit}}
+          <div class="mh2-rc-spends">
+            <span>spend one:</span>
+            {{#each spends}}
+            <button type="button" data-action="spend" data-opt="{{key}}" data-kind="{{../kind}}" data-actor-id="{{../actorId}}" data-index="{{../index}}" data-target-name="{{../targetName}}" title="{{rule}}">{{label}}</button>
+            {{/each}}
+          </div>
+          {{/if}}
+        </div>
+        {{else}}
+        <p class="mh2-rc-none">{{me.short}} isn’t holding anything over anyone.</p>
+        {{/each}}
+
+      </div>
+    </div>
+    {{else}}
+    <p class="mh2-rc-none mh2-rc-empty">No Strings at the table yet. Give it a session.</p>
+    {{/if}}
+  </section>
+
+</div>

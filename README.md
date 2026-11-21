@@ -26,7 +26,7 @@ https://raw.githubusercontent.com/Emoly01/monsterhearts2/main/system.json
 - **Character sheet**: name, skin/look/eyes/origin, the four stats, eleven
   themes (per-user — Dark, Light, Karibik, Trinidad, Island, Soucouyant,
   Bioluminescence, La Diablesse, Burn Book, Late Show, Prom Night). Themes
-  follow you into chat cards, the Strings Web and the NPC tracker. Optional
+  follow you into chat cards, Receipts and the NPC tracker. Optional
   chaconia sprays behind the sheet, on any theme.
 - **Rolling**: click a stat name (or a move) → modifier prompt with your recorded
   Forwards as checkboxes → 2d6 + stat + bonuses. Chat card shows 10+ / 7–9 / miss,
@@ -66,11 +66,15 @@ https://raw.githubusercontent.com/Emoly01/monsterhearts2/main/system.json
 - **NPC Strings tracker**: an open, shared list of every String an NPC holds —
   button in the Actors directory. Live-updates for everyone; only the MC edits.
   Each row has a receipt line too (players see it, the MC writes it).
-- **Strings Web**: a live relationship map of every String at the table —
-  the ones on sheets and the ones in the NPC tracker. Characters sit on an
-  inner ring, everyone without a sheet around them; thicker arrows mean more
-  Strings. Hover a person (or click to pin) to light up only their Strings and
-  read them as a list in the side panel. Also in the Actors directory.
+- **Receipts window** (replaces the Strings Web): every String at the table,
+  sheets and NPC tracker alike, read like a messaging app. Everyone is listed on
+  the left with how many Strings they hold and how many are held on them. Pick
+  someone and the thread shows the receipts others have on them, then the ones
+  they're keeping. Each receipt you're keeping has four spend chips — *Tempt
+  them*, *Give a Condition*, *+1 to your roll* (lands in your Forward) and *+1
+  harm* — that spend the String and post it to chat. The pencil edits a
+  receipt. Colours follow your sheet theme. Button in the Actors directory, or
+  `game.system.mh2.openReceipts()` in a macro.
 - **Skins as Items**: build a skin with stat lines, identity suggestion lists,
   moves (drag move items onto it), backstory steps, and advancements. Drop it on
   a character (or use the sheet's picker) to run the full apply interview:
@@ -96,8 +100,8 @@ https://raw.githubusercontent.com/Emoly01/monsterhearts2/main/system.json
   your own books into each move's description (it's rich text, go wild).
 - "Ongoing" is a manual catch-all for persistent bonuses (gang, Sanctuary,
   etc.). Set it, clear it when it stops applying.
-- Conditions remember who gave them, and show under each portrait in the
-  Strings Web so the whole table can see what's there to exploit.
+- Conditions remember who gave them, and show in each person's Receipts
+  header so the whole table can see what's there to exploit.
 
 ## Releases
 

@@ -8,7 +8,7 @@ export function escapeHTML(str) {
 /**
  * Case-insensitive name equality, used wherever String rows are merged so
  * "kayla" and "Kayla" land on the same row (matching how actors and the
- * Strings Web already resolve names).
+ * Receipts window already resolve names).
  */
 export function sameName(a, b) {
   return String(a ?? "").trim().toLowerCase() === String(b ?? "").trim().toLowerCase();

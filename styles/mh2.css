@@ -519,7 +519,9 @@
   border-color: var(--mh2-header-line);
   color: var(--mh2-header-text);
 }
-.monsterhearts2 .mh2-header select option { color: initial; background: initial; }
+/* the open dropdown list: the theme's own text on its own panel, never the
+   browser default (white on white under a dark colour scheme) */
+.monsterhearts2 select option { color: var(--mh2-bone); background: var(--mh2-ink-soft); }
 .monsterhearts2 .mh2-header h2 { color: var(--mh2-header-text); }
 .monsterhearts2 .mh2-portrait {
   width: 72px;
@@ -2234,7 +2236,7 @@
   cursor: pointer;
 }
 .monsterhearts2 .mh2-hero select.mh2-skin-picker:hover { border-color: rgba(255, 255, 255, 0.25); }
-.monsterhearts2 .mh2-hero select option { color: initial; background: initial; letter-spacing: normal; text-transform: none; }
+.monsterhearts2 .mh2-hero select option { letter-spacing: normal; text-transform: none; }
 .monsterhearts2 .mh2-hero-icon { color: var(--mh2-hero-accent); font-size: 0.75rem; opacity: 0.8; cursor: pointer; }
 .monsterhearts2 .mh2-hero-icon:hover { opacity: 1; text-shadow: none; }
 .monsterhearts2 .mh2-hero-ds-tag {

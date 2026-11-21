@@ -75,7 +75,7 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
   /** @override */
   static DEFAULT_OPTIONS = {
     classes: ["monsterhearts2", "sheet", "actor"],
-    position: { width: 640, height: 780 },
+    position: { width: 700, height: 820 },
     window: { resizable: true },
     form: { submitOnChange: true, closeOnSubmit: false },
     actions: {
@@ -111,7 +111,7 @@ export class MH2ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
   static PARTS = {
     body: {
       template: "systems/monsterhearts2/templates/actor-sheet.hbs",
-      scrollable: [".mh2-body"]
+      scrollable: [".mh2-scroll"]
     }
   };
 

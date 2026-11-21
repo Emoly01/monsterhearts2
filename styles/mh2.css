@@ -1446,76 +1446,11 @@
 }
 
 /* =====================================================
-   v0.26: Darkest Self on the sheet — the thread takes over.
-   The header floods with the theme's Strings colour and bleeds down
-   into the sheet; the Darkest Self text is pinned to the top.
+   Darkest Self on the sheet. The header turns to that theme's eclipse
+   (see the moonrise header below); panels take the Darkest Self ink and
+   the Darkest Self text is pinned to the top.
    ===================================================== */
 .monsterhearts2 .mh2-is-darkest { position: relative; overflow: hidden; }
-
-.monsterhearts2 .mh2-is-darkest .mh2-header {
-  margin-bottom: 0;
-  border-bottom: none;
-  color: var(--mh2-on-darkest);
-}
-.monsterhearts2 .mh2-is-darkest .mh2-header::before { background: var(--mh2-darkest); opacity: 1; }
-.monsterhearts2 .mh2-is-darkest .mh2-header::after { display: none; }
-.monsterhearts2 .mh2-is-darkest .mh2-header input[type="text"],
-.monsterhearts2 .mh2-is-darkest .mh2-header input[type="number"],
-.monsterhearts2 .mh2-is-darkest .mh2-header select {
-  background: color-mix(in srgb, var(--mh2-on-darkest) 12%, transparent);
-  border-color: color-mix(in srgb, var(--mh2-on-darkest) 55%, transparent);
-  color: var(--mh2-on-darkest);
-}
-.monsterhearts2 .mh2-is-darkest .mh2-header input.mh2-name { background: transparent; }
-.monsterhearts2 .mh2-is-darkest .mh2-header input:focus,
-.monsterhearts2 .mh2-is-darkest .mh2-header select:focus {
-  border-color: var(--mh2-on-darkest);
-  box-shadow: 0 0 0 1px var(--mh2-on-darkest);
-}
-.monsterhearts2 .mh2-is-darkest .mh2-header input::placeholder { color: var(--mh2-on-darkest); opacity: 0.6; }
-.monsterhearts2 .mh2-is-darkest .mh2-header .mh2-identity-grid label { color: var(--mh2-on-darkest); }
-.monsterhearts2 .mh2-is-darkest .mh2-header .mh2-portrait { border-color: var(--mh2-on-darkest); }
-.monsterhearts2 .mh2-is-darkest .mh2-header .mh2-btn {
-  color: var(--mh2-on-darkest);
-  border-color: color-mix(in srgb, var(--mh2-on-darkest) 55%, transparent);
-}
-.monsterhearts2 .mh2-is-darkest .mh2-darkest-toggle:hover { color: var(--mh2-darkest); border-color: var(--mh2-on-darkest); }
-
-/* the bleed: a painted drip silhouette, coloured by the theme, with a wet
-   shine laid over it. It tiles sideways at a fixed size, so every drip keeps
-   its shape however wide the sheet is. */
-.monsterhearts2 .mh2-bleed {
-  position: relative;
-  flex: 0 0 auto;
-  height: 7.3rem;
-  margin-top: -1px;
-  pointer-events: none;
-}
-.monsterhearts2 .mh2-bleed::before,
-.monsterhearts2 .mh2-bleed::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-}
-.monsterhearts2 .mh2-bleed::before {
-  background: var(--mh2-darkest);
-  -webkit-mask: url("bleed-mask.webp") top left / 56rem 7.1rem repeat-x;
-  mask: url("bleed-mask.webp") top left / 56rem 7.1rem repeat-x;
-}
-.monsterhearts2 .mh2-bleed::after {
-  background: url("bleed-shade.webp") top left / 56rem 7.1rem repeat-x;
-}
-/* a thin vein trickling down the left edge, beside the scrolling panels */
-.monsterhearts2 .mh2-vein {
-  position: absolute;
-  left: 0.2rem;
-  top: 100%;
-  width: 26px;
-  height: 200vh;
-  background: var(--mh2-darkest-ink);
-  -webkit-mask: url("vein.svg") top left / 26px 330px repeat-y;
-  mask: url("vein.svg") top left / 26px 330px repeat-y;
-}
 
 .monsterhearts2 .mh2-is-darkest .mh2-stats { border-bottom-color: color-mix(in srgb, var(--mh2-darkest-ink) 45%, var(--mh2-ink)); }
 .monsterhearts2 .mh2-is-darkest .mh2-stat input { border-color: color-mix(in srgb, var(--mh2-darkest-ink) 45%, var(--mh2-ink)); }
@@ -1524,7 +1459,6 @@
   background: color-mix(in srgb, var(--mh2-darkest) 6%, var(--mh2-ink));
   border-bottom-color: color-mix(in srgb, var(--mh2-darkest-ink) 45%, var(--mh2-ink));
 }
-.monsterhearts2 .mh2-is-darkest .mh2-body { padding-left: 2.1rem; }
 /* the narrower body must not push the second column out of the window */
 .monsterhearts2 .mh2-is-darkest .mh2-columns { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
 .monsterhearts2 .mh2-is-darkest .mh2-row input[type="text"] { min-width: 0; }
@@ -2105,3 +2039,448 @@
   background: var(--rc-chip-bg); color: var(--rc-chip-tx); font-size: 12px; cursor: pointer;
 }
 .monsterhearts2 .mh2-rc-spends button:hover { background: var(--rc-accent); color: var(--rc-on-accent); }
+
+/* =====================================================
+   v0.30: the Profile sheet, under a painted moonrise header.
+   Every theme has its own moonrise and its own Darkest Self eclipse;
+   the portrait sits in the moon (or the dark disc of the eclipse).
+   ===================================================== */
+
+/* Per-theme header: where the moon is, and the colours that sit on the painting. */
+:root,
+:root[data-mh2-theme="dark"] {
+  --mh2-moon-l: 69.13%; --mh2-moon-t: 9.52%; --mh2-moon-w: 19.88%;
+  --mh2-eclipse-l: 68.69%; --mh2-eclipse-t: 7.54%; --mh2-eclipse-w: 20.13%;
+  --mh2-hero-text: #ece5d6; --mh2-hero-dim: #a69db3; --mh2-hero-accent: #d8b35d;
+  --mh2-hero-shade: 20,16,26; --mh2-hero-line: #e8487a;
+  --mh2-hero-ds: #9565f5; --mh2-hero-on-ds: #0b0a0d;
+}
+:root[data-mh2-theme="light"] {
+  --mh2-moon-l: 69.18%; --mh2-moon-t: 8.41%; --mh2-moon-w: 20.42%;
+  --mh2-eclipse-l: 68.48%; --mh2-eclipse-t: 7.30%; --mh2-eclipse-w: 20.13%;
+  --mh2-hero-text: #f2ece0; --mh2-hero-dim: #b4ada6; --mh2-hero-accent: #a38140;
+  --mh2-hero-shade: 35,25,32; --mh2-hero-line: #cb6282;
+  --mh2-hero-ds: #2fb3aa; --mh2-hero-on-ds: #0b0a0d;
+}
+:root[data-mh2-theme="karibik"] {
+  --mh2-moon-l: 69.15%; --mh2-moon-t: 9.07%; --mh2-moon-w: 20.06%;
+  --mh2-eclipse-l: 67.79%; --mh2-eclipse-t: 5.71%; --mh2-eclipse-w: 21.30%;
+  --mh2-hero-text: #fbf4e4; --mh2-hero-dim: #b9bdb1; --mh2-hero-accent: #d6988a;
+  --mh2-hero-shade: 31,61,58; --mh2-hero-line: #6db1aa;
+  --mh2-hero-ds: #e8651a; --mh2-hero-on-ds: #0b0a0d;
+}
+:root[data-mh2-theme="trinidad"] {
+  --mh2-moon-l: 69.25%; --mh2-moon-t: 9.07%; --mh2-moon-w: 20.06%;
+  --mh2-eclipse-l: 68.27%; --mh2-eclipse-t: 6.80%; --mh2-eclipse-w: 19.93%;
+  --mh2-hero-text: #fdf6e9; --mh2-hero-dim: #b9b3a9; --mh2-hero-accent: #a38140;
+  --mh2-hero-shade: 26,22,19; --mh2-hero-line: #d8586d;
+  --mh2-hero-ds: #f2b632; --mh2-hero-on-ds: #0b0a0d;
+}
+:root[data-mh2-theme="island"] {
+  --mh2-moon-l: 69.18%; --mh2-moon-t: 8.41%; --mh2-moon-w: 20.42%;
+  --mh2-eclipse-l: 68.16%; --mh2-eclipse-t: 6.80%; --mh2-eclipse-w: 19.93%;
+  --mh2-hero-text: #effaf9; --mh2-hero-dim: #acc0c3; --mh2-hero-accent: #6bacb8;
+  --mh2-hero-shade: 15,58,68; --mh2-hero-line: #e189a6;
+  --mh2-hero-ds: #5a9be8; --mh2-hero-on-ds: #0b0a0d;
+}
+:root[data-mh2-theme="soucouyant"] {
+  --mh2-moon-l: 69.12%; --mh2-moon-t: 8.75%; --mh2-moon-w: 20.96%;
+  --mh2-eclipse-l: 67.21%; --mh2-eclipse-t: 6.07%; --mh2-eclipse-w: 19.93%;
+  --mh2-hero-text: #f3e6d6; --mh2-hero-dim: #b9a08a; --mh2-hero-accent: #ffc94a;
+  --mh2-hero-shade: 23,16,12; --mh2-hero-line: #ff7a2f;
+  --mh2-hero-ds: #ff7a2f; --mh2-hero-on-ds: #0b0a0d;
+}
+:root[data-mh2-theme="lagoon"] {
+  --mh2-moon-l: 69.12%; --mh2-moon-t: 9.00%; --mh2-moon-w: 20.96%;
+  --mh2-eclipse-l: 67.64%; --mh2-eclipse-t: 6.57%; --mh2-eclipse-w: 20.13%;
+  --mh2-hero-text: #e3f1f5; --mh2-hero-dim: #8fb0bf; --mh2-hero-accent: #ff8a6b;
+  --mh2-hero-shade: 7,19,31; --mh2-hero-line: #3fe0d0;
+  --mh2-hero-ds: #ef4a9c; --mh2-hero-on-ds: #0b0a0d;
+}
+:root[data-mh2-theme="diablesse"] {
+  --mh2-moon-l: 69.20%; --mh2-moon-t: 9.17%; --mh2-moon-w: 19.34%;
+  --mh2-eclipse-l: 67.77%; --mh2-eclipse-t: 5.17%; --mh2-eclipse-w: 20.72%;
+  --mh2-hero-text: #f4f0ea; --mh2-hero-dim: #b2adac; --mh2-hero-accent: #63867c;
+  --mh2-hero-shade: 24,18,26; --mh2-hero-line: #c06b80;
+  --mh2-hero-ds: #62a874; --mh2-hero-on-ds: #0b0a0d;
+}
+:root[data-mh2-theme="burnbook"] {
+  --mh2-moon-l: 69.27%; --mh2-moon-t: 8.62%; --mh2-moon-w: 20.24%;
+  --mh2-eclipse-l: 67.12%; --mh2-eclipse-t: 6.35%; --mh2-eclipse-w: 20.33%;
+  --mh2-hero-text: #ffe3ef; --mh2-hero-dim: #baa3ad; --mh2-hero-accent: #5f7bd3;
+  --mh2-hero-shade: 26,15,20; --mh2-hero-line: #cc5997;
+  --mh2-hero-ds: #ff4fa3; --mh2-hero-on-ds: #0b0a0d;
+}
+:root[data-mh2-theme="lateshow"] {
+  --mh2-moon-l: 69.16%; --mh2-moon-t: 8.86%; --mh2-moon-w: 20.24%;
+  --mh2-eclipse-l: 67.03%; --mh2-eclipse-t: 6.14%; --mh2-eclipse-w: 20.72%;
+  --mh2-hero-text: #ecebf2; --mh2-hero-dim: #a4a0b4; --mh2-hero-accent: #35e0ff;
+  --mh2-hero-shade: 13,11,18; --mh2-hero-line: #ff3d9a;
+  --mh2-hero-ds: #b4b2bb; --mh2-hero-on-ds: #0b0a0d;
+}
+:root[data-mh2-theme="prom"] {
+  --mh2-moon-l: 69.27%; --mh2-moon-t: 8.86%; --mh2-moon-w: 20.24%;
+  --mh2-eclipse-l: 66.52%; --mh2-eclipse-t: 4.24%; --mh2-eclipse-w: 21.11%;
+  --mh2-hero-text: #eeeae4; --mh2-hero-dim: #a9a6a0; --mh2-hero-accent: #d9c9a3;
+  --mh2-hero-shade: 18,18,20; --mh2-hero-line: #f0606f;
+  --mh2-hero-ds: #ef4b60; --mh2-hero-on-ds: #0b0a0d;
+}
+.monsterhearts2 .mh2-hero-moon { background-image: url("moonrise/dark-n.webp"); }
+.monsterhearts2 .mh2-hero-eclipse { background-image: url("moonrise/dark-d.webp"); }
+:root[data-mh2-theme="light"] .monsterhearts2 .mh2-hero-moon { background-image: url("moonrise/light-n.webp"); }
+:root[data-mh2-theme="light"] .monsterhearts2 .mh2-hero-eclipse { background-image: url("moonrise/light-d.webp"); }
+:root[data-mh2-theme="karibik"] .monsterhearts2 .mh2-hero-moon { background-image: url("moonrise/karibik-n.webp"); }
+:root[data-mh2-theme="karibik"] .monsterhearts2 .mh2-hero-eclipse { background-image: url("moonrise/karibik-d.webp"); }
+:root[data-mh2-theme="trinidad"] .monsterhearts2 .mh2-hero-moon { background-image: url("moonrise/trinidad-n.webp"); }
+:root[data-mh2-theme="trinidad"] .monsterhearts2 .mh2-hero-eclipse { background-image: url("moonrise/trinidad-d.webp"); }
+:root[data-mh2-theme="island"] .monsterhearts2 .mh2-hero-moon { background-image: url("moonrise/island-n.webp"); }
+:root[data-mh2-theme="island"] .monsterhearts2 .mh2-hero-eclipse { background-image: url("moonrise/island-d.webp"); }
+:root[data-mh2-theme="soucouyant"] .monsterhearts2 .mh2-hero-moon { background-image: url("moonrise/soucouyant-n.webp"); }
+:root[data-mh2-theme="soucouyant"] .monsterhearts2 .mh2-hero-eclipse { background-image: url("moonrise/soucouyant-d.webp"); }
+:root[data-mh2-theme="lagoon"] .monsterhearts2 .mh2-hero-moon { background-image: url("moonrise/lagoon-n.webp"); }
+:root[data-mh2-theme="lagoon"] .monsterhearts2 .mh2-hero-eclipse { background-image: url("moonrise/lagoon-d.webp"); }
+:root[data-mh2-theme="diablesse"] .monsterhearts2 .mh2-hero-moon { background-image: url("moonrise/diablesse-n.webp"); }
+:root[data-mh2-theme="diablesse"] .monsterhearts2 .mh2-hero-eclipse { background-image: url("moonrise/diablesse-d.webp"); }
+:root[data-mh2-theme="burnbook"] .monsterhearts2 .mh2-hero-moon { background-image: url("moonrise/burnbook-n.webp"); }
+:root[data-mh2-theme="burnbook"] .monsterhearts2 .mh2-hero-eclipse { background-image: url("moonrise/burnbook-d.webp"); }
+:root[data-mh2-theme="lateshow"] .monsterhearts2 .mh2-hero-moon { background-image: url("moonrise/lateshow-n.webp"); }
+:root[data-mh2-theme="lateshow"] .monsterhearts2 .mh2-hero-eclipse { background-image: url("moonrise/lateshow-d.webp"); }
+:root[data-mh2-theme="prom"] .monsterhearts2 .mh2-hero-moon { background-image: url("moonrise/prom-n.webp"); }
+:root[data-mh2-theme="prom"] .monsterhearts2 .mh2-hero-eclipse { background-image: url("moonrise/prom-d.webp"); }
+
+/* ---------- the whole sheet scrolls, header included ---------- */
+.monsterhearts2 .mh2-profile { overflow: hidden; }
+.monsterhearts2 .mh2-profile .mh2-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  container: mh2sheet / inline-size;
+}
+.monsterhearts2 .mh2-profile .mh2-body { flex: none; overflow: visible; padding: 14px 18px 18px; gap: 12px; }
+
+/* ---------- the moonrise header ---------- */
+.monsterhearts2 .mh2-hero {
+  position: relative;
+  flex: 0 0 auto;
+  aspect-ratio: 1400 / 609;
+  overflow: hidden;
+  background: #000;
+  color: var(--mh2-hero-text);
+  border-bottom: 2px solid var(--mh2-hero-line);
+  container-type: inline-size;
+}
+.monsterhearts2 .mh2-hero-art { position: absolute; inset: 0; background-size: cover; background-position: center; }
+.monsterhearts2 .mh2-hero-eclipse { opacity: 0; }
+.monsterhearts2 .mh2-is-darkest .mh2-hero-moon { opacity: 0; }
+.monsterhearts2 .mh2-is-darkest .mh2-hero-eclipse { opacity: 1; }
+.monsterhearts2 .mh2-is-darkest .mh2-hero { border-bottom-color: var(--mh2-hero-ds); }
+.monsterhearts2 .mh2-hero-shade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(90deg, rgba(var(--mh2-hero-shade), 0.55) 0%, rgba(var(--mh2-hero-shade), 0.25) 38%, rgba(var(--mh2-hero-shade), 0) 58%);
+}
+/* the portrait, sitting in the moon */
+.monsterhearts2 .mh2-hero-portrait {
+  position: absolute;
+  left: var(--mh2-moon-l);
+  top: var(--mh2-moon-t);
+  width: var(--mh2-moon-w);
+  aspect-ratio: 1;
+  height: auto;
+  border: none;
+  border-radius: 50%;
+  object-fit: cover;
+  cursor: pointer;
+  -webkit-mask-image: radial-gradient(circle, #000 60%, transparent 71%);
+  mask-image: radial-gradient(circle, #000 60%, transparent 71%);
+  transition: filter 0.2s ease;
+}
+.monsterhearts2 .mh2-hero-portrait:hover { filter: brightness(1.08); }
+.monsterhearts2 .mh2-is-darkest .mh2-hero-portrait {
+  left: var(--mh2-eclipse-l);
+  top: var(--mh2-eclipse-t);
+  width: var(--mh2-eclipse-w);
+  filter: brightness(0.78) contrast(1.12) saturate(0.85);
+  -webkit-mask-image: radial-gradient(circle, #000 62%, transparent 71%);
+  mask-image: radial-gradient(circle, #000 62%, transparent 71%);
+}
+/* name, skin, origin, look and eyes, over the open sky */
+.monsterhearts2 .mh2-hero-text {
+  position: absolute;
+  left: 3.4cqw;
+  top: 3.4cqw;
+  width: 55cqw;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.8cqw;
+}
+.monsterhearts2 .mh2-hero-skin { display: flex; align-items: center; gap: 0.4rem; max-width: 100%; }
+.monsterhearts2 .mh2-hero select.mh2-skin-picker {
+  height: 1.6rem;
+  max-width: 100%;
+  padding: 0 0.2rem;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  color: var(--mh2-hero-accent);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.monsterhearts2 .mh2-hero select.mh2-skin-picker:hover { border-color: rgba(255, 255, 255, 0.25); }
+.monsterhearts2 .mh2-hero select option { color: initial; background: initial; letter-spacing: normal; text-transform: none; }
+.monsterhearts2 .mh2-hero-icon { color: var(--mh2-hero-accent); font-size: 0.75rem; opacity: 0.8; cursor: pointer; }
+.monsterhearts2 .mh2-hero-icon:hover { opacity: 1; text-shadow: none; }
+.monsterhearts2 .mh2-hero-ds-tag {
+  color: var(--mh2-hero-ds);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.monsterhearts2 .mh2-hero input[type="text"] {
+  background: transparent;
+  border: none;
+  border-bottom: 1px dashed transparent;
+  border-radius: 0;
+  box-shadow: none;
+  color: var(--mh2-hero-text);
+  padding: 0;
+}
+.monsterhearts2 .mh2-hero input[type="text"]:hover { border-bottom-color: rgba(255, 255, 255, 0.3); }
+.monsterhearts2 .mh2-hero input[type="text"]:focus { border-bottom-color: var(--mh2-hero-accent); box-shadow: none; }
+.monsterhearts2 .mh2-hero input::placeholder { color: var(--mh2-hero-dim); opacity: 0.8; }
+.monsterhearts2 .mh2-hero input.mh2-name {
+  width: 100%;
+  height: auto;
+  font-family: var(--mh2-serif);
+  font-size: clamp(1.5rem, 6cqw, 2.75rem);
+  font-weight: 700;
+  line-height: 1.1;
+  text-shadow: 0 2px 12px rgba(var(--mh2-hero-shade), 0.6);
+}
+.monsterhearts2 .mh2-hero input.mh2-hero-origin {
+  width: 100%;
+  height: 1.5rem;
+  font-family: var(--mh2-serif);
+  font-style: italic;
+  font-size: clamp(0.85rem, 2.3cqw, 1rem);
+  opacity: 0.88;
+}
+.monsterhearts2 .mh2-hero-chips { display: flex; flex-wrap: wrap; gap: 6px; width: 100%; margin-top: 0.4cqw; }
+.monsterhearts2 .mh2-hero-chip {
+  flex: 1 1 6.5rem;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 10px;
+  box-sizing: border-box;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 14px;
+  background: rgba(var(--mh2-hero-shade), 0.7);
+  cursor: text;
+}
+.monsterhearts2 .mh2-hero-chip b {
+  flex: 0 0 auto;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--mh2-hero-dim);
+}
+.monsterhearts2 .mh2-hero .mh2-hero-chip input[type="text"] { flex: 1; min-width: 0; height: 26px; font-size: 0.8rem; border-bottom: none; }
+.monsterhearts2 .mh2-profile .mh2-darkest-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 34px;
+  margin-top: 0.6cqw;
+  padding: 0 15px;
+  border: 1.5px solid var(--mh2-hero-text);
+  border-radius: 17px;
+  background: rgba(var(--mh2-hero-shade), 0.65);
+  color: var(--mh2-hero-text);
+  font-family: var(--mh2-serif);
+  font-style: italic;
+  font-size: 0.88rem;
+  letter-spacing: 0;
+  text-transform: none;
+  cursor: pointer;
+}
+.monsterhearts2 .mh2-profile .mh2-darkest-toggle:hover { border-color: var(--mh2-hero-ds); color: var(--mh2-hero-text); text-shadow: none; }
+.monsterhearts2 .mh2-profile .mh2-darkest-toggle.active,
+.monsterhearts2 .mh2-is-darkest.mh2-profile .mh2-darkest-toggle:hover {
+  background: var(--mh2-hero-ds);
+  border-color: var(--mh2-hero-ds);
+  color: var(--mh2-hero-on-ds);
+}
+
+/* ---------- stats as tiles, trackers as one line ---------- */
+.monsterhearts2 .mh2-profile .mh2-stats { gap: 8px; padding: 14px 18px 0; border-bottom: none; }
+.monsterhearts2 .mh2-profile .mh2-stat {
+  gap: 0;
+  padding: 6px 0 7px;
+  border: 1px solid var(--mh2-line);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--mh2-ink-soft) var(--mh2-veil), transparent);
+  transition: border-color 0.15s ease;
+}
+.monsterhearts2 .mh2-profile .mh2-stat:hover { border-color: var(--mh2-thread); }
+.monsterhearts2 .mh2-profile .mh2-stat input {
+  width: 100%;
+  height: 2.2rem;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  font-family: var(--mh2-serif);
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+.monsterhearts2 .mh2-profile .mh2-stat-roll {
+  font-family: inherit;
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  color: var(--mh2-bone-dim);
+}
+.monsterhearts2 .mh2-profile .mh2-stat-roll:hover { color: var(--mh2-thread); text-shadow: none; }
+.monsterhearts2 .mh2-profile .mh2-trackers,
+.monsterhearts2 .mh2-is-darkest.mh2-profile .mh2-trackers {
+  padding: 10px 22px 0;
+  background: none;
+  border-bottom: none;
+}
+
+/* ---------- cards ---------- */
+.monsterhearts2 .mh2-profile .mh2-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+}
+.monsterhearts2 .mh2-profile .mh2-grid-play { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); }
+.monsterhearts2 .mh2-profile .mh2-stack { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+@container mh2sheet (max-width: 560px) {
+  .monsterhearts2 .mh2-profile .mh2-grid,
+  .monsterhearts2 .mh2-profile .mh2-grid-play,
+  .monsterhearts2 .mh2-profile .mh2-move-grid { grid-template-columns: minmax(0, 1fr); }
+}
+.monsterhearts2 .mh2-profile .mh2-panel { border-radius: 14px; padding: 12px 14px; }
+.monsterhearts2 .mh2-profile .mh2-panel-header { margin-bottom: 8px; padding-bottom: 0; border-bottom: none; }
+.monsterhearts2 .mh2-profile .mh2-panel h2 { font-size: 1.05rem; font-weight: 700; letter-spacing: 0; text-transform: none; }
+.monsterhearts2 .mh2-profile .mh2-strings .mh2-panel-header { border-bottom: none; }
+.monsterhearts2 .mh2-profile .mh2-btn { min-width: 26px; height: 26px; border-radius: 13px; }
+.monsterhearts2 .mh2-profile .mh2-btn-text { border-radius: 13px; padding: 0 10px; }
+.monsterhearts2 .mh2-profile .mh2-body input[type="text"],
+.monsterhearts2 .mh2-profile .mh2-body input[type="number"] { border-radius: 8px; }
+
+/* Strings: name, count pill, then the receipt as a message bubble */
+.monsterhearts2 .mh2-profile .mh2-string { margin: 0; padding: 8px 0; border-top: 1px solid var(--mh2-line); }
+.monsterhearts2 .mh2-profile .mh2-string-row { margin-bottom: 4px; gap: 3px; }
+.monsterhearts2 .mh2-profile .mh2-string-row input[type="text"] {
+  min-width: 0;
+  background: transparent;
+  border-color: transparent;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+.monsterhearts2 .mh2-profile .mh2-string-row input[type="text"]:hover,
+.monsterhearts2 .mh2-profile .mh2-string-row input[type="text"]:focus { border-color: var(--mh2-line); }
+.monsterhearts2 .mh2-profile .mh2-string-row .mh2-count {
+  width: 2.1rem;
+  height: 1.5rem;
+  flex: 0 0 auto;
+  border: none;
+  border-radius: 12px;
+  background: var(--mh2-thread);
+  color: var(--mh2-on-thread);
+  font-weight: 700;
+}
+.monsterhearts2 .mh2-profile .mh2-receipt {
+  margin: 0;
+  padding: 3px 10px;
+  border-left: none;
+  border-radius: 4px 12px 12px 12px;
+  background: color-mix(in srgb, var(--mh2-raised) var(--mh2-veil), transparent);
+}
+.monsterhearts2 .mh2-profile .mh2-receipt.has-note > i { color: var(--mh2-thread); }
+
+/* Forward: the value is a gold pill */
+.monsterhearts2 .mh2-profile .mh2-forward-row .mh2-count {
+  width: 2.4rem;
+  height: 1.6rem;
+  border: none;
+  border-radius: 12px;
+  background: var(--mh2-held);
+  color: var(--mh2-ink);
+  font-weight: 700;
+}
+
+/* Moves: basic moves as a two-column grid of roll buttons, skin moves below */
+.monsterhearts2 .mh2-profile .mh2-move-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 6px; }
+.monsterhearts2 .mh2-profile .mh2-move-grid > .mh2-empty { grid-column: 1 / -1; }
+.monsterhearts2 .mh2-profile .mh2-skin-moves { display: flex; flex-direction: column; gap: 6px; }
+.monsterhearts2 .mh2-profile .mh2-move {
+  align-items: center;
+  gap: 4px;
+  margin: 0;
+  padding: 5px 6px 5px 10px;
+  border: 1px solid var(--mh2-line);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--mh2-raised) var(--mh2-veil), transparent);
+}
+.monsterhearts2 .mh2-profile .mh2-move:hover { border-color: var(--mh2-thread); }
+.monsterhearts2 .mh2-profile .mh2-move-name { flex: 1; min-width: 0; }
+.monsterhearts2 .mh2-profile .mh2-move .mh2-btn { min-width: 22px; height: 22px; border-radius: 11px; font-size: 0.7rem; }
+.monsterhearts2 .mh2-profile .mh2-subpanel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 14px 0 8px;
+}
+.monsterhearts2 .mh2-profile .mh2-subpanel-header h3 {
+  margin: 0;
+  border: none;
+  font-family: inherit;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--mh2-thread);
+}
+
+/* Darkest Self text card, tinted with the theme's Darkest Self colour */
+.monsterhearts2 .mh2-profile .mh2-ds-panel {
+  border-color: var(--mh2-darkest-ink);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--mh2-darkest) 16%, transparent), color-mix(in srgb, var(--mh2-ink-soft) var(--mh2-veil), transparent) 70%);
+}
+.monsterhearts2 .mh2-profile .mh2-darkest-banner { border-radius: 14px; }
+.monsterhearts2 .mh2-profile .mh2-row input[type="text"] { min-width: 0; }
+.monsterhearts2 .mh2-profile .mh2-condition-from { flex: 0 0 36%; }
+.monsterhearts2 .mh2-profile .mh2-custom .mh2-panel-header input.mh2-custom-label {
+  flex: 1;
+  min-width: 0;
+  height: 1.7rem;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-bottom: 1px dashed transparent;
+  border-radius: 0;
+  box-shadow: none;
+  font-family: var(--mh2-serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--mh2-bone);
+}
+.monsterhearts2 .mh2-profile .mh2-custom .mh2-panel-header input.mh2-custom-label:hover,
+.monsterhearts2 .mh2-profile .mh2-custom .mh2-panel-header input.mh2-custom-label:focus { border-bottom-color: var(--mh2-line); }
+.monsterhearts2 .mh2-profile .mh2-body > .mh2-grid input[name="system.advancements"] { width: 100%; }

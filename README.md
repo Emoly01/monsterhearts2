@@ -23,10 +23,16 @@ https://raw.githubusercontent.com/Emoly01/monsterhearts2/main/system.json
 
 ## What works
 
-- **Character sheet**: name, skin/look/eyes/origin, the four stats, eleven
-  themes (per-user — Dark, Light, Karibik, Trinidad, Island, Soucouyant,
-  Bioluminescence, La Diablesse, Burn Book, Late Show, Prom Night). Themes
-  follow you into chat cards, Receipts and the NPC tracker. Optional
+- **Character sheet**: one long page that scrolls as a whole, laid out like a
+  profile. It opens on a painted moonrise header: a Trinidad beach at night,
+  with your portrait in the moon (click it to change the picture) and your
+  skin, name, origin, look and eyes over the sky. Under it sit the four stats as
+  tiles (click the name to roll), harm, experience and ongoing, then cards for
+  Strings, Conditions, Forward, your custom tracker, Moves, Darkest Self, Sex
+  Move, Backstory, Advancements and Notes. Eleven themes, per user: Dark, Light,
+  Karibik, Trinidad, Island, Soucouyant, Bioluminescence, La Diablesse, Burn
+  Book, Late Show, Prom Night. Each has its own painting of the moonrise.
+  Themes follow you into chat cards, Receipts and the NPC tracker. Optional
   chaconia sprays behind the sheet, on any theme.
 - **Rolling**: click a stat name (or a move) → modifier prompt with your recorded
   Forwards as checkboxes → 2d6 + stat + bonuses. Chat card shows 10+ / 7–9 / miss,
@@ -86,9 +92,10 @@ https://raw.githubusercontent.com/Emoly01/monsterhearts2/main/system.json
   New characters get the basic moves automatically.
 - **Darkest Self**: toggle it on the sheet (or choose it when Skirting Death) —
   the screen cracks and the character's name is stamped across it for the whole
-  table, and the Darkest Self text goes to chat. While it lasts, the sheet's
-  header floods with the theme's Darkest Self colour and bleeds down into the
-  sheet, and the Darkest Self text is pinned to the top. Each theme has its own
+  table, and the Darkest Self text goes to chat. While it lasts, the moon in the
+  sheet's header goes into a total eclipse that bleeds light in the theme's
+  Darkest Self colour (Burn Book cries mascara, Late Show turns into an old
+  black-and-white film), and the Darkest Self text is pinned to the top. Each theme has its own
   Darkest Self colour that answers its everyday one, and no two are alike
   (Karibik turns lionfish orange, Trinidad goes molasses-black and gold, Late
   Show dissolves into static, and so on).
